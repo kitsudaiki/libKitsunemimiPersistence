@@ -1,7 +1,15 @@
+/**
+ *  @file    storageMemory.h
+ *  @author  Tobias Anker
+ *
+ *  @section DESCRIPTION
+ *
+ *  TODO: Description
+ */
+
 #ifndef SSDMEMORY_H
 #define SSDMEMORY_H
 
-#include <QObject>
 #include <deque>
 #include <sstream>
 #include <mutex>
@@ -11,35 +19,32 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <assert.h>
-#include <QDebug>
 
-#include <persistence_global.h>
-
-namespace Persistence
+namespace PerformanceIO
 {
 
-class PERSISTENCESHARED_EXPORT StorageMemory
+class StorageMemory
 {
 public:
-    StorageMemory(const QString filePath);
+    StorageMemory(const std::string filePath);
     ~StorageMemory();
 
-    bool allocateMemory(const quint32 size);
-    quint32 getFileSize(const bool makeCheck = false);
+    bool allocateMemory(const uint32_t size);
+    uint32_t getFileSize(const bool makeCheck = false);
 
-    bool readBlock(const quint32 storagePosition,
+    bool readBlock(const uint32_t storagePosition,
                    void *buffer,
-                   const quint32 bufferSize,
-                   const quint32 bufferOffset = 0);
-    bool writeBlock(const quint32 storagePosition,
+                   const uint32_t bufferSize,
+                   const uint32_t bufferOffset = 0);
+    bool writeBlock(const uint32_t storagePosition,
                     void *buffer,
-                    const quint32 bufferSize,
-                    const quint32 bufferOffset = 0);
+                    const uint32_t bufferSize,
+                    const uint32_t bufferOffset = 0);
     bool closeFile();
 
 private:
-    QString m_filePath = "";
-    quint32 m_fileSize = 0;
+    std::string m_filePath = "";
+    uint32_t m_fileSize = 0;
     int m_fileDescriptor = -1;
 
     void initFile();

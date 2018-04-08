@@ -1,13 +1,22 @@
+/**
+ *  @file    storageMemory.cpp
+ *  @author  Tobias Anker
+ *
+ *  @section DESCRIPTION
+ *
+ *  TODO: Description
+ */
+
 #include <files/storageMemory.h>
 
-namespace Persistence
+namespace PerformanceIO
 {
 
 /**
  * @brief StorageMemory::StorageMemory init the storage-class with an already existing file
  * @param filePath path to the existing file
  */
-StorageMemory::StorageMemory(const QString filePath)
+StorageMemory::StorageMemory(const std::string filePath)
 {
     m_filePath = filePath;
     initFile();
@@ -26,7 +35,7 @@ StorageMemory::~StorageMemory()
  */
 void StorageMemory::initFile()
 {
-    m_fileDescriptor = open(m_filePath.toStdString().c_str(), O_CREAT | O_DIRECT | O_RDWR | O_LARGEFILE, 0666);
+    m_fileDescriptor = open(m_filePath.c_str(), O_CREAT | O_DIRECT | O_RDWR | O_LARGEFILE, 0666);
     // chech if file is open
     assert(m_fileDescriptor != -1);
     getFileSize();
@@ -37,7 +46,7 @@ void StorageMemory::initFile()
  * @param size size which show be additional be allocated
  * @return true is successful, else false
  */
-bool StorageMemory::allocateMemory(const quint32 size)
+bool StorageMemory::allocateMemory(const uint32_t size)
 {
     if(size == 0) {
         return true;
@@ -69,7 +78,7 @@ bool StorageMemory::allocateMemory(const quint32 size)
  * @param makeCheck force a new check of the file-size
  * @return size of the file
  */
-quint32 StorageMemory::getFileSize(const bool makeCheck)
+uint32_t StorageMemory::getFileSize(const bool makeCheck)
 {
     if(m_fileSize == 0 || makeCheck) {
         // check if filesize is really 0 or check is requested
@@ -87,10 +96,10 @@ quint32 StorageMemory::getFileSize(const bool makeCheck)
  * @param bufferOffset offet inside of buffer in bytes
  * @return true, if successful, else false
  */
-bool StorageMemory::readBlock(const quint32 storagePosition,
+bool StorageMemory::readBlock(const uint32_t storagePosition,
                               void *buffer,
-                              const quint32 bufferSize,
-                              const quint32 bufferOffset)
+                              const uint32_t bufferSize,
+                              const uint32_t bufferOffset)
 {
     // check if blocksizes are compatible with direct read
     if(storagePosition % 512 != 0
@@ -128,10 +137,10 @@ bool StorageMemory::readBlock(const quint32 storagePosition,
  * @param bufferOffset offet inside of buffer in bytes
  * @return true, if successful, else false
  */
-bool StorageMemory::writeBlock(const quint32 storagePosition,
+bool StorageMemory::writeBlock(const uint32_t storagePosition,
                                void *buffer,
-                               const quint32 bufferSize,
-                               const quint32 bufferOffset)
+                               const uint32_t bufferSize,
+                               const uint32_t bufferOffset)
 {
     // check if blocksizes are compatible with direct write
     if(storagePosition % 512 != 0

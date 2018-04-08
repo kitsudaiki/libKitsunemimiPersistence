@@ -1,18 +1,27 @@
+/**
+ *  @file    ioBuffer.cpp
+ *  @author  Tobias Anker
+ *
+ *  @section DESCRIPTION
+ *
+ *  TODO: Description
+ */
+
 #include <files/ioBuffer.h>
 #include <files/storageMemory.h>
 
 #define BLOCKSIZE 4096
 
-namespace Persistence
+namespace PerformanceIO
 {
 
 /**
  * @brief IOBuffer::IOBuffer creates and initialize a buffer with a file
  * @param filePath path to the file with the data
  */
-IOBuffer::IOBuffer(const QString filePath)
+IOBuffer::IOBuffer(const std::string filePath)
 {
-    m_storage = new Persistence::StorageMemory(filePath);
+    m_storage = new PerformanceIO::StorageMemory(filePath);
 
     initBuffer();
 }
@@ -34,7 +43,7 @@ bool IOBuffer::initBuffer()
     assert(BLOCKSIZE % 512 == 0);
 
     // read number of bytes from the file
-    quint32 readedSize = m_storage->getFileSize(true);
+    uint32_t readedSize = m_storage->getFileSize(true);
 
     // check if file-size is valid
     assert(readedSize % BLOCKSIZE == 0);
@@ -83,7 +92,7 @@ bool IOBuffer::closeBuffer(const bool withoutStorage)
  * @brief IOBuffer::getNumberOfBlocks
  * @return number of current allocated blocks
  */
-quint32 IOBuffer::getNumberOfBlocks() const
+uint32_t IOBuffer::getNumberOfBlocks() const
 {
     return m_size;
 }
@@ -92,7 +101,7 @@ quint32 IOBuffer::getNumberOfBlocks() const
  * @brief IOBuffer::getBlockSize
  * @return
  */
-quint32 IOBuffer::getBlockSize() const
+uint32_t IOBuffer::getBlockSize() const
 {
     return BLOCKSIZE;
 }
@@ -111,7 +120,7 @@ void *IOBuffer::getBufferPointer()
  * @param blockNumber
  * @return
  */
-void* IOBuffer::getBlock(const quint32 blockNumber)
+void* IOBuffer::getBlock(const uint32_t blockNumber)
 {
     if(blockNumber >= m_size) {
         return nullptr;
@@ -126,7 +135,7 @@ void* IOBuffer::getBlock(const quint32 blockNumber)
  * @param withoutStorage true, if the file should not be resized (default: false)
  * @return true, if successful, else false
  */
-bool IOBuffer::allocateBlocks(const quint32 numberOfBlocks, const bool withoutStorage)
+bool IOBuffer::allocateBlocks(const uint32_t numberOfBlocks, const bool withoutStorage)
 {
     if(numberOfBlocks == 0) {
         return true;
@@ -141,7 +150,7 @@ bool IOBuffer::allocateBlocks(const quint32 numberOfBlocks, const bool withoutSt
     }
 
     // create the new buffer
-    quint32 newSize = m_size + numberOfBlocks;
+    uint32_t newSize = m_size + numberOfBlocks;
     void* newBuffer = aligned_malloc(newSize * BLOCKSIZE);
     memset(newBuffer, 0, newSize * BLOCKSIZE);
 
@@ -164,8 +173,8 @@ bool IOBuffer::allocateBlocks(const quint32 numberOfBlocks, const bool withoutSt
  * @param endBlockNumber number of the last block to write
  * @return true, if successful, else false
  */
-bool IOBuffer::syncBlocks(const quint32 beginBlockNumber,
-                          const quint32 endBlockNumber)
+bool IOBuffer::syncBlocks(const uint32_t beginBlockNumber,
+                          const uint32_t endBlockNumber)
 {
     if(m_storage == nullptr) {
         return false;
@@ -197,7 +206,7 @@ bool IOBuffer::syncAll()
  * @param numberOfBytes bytes to allocate
  * @return pointer to the allocated memory
  */
-void* IOBuffer::aligned_malloc(const quint32 numberOfBytes)
+void* IOBuffer::aligned_malloc(const uint32_t numberOfBytes)
 {
     void *mem = malloc(numberOfBytes+BLOCKSIZE+sizeof(void*));
     void **ptr = (void**)((uintptr_t)(mem+BLOCKSIZE+sizeof(void*)) & ~(BLOCKSIZE-1));

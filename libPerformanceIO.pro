@@ -8,7 +8,10 @@ QT       -= core gui
 
 TARGET = PerformanceIO
 TEMPLATE = lib
-CONFIG += staticlib
+CONFIG += c++11
+
+INCLUDEPATH += $$PWD \
+            include/libPerformanceIO
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -22,18 +25,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        src/files/crc32.cpp \
         src/files/ioBuffer.cpp \
-        src/files/storageMemory.cpp \
-        tests/ioBufferTest.cpp \
-        tests/storageMemoryTest.cpp
+        src/files/storageMemory.cpp
 
 HEADERS += \
-        include/libPerformanceIO/files/crc32.h \
         include/libPerformanceIO/files/ioBuffer.h \
-        include/libPerformanceIO/files/storageMemory.h \
-        tests/ioBufferTest.h \
-        tests/storageMemoryTest.h
+        include/libPerformanceIO/files/storageMemory.h
 unix {
     target.path = /usr/lib
     INSTALLS += target
