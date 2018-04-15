@@ -19,11 +19,11 @@ namespace PerformanceIO
 {
 class StorageMemory;
 
-class IOBuffer
+class DataBuffer
 {
 public:
-    IOBuffer(const std::string filePath);
-    ~IOBuffer();
+    DataBuffer(const std::string filePath = "");
+    ~DataBuffer();
 
     bool initBuffer();
     bool closeBuffer(const bool withoutStorage = false);

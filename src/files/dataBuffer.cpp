@@ -7,7 +7,7 @@
  *  TODO: Description
  */
 
-#include <files/ioBuffer.h>
+#include <files/dataBuffer.h>
 #include <files/storageMemory.h>
 
 #define BLOCKSIZE 4096
@@ -16,58 +16,67 @@ namespace PerformanceIO
 {
 
 /**
- * @brief IOBuffer::IOBuffer creates and initialize a buffer with a file
+ * @brief DataBuffer::IOBuffer creates and initialize a buffer with a file
  * @param filePath path to the file with the data
  */
-IOBuffer::IOBuffer(const std::string filePath)
+DataBuffer::DataBuffer(const std::string filePath)
 {
-    m_storage = new PerformanceIO::StorageMemory(filePath);
+    if(filePath != "") {
+        m_storage = new PerformanceIO::StorageMemory(filePath);
+    }
 
     initBuffer();
 }
 
 /**
- * @brief IOBuffer::~IOBuffer close the buffer at the end
+ * @brief DataBuffer::~IOBuffer close the buffer at the end
  */
-IOBuffer::~IOBuffer()
+DataBuffer::~DataBuffer()
 {
     closeBuffer();
 }
 
 /**
- * @brief IOBuffer::initBuffer
+ * @brief DataBuffer::initBuffer
  * @return
  */
-bool IOBuffer::initBuffer()
+bool DataBuffer::initBuffer()
 {
     assert(BLOCKSIZE % 512 == 0);
 
-    // read number of bytes from the file
-    uint32_t readedSize = m_storage->getFileSize(true);
+    if(m_storage != nullptr)
+    {
+        // read number of bytes from the file
+        uint32_t readedSize = m_storage->getFileSize(true);
 
-    // check if file-size is valid
-    assert(readedSize % BLOCKSIZE == 0);
+        // check if file-size is valid
+        assert(readedSize % BLOCKSIZE == 0);
 
-    // init the buffer with the file-size or the the minimal size of a block
-    if(readedSize != 0) {
-        allocateBlocks(readedSize/BLOCKSIZE, true);
+        // init the buffer with the file-size or the the minimal size of a block
+        if(readedSize != 0) {
+            allocateBlocks(readedSize/BLOCKSIZE, true);
+        }
+        else {
+            allocateBlocks(1);
+        }
+
+        // read data from the file to the buffer
+        m_storage->readBlock(m_storagePosition, m_buffer, m_size * BLOCKSIZE);
     }
-    else {
-        allocateBlocks(1);
+    else
+    {
+        allocateBlocks(1, true);
     }
-
-    // read data from the file to the buffer
-    m_storage->readBlock(m_storagePosition, m_buffer, m_size * BLOCKSIZE);
 
     return true;
 }
 
 /**
- * @brief IOBuffer::closeBuffer sync and close the buffer
+ * @brief DataBuffer::closeBuffer sync and close the buffer
  * @param withoutStorage true, to not close the file-connection (default: false)
  * @return true, if successful, else false
  */
-bool IOBuffer::closeBuffer(const bool withoutStorage)
+bool DataBuffer::closeBuffer(const bool withoutStorage)
 {
     // sync at the end
     syncAll();
@@ -89,38 +98,38 @@ bool IOBuffer::closeBuffer(const bool withoutStorage)
 }
 
 /**
- * @brief IOBuffer::getNumberOfBlocks
+ * @brief DataBuffer::getNumberOfBlocks
  * @return number of current allocated blocks
  */
-uint32_t IOBuffer::getNumberOfBlocks() const
+uint32_t DataBuffer::getNumberOfBlocks() const
 {
     return m_size;
 }
 
 /**
- * @brief IOBuffer::getBlockSize
+ * @brief DataBuffer::getBlockSize
  * @return
  */
-uint32_t IOBuffer::getBlockSize() const
+uint32_t DataBuffer::getBlockSize() const
 {
     return BLOCKSIZE;
 }
 
 /**
- * @brief IOBuffer::getBufferPointer
+ * @brief DataBuffer::getBufferPointer
  * @return
  */
-void *IOBuffer::getBufferPointer()
+void *DataBuffer::getBufferPointer()
 {
     return m_buffer;
 }
 
 /**
- * @brief IOBuffer::getBlock
+ * @brief DataBuffer::getBlock
  * @param blockNumber
  * @return
  */
-void* IOBuffer::getBlock(const uint32_t blockNumber)
+void* DataBuffer::getBlock(const uint32_t blockNumber)
 {
     if(blockNumber >= m_size) {
         return nullptr;
@@ -130,19 +139,19 @@ void* IOBuffer::getBlock(const uint32_t blockNumber)
 }
 
 /**
- * @brief IOBuffer::allocateBlocks allocate more memory for the buffer
+ * @brief DataBuffer::allocateBlocks allocate more memory for the buffer
  * @param numberOfBlocks number of blocks to allocate
  * @param withoutStorage true, if the file should not be resized (default: false)
  * @return true, if successful, else false
  */
-bool IOBuffer::allocateBlocks(const uint32_t numberOfBlocks, const bool withoutStorage)
+bool DataBuffer::allocateBlocks(const uint32_t numberOfBlocks, const bool withoutStorage)
 {
     if(numberOfBlocks == 0) {
         return true;
     }
 
     // resize the file to the new size, if choosen
-    if(withoutStorage == false) {
+    if(withoutStorage == false && m_storage != nullptr) {
         if(m_storage->allocateMemory(numberOfBlocks * BLOCKSIZE) == false)
         {
             return false;
@@ -168,12 +177,12 @@ bool IOBuffer::allocateBlocks(const uint32_t numberOfBlocks, const bool withoutS
 }
 
 /**
- * @brief IOBuffer::syncBlocks write a number of blocks from the buffer to the file
+ * @brief DataBuffer::syncBlocks write a number of blocks from the buffer to the file
  * @param beginBlockNumber number of the first block to write
  * @param endBlockNumber number of the last block to write
  * @return true, if successful, else false
  */
-bool IOBuffer::syncBlocks(const uint32_t beginBlockNumber,
+bool DataBuffer::syncBlocks(const uint32_t beginBlockNumber,
                           const uint32_t endBlockNumber)
 {
     if(m_storage == nullptr) {
@@ -193,20 +202,20 @@ bool IOBuffer::syncBlocks(const uint32_t beginBlockNumber,
 }
 
 /**
- * @brief IOBuffer::syncAll write the complete buffer to the file
+ * @brief DataBuffer::syncAll write the complete buffer to the file
  * @return true, if successful written
  */
-bool IOBuffer::syncAll()
+bool DataBuffer::syncAll()
 {
     return syncBlocks(0, m_size - 1);
 }
 
 /**
- * @brief IOBuffer::aligned_malloc allocate a number of aligned bytes
+ * @brief DataBuffer::aligned_malloc allocate a number of aligned bytes
  * @param numberOfBytes bytes to allocate
  * @return pointer to the allocated memory
  */
-void* IOBuffer::aligned_malloc(const uint32_t numberOfBytes)
+void* DataBuffer::aligned_malloc(const uint32_t numberOfBytes)
 {
     void *mem = malloc(numberOfBytes+BLOCKSIZE+sizeof(void*));
     void **ptr = (void**)((uintptr_t)(mem+BLOCKSIZE+sizeof(void*)) & ~(BLOCKSIZE-1));
@@ -216,11 +225,11 @@ void* IOBuffer::aligned_malloc(const uint32_t numberOfBytes)
 }
 
 /**
- * @brief IOBuffer::aligned_free to free aligned memory
+ * @brief DataBuffer::aligned_free to free aligned memory
  * @param ptr pointer to the memory to free
  * @return true, if pointer not nullptr, else false
  */
-bool IOBuffer::aligned_free(void *ptr)
+bool DataBuffer::aligned_free(void *ptr)
 {
     if(ptr != nullptr) {
         free(((void**)ptr)[-1]);

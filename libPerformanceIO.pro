@@ -25,12 +25,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        src/files/ioBuffer.cpp \
-        src/files/storageMemory.cpp
+        src/files/storageMemory.cpp \
+    src/files/dataBuffer.cpp
 
 HEADERS += \
-        include/libPerformanceIO/files/ioBuffer.h \
-        include/libPerformanceIO/files/storageMemory.h
+        include/libPerformanceIO/files/storageMemory.h \
+    include/libPerformanceIO/files/dataBuffer.h
 unix {
     target.path = /usr/lib
     INSTALLS += target
