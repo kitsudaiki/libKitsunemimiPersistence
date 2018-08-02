@@ -23,6 +23,7 @@ class DataBuffer
 {
 public:
     DataBuffer(const std::string filePath = "");
+    DataBuffer(void* data, uint32_t size);
     ~DataBuffer();
 
     bool initBuffer();
@@ -42,7 +43,7 @@ public:
 
 
 private:
-    uint32_t m_size = 0;
+    uint32_t m_numberOfBlocks = 0;
     uint32_t m_storagePosition = 0;
     PerformanceIO::StorageMemory* m_storage = nullptr;
 

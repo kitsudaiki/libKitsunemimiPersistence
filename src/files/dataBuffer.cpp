@@ -29,6 +29,18 @@ DataBuffer::DataBuffer(const std::string filePath)
 }
 
 /**
+ * @brief DataBuffer::DataBuffer init data-buffer with existing datas
+ * @param data already existing data
+ */
+DataBuffer::DataBuffer(void *data, uint32_t size)
+{
+    if(m_buffer == nullptr && size > 0) {
+        m_buffer = data;
+        m_numberOfBlocks = (size / BLOCKSIZE) + 1;
+    }
+}
+
+/**
  * @brief DataBuffer::~IOBuffer close the buffer at the end
  */
 DataBuffer::~DataBuffer()
@@ -61,7 +73,7 @@ bool DataBuffer::initBuffer()
         }
 
         // read data from the file to the buffer
-        m_storage->readBlock(m_storagePosition, m_buffer, m_size * BLOCKSIZE);
+        m_storage->readBlock(m_storagePosition, m_buffer, m_numberOfBlocks * BLOCKSIZE);
     }
     else
     {
@@ -91,7 +103,7 @@ bool DataBuffer::closeBuffer(const bool withoutStorage)
     // deallocate the buffer
     if(aligned_free(m_buffer)) {
         m_buffer = nullptr;
-        m_size = 0;
+        m_numberOfBlocks = 0;
         return true;
     }
     return false;
@@ -103,7 +115,7 @@ bool DataBuffer::closeBuffer(const bool withoutStorage)
  */
 uint32_t DataBuffer::getNumberOfBlocks() const
 {
-    return m_size;
+    return m_numberOfBlocks;
 }
 
 /**
@@ -131,7 +143,7 @@ void *DataBuffer::getBufferPointer()
  */
 void* DataBuffer::getBlock(const uint32_t blockNumber)
 {
-    if(blockNumber >= m_size) {
+    if(blockNumber >= m_numberOfBlocks) {
         return nullptr;
     }
 
@@ -159,18 +171,18 @@ bool DataBuffer::allocateBlocks(const uint32_t numberOfBlocks, const bool withou
     }
 
     // create the new buffer
-    uint32_t newSize = m_size + numberOfBlocks;
+    uint32_t newSize = m_numberOfBlocks + numberOfBlocks;
     void* newBuffer = aligned_malloc(newSize * BLOCKSIZE);
     memset(newBuffer, 0, newSize * BLOCKSIZE);
 
     // copy the content of the old buffer to the new and deallocate the old
     if(m_buffer != nullptr) {
-        memcpy(newBuffer, m_buffer, m_size * BLOCKSIZE);
+        memcpy(newBuffer, m_buffer, m_numberOfBlocks * BLOCKSIZE);
         aligned_free(m_buffer);
     }
 
     // set the new values
-    m_size = newSize;
+    m_numberOfBlocks = newSize;
     m_buffer = newBuffer;
 
     return true;
@@ -190,7 +202,7 @@ bool DataBuffer::syncBlocks(const uint32_t beginBlockNumber,
     }
 
     // check the borders
-    if(endBlockNumber >= m_size || beginBlockNumber >= endBlockNumber) {
+    if(endBlockNumber >= m_numberOfBlocks || beginBlockNumber >= endBlockNumber) {
         return false;
     }
 
@@ -207,7 +219,7 @@ bool DataBuffer::syncBlocks(const uint32_t beginBlockNumber,
  */
 bool DataBuffer::syncAll()
 {
-    return syncBlocks(0, m_size - 1);
+    return syncBlocks(0, m_numberOfBlocks - 1);
 }
 
 /**
