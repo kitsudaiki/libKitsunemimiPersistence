@@ -6,12 +6,12 @@
 
 QT       -= core gui
 
-TARGET = PerformanceIO
+TARGET = KitsunePersistence
 TEMPLATE = lib
-CONFIG += c++11
+CONFIG += c++17
 
 INCLUDEPATH += $$PWD \
-            include/libPerformanceIO
+            include/libKitsunePersistence
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -26,11 +26,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         src/files/storageMemory.cpp \
-    src/files/dataBuffer.cpp
+        src/files/dataBuffer.cpp
 
 HEADERS += \
-        include/libPerformanceIO/files/storageMemory.h \
-    include/libPerformanceIO/files/dataBuffer.h
+        include/libKitsunePersistence/files/storageMemory.h \
+        include/libKitsunePersistence/files/dataBuffer.h
 unix {
     target.path = /usr/lib
     INSTALLS += target
