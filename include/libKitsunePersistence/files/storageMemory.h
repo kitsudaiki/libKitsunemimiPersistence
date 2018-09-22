@@ -20,13 +20,20 @@
 #include <unistd.h>
 #include <assert.h>
 
-namespace PerformanceIO
+#include <commonDataBuffer.h>
+
+namespace Kitsune
+{
+class CommonDataBuffer;
+
+namespace Persistence
 {
 
 class StorageMemory
 {
 public:
-    StorageMemory(const std::string filePath);
+    StorageMemory(const std::string filePath,
+                  Kitsune::CommonDataBuffer* buffer);
     ~StorageMemory();
 
     bool allocateMemory(const uint32_t size);
@@ -46,10 +53,12 @@ private:
     std::string m_filePath = "";
     uint32_t m_fileSize = 0;
     int m_fileDescriptor = -1;
+    Kitsune::CommonDataBuffer* m_buffer = nullptr;
 
     void initFile();
 };
 
+}
 }
 
 #endif // SSDMEMORY_H

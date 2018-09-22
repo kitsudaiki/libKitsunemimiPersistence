@@ -10,6 +10,11 @@ TARGET = KitsunePersistence
 TEMPLATE = lib
 CONFIG += c++17
 
+LIBS += -L../libKitsuneCommon -lKitsuneCommon
+LIBS += -L../libKitsuneCommon/debug -lKitsuneCommon
+LIBS += -L../libKitsuneCommon/release -lKitsuneCommon
+INCLUDEPATH += ../libKitsuneCommon/include/libKitsuneCommon
+
 INCLUDEPATH += $$PWD \
             include/libKitsunePersistence
 
@@ -25,12 +30,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        src/files/storageMemory.cpp \
-        src/files/dataBuffer.cpp
+        src/files/storageMemory.cpp
 
 HEADERS += \
-        include/libKitsunePersistence/files/storageMemory.h \
-        include/libKitsunePersistence/files/dataBuffer.h
+        include/libKitsunePersistence/files/storageMemory.h
 unix {
     target.path = /usr/lib
     INSTALLS += target

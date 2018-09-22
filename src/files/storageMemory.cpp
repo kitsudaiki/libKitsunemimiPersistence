@@ -9,16 +9,21 @@
 
 #include <files/storageMemory.h>
 
-namespace PerformanceIO
+namespace Kitsune
+{
+namespace Persistence
 {
 
 /**
  * @brief StorageMemory::StorageMemory init the storage-class with an already existing file
  * @param filePath path to the existing file
+ * @param buffer
  */
-StorageMemory::StorageMemory(const std::string filePath)
+StorageMemory::StorageMemory(const std::string filePath,
+                             Kitsune::CommonDataBuffer* buffer)
 {
     m_filePath = filePath;
+    m_buffer = buffer;
     initFile();
 }
 
@@ -36,7 +41,7 @@ StorageMemory::~StorageMemory()
 void StorageMemory::initFile()
 {
     m_fileDescriptor = open(m_filePath.c_str(), O_CREAT | O_DIRECT | O_RDWR | O_LARGEFILE, 0666);
-    // chech if file is open
+    // check if file is open
     assert(m_fileDescriptor != -1);
     getFileSize();
 }
@@ -188,4 +193,5 @@ bool StorageMemory::closeFile()
     return false;
 }
 
+}
 }
