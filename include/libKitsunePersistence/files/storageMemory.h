@@ -20,11 +20,10 @@
 #include <unistd.h>
 #include <assert.h>
 
-#include <commonDataBuffer.h>
+#include <buffering/commonDataBuffer.h>
 
 namespace Kitsune
 {
-class CommonDataBuffer;
 
 namespace Persistence
 {
