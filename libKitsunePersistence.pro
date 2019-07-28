@@ -1,27 +1,8 @@
-QT       -= qt core gui
+TEMPLATE = subdirs
+CONFIG += ordered
 
-TARGET = KitsunePersistence
-TEMPLATE = lib
-CONFIG += c++14
+SUBDIRS = \
+   src \
+   tests
 
-LIBS += -L../libKitsuneCommon/src -lKitsuneCommon
-LIBS += -L../libKitsuneCommon/src/debug -lKitsuneCommon
-LIBS += -L../libKitsuneCommon/src/release -lKitsuneCommon
-INCLUDEPATH += ../libKitsuneCommon/include/libKitsuneCommon
-
-LIBS +=  -lboost_filesystem -lboost_system -lboost_program_options -lboost_iostreams
-
-INCLUDEPATH += $$PWD \
-            include/libKitsunePersistence
-
-SOURCES += \
-        src/files/storageMemory.cpp \
-    include/libKitsunePersistence/files/textFile.cpp
-
-HEADERS += \
-        include/libKitsunePersistence/files/storageMemory.h \
-    include/libKitsunePersistence/files/textFile.hpp
-unix {
-    target.path = /usr/lib
-    INSTALLS += target
-}
+tests.depends = src

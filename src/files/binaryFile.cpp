@@ -1,19 +1,24 @@
 /**
- *  @file    storageMemory.cpp
+ *  @file    binaryFile.cpp
+ *
  *  @author  Tobias Anker
+ *  Contact: tobias.anker@kitsunemimi.moe
  *
- *  @section DESCRIPTION
- *
- *  TODO: Description
+ *  MIT License
  */
 
-#include <files/storageMemory.h>
+#include <files/binaryFile.hpp>
 
 namespace Kitsune
 {
 namespace Persistence
 {
 
+/**
+ * @brief StorageMemory::StorageMemory
+ * @param filePath
+ * @param buffer
+ */
 StorageMemory::StorageMemory(const std::string filePath,
                              Kitsune::CommonDataBuffer* buffer)
 {
@@ -22,6 +27,9 @@ StorageMemory::StorageMemory(const std::string filePath,
     initFile();
 }
 
+/**
+ * @brief StorageMemory::~StorageMemory
+ */
 StorageMemory::~StorageMemory()
 {
     closeFile();
@@ -40,27 +48,40 @@ StorageMemory::initFile()
 }
 
 /**
+ * @brief StorageMemory::checkData
+ * @return
+ */
+bool
+StorageMemory::checkMetaData()
+{
+    if(m_buffer->data == nullptr
+            || m_fileDescriptor == -1)
+    {
+        return false;
+    }
+    return true;
+}
+
+/**
  * @brief allocate new storage at the end of the file
  *
  * @return true is successful, else false
  */
 bool
-StorageMemory::allocateMemory(const uint32_t size)
+StorageMemory::allocateStorage(const uint64_t numberOfBlocks)
 {
-    if(size == 0) {
-        return true;
-    }
-
-    // check if file is open and the new additional size is a multiple of 4096
-    if(m_fileDescriptor == -1
-            || size % 4096 != 0)
+    // precheck
+    if(numberOfBlocks == 0
+            || checkMetaData() == false)
     {
         return false;
     }
 
     // set first to the start of the file and allocate the new size at the end of the file
     lseek(m_fileDescriptor, 0, SEEK_SET);
-    int ret = posix_fallocate(m_fileDescriptor, m_fileSize, size);
+    long ret = posix_fallocate(m_fileDescriptor,
+                               m_totalFileSize,
+                               numberOfBlocks * m_blockSize);
 
     // check if allocation was successful
     if(ret != 0)
@@ -70,7 +91,10 @@ StorageMemory::allocateMemory(const uint32_t size)
     }
 
     // got the the end of the file
-    m_fileSize = lseek(m_fileDescriptor, 0, SEEK_END);
+    ret = lseek(m_fileDescriptor, 0, SEEK_END);
+    if(ret >= 0) {
+        m_totalFileSize = ret;
+    }
 
     return true;
 }
@@ -80,52 +104,45 @@ StorageMemory::allocateMemory(const uint32_t size)
  *
  * @return size of the file
  */
-uint32_t
+uint64_t
 StorageMemory::getFileSize(const bool makeCheck)
 {
-    if(m_fileSize == 0 || makeCheck)
+    if(m_totalFileSize == 0
+            || makeCheck)
     {
         // check if filesize is really 0 or check is requested
-        m_fileSize = lseek(m_fileDescriptor, 0, SEEK_END);
+        m_totalFileSize = lseek(m_fileDescriptor, 0, SEEK_END);
         lseek(m_fileDescriptor, 0, SEEK_SET);
     }
-    return m_fileSize;
+    return m_totalFileSize;
 }
 
 /**
- * @brief StorageMemory::readBlock read a block of the file
+ * read a readSegment of the file
  *
  * @return true, if successful, else false
  */
 bool
-StorageMemory::readBlock(const uint32_t storagePosition,
-                         void *buffer,
-                         const uint32_t bufferSize,
-                         const uint32_t bufferOffset)
+StorageMemory::readSegment(const uint64_t startBlockInFile,
+                           const uint64_t numberOfBlocks,
+                           const uint64_t startBlockInBuffer)
 {
-    // check if blocksizes are compatible with direct read
-    if(storagePosition % 512 != 0
-            || storagePosition % 512 != 0
-            || storagePosition % 512 != 0)
-    {
-        return false;
-    }
-
-    // check if file is open and buffer-pointer is valid
-    if(m_fileDescriptor == -1
-            || buffer == nullptr)
+    // precheck
+    if(numberOfBlocks != 0
+            || m_fileDescriptor == -1
+            || m_buffer->data == nullptr)
     {
         return false;
     }
 
     // check if requested block is in range of file
-    if(storagePosition + bufferSize > m_fileSize) {
+    if(startBlockInFile + numberOfBlocks > m_totalFileSize) {
        return false;
     }
 
     // go to the requested position and read the block
-    lseek(m_fileDescriptor, storagePosition, SEEK_SET);
-    ssize_t ret = read(m_fileDescriptor, buffer + bufferOffset, bufferSize);
+    lseek(m_fileDescriptor, startBlockInFile, SEEK_SET);
+    ssize_t ret = read(m_fileDescriptor, m_buffer->data, numberOfBlocks);
 
     if(ret == -1)
     {
@@ -140,34 +157,26 @@ StorageMemory::readBlock(const uint32_t storagePosition,
  *
  * @return true, if successful, else false
  */
-bool StorageMemory::writeBlock(const uint32_t storagePosition,
-                               void *buffer,
-                               const uint32_t bufferSize,
-                               const uint32_t bufferOffset)
+bool StorageMemory::writeSegment(const uint64_t startBlockInFile,
+                                 const uint64_t numberOfBlocks,
+                                 const uint64_t startBlockInBuffer)
 {
-    // check if blocksizes are compatible with direct write
-    if(storagePosition % 512 != 0
-            || bufferSize % 512 != 0
-            || bufferOffset % 512 != 0)
-    {
-        return false;
-    }
-
-    // check if file is open and buffer-pointer is valid
-    if(m_fileDescriptor == -1
-            || buffer == nullptr)
+    // precheck
+    if(numberOfBlocks != 0
+            || m_fileDescriptor == -1
+            || m_buffer->data == nullptr)
     {
         return false;
     }
 
     // check if requested block is in range of file
-    if(storagePosition + bufferSize > m_fileSize) {
+    if(startBlockInFile + numberOfBlocks > m_totalFileSize) {
        return false;
     }
 
     // go to the requested position and write the block
-    lseek(m_fileDescriptor, storagePosition, SEEK_SET);
-    ssize_t ret = write(m_fileDescriptor, buffer + bufferOffset, bufferSize);
+    lseek(m_fileDescriptor, startBlockInFile, SEEK_SET);
+    ssize_t ret = write(m_fileDescriptor, m_buffer->data, numberOfBlocks);
 
     if(ret == -1)
     {

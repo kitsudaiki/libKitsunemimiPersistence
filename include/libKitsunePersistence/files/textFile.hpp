@@ -10,8 +10,8 @@ namespace Persistence
 
 std::pair<bool, std::string> readFile(const std::string &filePath);
 std::pair<bool, std::string> writeFile(const std::string &filePath,
-               const std::string &content,
-               const bool force);
+                                       const std::string &content,
+                                       const bool force);
 
 }
 }
