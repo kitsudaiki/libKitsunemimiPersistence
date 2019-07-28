@@ -20,7 +20,7 @@
 #include <unistd.h>
 #include <assert.h>
 
-#include <buffering/commonDataBuffer.h>
+#include <buffering/commonDataBuffer.hpp>
 
 namespace Kitsune
 {

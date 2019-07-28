@@ -8,8 +8,8 @@ namespace Kitsune
 namespace Persistence
 {
 
-std::string readFile(const std::string &filePath);
-bool writeFile(const std::string &filePath,
+std::pair<bool, std::string> readFile(const std::string &filePath);
+std::pair<bool, std::string> writeFile(const std::string &filePath,
                const std::string &content,
                const bool force);
 
