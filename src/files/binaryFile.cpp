@@ -177,21 +177,21 @@ BinaryFile::writeSegment(const uint64_t startBlockInFile,
                          const uint64_t startBlockInBuffer)
 {
     // precheck
-    if(numberOfBlocks != 0
+    if(numberOfBlocks == 0
             || startBlockInFile + numberOfBlocks > m_numberOfBlocks
-            || startBlockInBuffer + numberOfBlocks > m_buffer->numberOfBlocks
-            || checkMetaData() == false)
+            || startBlockInBuffer + numberOfBlocks > m_buffer->numberOfBlocks)
     {
         return false;
     }
 
     // go to the requested position and write the block
-    lseek(m_fileDescriptor,
-          static_cast<long>(startBlockInFile),
-          SEEK_SET);
+    long retSeek = lseek(m_fileDescriptor,
+                         static_cast<long>(startBlockInFile),
+                         SEEK_SET);
+    assert(retSeek >= 0);
     ssize_t ret = write(m_fileDescriptor,
                         static_cast<uint8_t*>(m_buffer->data) + startBlockInBuffer,
-                        numberOfBlocks);
+                        numberOfBlocks * m_blockSize);
 
     if(ret == -1)
     {
