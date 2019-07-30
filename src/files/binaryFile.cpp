@@ -19,8 +19,8 @@ namespace Persistence
  * @param filePath
  * @param buffer
  */
-StorageMemory::StorageMemory(const std::string filePath,
-                             Kitsune::CommonDataBuffer* buffer)
+BinaryFile::BinaryFile(const std::string filePath,
+                       CommonDataBuffer* buffer)
 {
     m_filePath = filePath;
     m_buffer = buffer;
@@ -30,7 +30,7 @@ StorageMemory::StorageMemory(const std::string filePath,
 /**
  * @brief StorageMemory::~StorageMemory
  */
-StorageMemory::~StorageMemory()
+BinaryFile::~BinaryFile()
 {
     closeFile();
 }
@@ -39,12 +39,14 @@ StorageMemory::~StorageMemory()
  * @brief create a new file or open an existing file
  */
 void
-StorageMemory::initFile()
+BinaryFile::initFile()
 {
-    m_fileDescriptor = open(m_filePath.c_str(), O_CREAT | O_DIRECT | O_RDWR | O_LARGEFILE, 0666);
+    m_fileDescriptor = open(m_filePath.c_str(),
+                            O_CREAT | O_DIRECT | O_RDWR | O_LARGEFILE,
+                            0666);
     // check if file is open
     assert(m_fileDescriptor != -1);
-    getFileSize();
+    updateFileSize();
 }
 
 /**
@@ -52,7 +54,7 @@ StorageMemory::initFile()
  * @return
  */
 bool
-StorageMemory::checkMetaData()
+BinaryFile::checkMetaData()
 {
     if(m_buffer->data == nullptr
             || m_fileDescriptor == -1)
@@ -63,12 +65,12 @@ StorageMemory::checkMetaData()
 }
 
 /**
- * @brief allocate new storage at the end of the file
+ * allocate new storage at the end of the file
  *
  * @return true is successful, else false
  */
 bool
-StorageMemory::allocateStorage(const uint64_t numberOfBlocks)
+BinaryFile::allocateStorage(const uint64_t numberOfBlocks)
 {
     // precheck
     if(numberOfBlocks == 0
@@ -80,8 +82,8 @@ StorageMemory::allocateStorage(const uint64_t numberOfBlocks)
     // set first to the start of the file and allocate the new size at the end of the file
     lseek(m_fileDescriptor, 0, SEEK_SET);
     long ret = posix_fallocate(m_fileDescriptor,
-                               m_totalFileSize,
-                               numberOfBlocks * m_blockSize);
+                               static_cast<long>(m_totalFileSize),
+                               static_cast<long>(numberOfBlocks * m_blockSize));
 
     // check if allocation was successful
     if(ret != 0)
@@ -92,29 +94,38 @@ StorageMemory::allocateStorage(const uint64_t numberOfBlocks)
 
     // got the the end of the file
     ret = lseek(m_fileDescriptor, 0, SEEK_END);
-    if(ret >= 0) {
-        m_totalFileSize = ret;
+    if(ret >= 0)
+    {
+        m_totalFileSize = static_cast<uint64_t>(ret);
+        m_numberOfBlocks += numberOfBlocks;
     }
 
     return true;
 }
 
 /**
- * @brief StorageMemory::getFileSize get the size of the file
+ * update size-information from the file
  *
- * @return size of the file
+ * @return false, if file not open, else true
  */
-uint64_t
-StorageMemory::getFileSize(const bool makeCheck)
+bool
+BinaryFile::updateFileSize()
 {
-    if(m_totalFileSize == 0
-            || makeCheck)
-    {
-        // check if filesize is really 0 or check is requested
-        m_totalFileSize = lseek(m_fileDescriptor, 0, SEEK_END);
-        lseek(m_fileDescriptor, 0, SEEK_SET);
+    if(m_fileDescriptor == -1) {
+        return false;
     }
-    return m_totalFileSize;
+
+    // check if filesize is really 0 or check is requested
+    long ret = lseek(m_fileDescriptor, 0, SEEK_END);
+    if(ret >= 0) {
+        m_totalFileSize = static_cast<uint64_t>(ret);
+    }
+
+    lseek(m_fileDescriptor,
+          0,
+          SEEK_SET);
+
+    return true;
 }
 
 /**
@@ -123,14 +134,13 @@ StorageMemory::getFileSize(const bool makeCheck)
  * @return true, if successful, else false
  */
 bool
-StorageMemory::readSegment(const uint64_t startBlockInFile,
-                           const uint64_t numberOfBlocks,
-                           const uint64_t startBlockInBuffer)
+BinaryFile::readSegment(const uint64_t startBlockInFile,
+                        const uint64_t numberOfBlocks,
+                        const uint64_t startBlockInBuffer)
 {
     // precheck
     if(numberOfBlocks != 0
-            || m_fileDescriptor == -1
-            || m_buffer->data == nullptr)
+            || checkMetaData() == false)
     {
         return false;
     }
@@ -141,8 +151,12 @@ StorageMemory::readSegment(const uint64_t startBlockInFile,
     }
 
     // go to the requested position and read the block
-    lseek(m_fileDescriptor, startBlockInFile, SEEK_SET);
-    ssize_t ret = read(m_fileDescriptor, m_buffer->data, numberOfBlocks);
+    lseek(m_fileDescriptor,
+          static_cast<long>(startBlockInFile),
+          SEEK_SET);
+    ssize_t ret = read(m_fileDescriptor,
+                       m_buffer->data,
+                       numberOfBlocks);
 
     if(ret == -1)
     {
@@ -153,30 +167,31 @@ StorageMemory::readSegment(const uint64_t startBlockInFile,
 }
 
 /**
- * @brief write a block of the file
+ * write a block of the file
  *
  * @return true, if successful, else false
  */
-bool StorageMemory::writeSegment(const uint64_t startBlockInFile,
-                                 const uint64_t numberOfBlocks,
-                                 const uint64_t startBlockInBuffer)
+bool
+BinaryFile::writeSegment(const uint64_t startBlockInFile,
+                         const uint64_t numberOfBlocks,
+                         const uint64_t startBlockInBuffer)
 {
     // precheck
     if(numberOfBlocks != 0
-            || m_fileDescriptor == -1
-            || m_buffer->data == nullptr)
+            || startBlockInFile + numberOfBlocks > m_numberOfBlocks
+            || startBlockInBuffer + numberOfBlocks > m_buffer->numberOfBlocks
+            || checkMetaData() == false)
     {
         return false;
     }
 
-    // check if requested block is in range of file
-    if(startBlockInFile + numberOfBlocks > m_totalFileSize) {
-       return false;
-    }
-
     // go to the requested position and write the block
-    lseek(m_fileDescriptor, startBlockInFile, SEEK_SET);
-    ssize_t ret = write(m_fileDescriptor, m_buffer->data, numberOfBlocks);
+    lseek(m_fileDescriptor,
+          static_cast<long>(startBlockInFile),
+          SEEK_SET);
+    ssize_t ret = write(m_fileDescriptor,
+                        static_cast<uint8_t*>(m_buffer->data) + startBlockInBuffer,
+                        numberOfBlocks);
 
     if(ret == -1)
     {
@@ -190,10 +205,12 @@ bool StorageMemory::writeSegment(const uint64_t startBlockInFile,
 }
 
 /**
- * @brief StorageMemory::closeFile close the cluser-file
+ * close the cluser-file
+ *
  * @return true, if file-descriptor is valid, else false
  */
-bool StorageMemory::closeFile()
+bool
+BinaryFile::closeFile()
 {
     // check file-deskriptor
     if(m_fileDescriptor > 0)
@@ -205,5 +222,5 @@ bool StorageMemory::closeFile()
     return false;
 }
 
-}
-}
+} // namespace Persistence
+} // namespace Kitsune

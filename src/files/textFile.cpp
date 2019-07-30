@@ -1,3 +1,12 @@
+/**
+ *  @file    textFile.cpp
+ *
+ *  @author  Tobias Anker
+ *  Contact: tobias.anker@kitsunemimi.moe
+ *
+ *  MIT License
+ */
+
 #include <files/textFile.hpp>
 
 #include <iostream>
@@ -6,6 +15,7 @@
 #include <fstream>
 #include <fstream>
 #include <boost/filesystem.hpp>
+#include <commonMethods/stringMethods.hpp>
 
 namespace fs=boost::filesystem;
 
@@ -15,9 +25,13 @@ namespace Persistence
 {
 
 /**
- * @brief readFile
- * @param filePath
- * @return
+ * read text from a text-file
+ *
+ * @param filePath path the to file
+ *
+ * @return pair of bool and string
+ *         success: first element is true and the second contains the content of the file
+ *         fail: first element is false and the second contains the error-message
  */
 std::pair<bool, std::string>
 readFile(const std::string &filePath)
@@ -62,8 +76,9 @@ readFile(const std::string &filePath)
  * @param content text which be wirtten into the file
  * @param force if true, it overwrites the file, if there already exist one
  *
- * @return pair of bool and string, where the first is true, if write was successful or false
- *         if write into file failed. If Failed the second entry contains the error-message
+ * @return pair of bool and string
+ *         success: first element is true and the second contains an empty string
+ *         fail: first element is false and the second contains the error-message
  */
 std::pair<bool, std::string>
 writeFile(const std::string &filePath,
@@ -112,5 +127,116 @@ writeFile(const std::string &filePath,
     return std::pair<bool, std::string>(true, "");
 }
 
+/**
+ * append text to a existing text-file
+ *
+ * @param filePath path the to file
+ * @param newText text which should be append to the file
+ *
+ * @return pair of bool and string
+ *         success: first element is true and the second contains an empty string
+ *         fail: first element is false and the second contains the error-message
+ */
+std::pair<bool, std::string>
+appendText(const std::string &filePath,
+           const std::string &newText)
+{
+    // read file
+    std::pair<bool, std::string> result = readFile(filePath);
+    if(result.first == false) {
+        return result;
+    }
+
+    // write file back the new content
+    result = writeFile(filePath, result.second + newText, true);
+
+    return result;
 }
+
+/**
+ * replace a specific line inside a text-file
+ *
+ * @param filePath path the to file
+ * @param lineNumber number of the line inside the file, which should be replaced (beginning with 0)
+ * @param newLineContent the new content string for the line, which should be replaced
+ *
+ * @return pair of bool and string
+ *         success: first element is true and the second contains an empty string
+ *         fail: first element is false and the second contains the error-message
+ */
+std::pair<bool, std::string>
+replaceLine(const std::string &filePath,
+            const uint32_t lineNumber,
+            const std::string newLineContent)
+{
+    // read file
+    std::pair<bool, std::string> result = readFile(filePath);
+    if(result.first == false) {
+        return result;
+    }
+
+    // split content into a vector of lines
+    std::vector<std::string> splitedContent = splitString(result.second, '\n');
+    if(splitedContent.size() <= lineNumber)
+    {
+        std::string errorMessage = "failed to replace line in file \""
+                                   + filePath +
+                                   "\", because linenumber is too big for the file";
+        return std::pair<bool, std::string>(false, errorMessage);
+    }
+
+    // build new file-content
+    splitedContent[lineNumber] = newLineContent;
+    std::string newFileContent = "";
+    for(uint64_t i = 0; i < splitedContent.size(); i++)
+    {
+        if(i != 0) {
+           newFileContent.append("\n");
+        }
+        newFileContent.append(splitedContent.at(i));
+    }
+
+    // write file back the new content
+    result = writeFile(filePath, newFileContent, true);
+
+    return result;
 }
+
+/**
+ * replace a substring inside the file with another string
+ *
+ * @param filePath path the to file
+ * @param oldContent substring which should be replaced
+ * @param newContent new string for the replacement
+ *
+ * @return pair of bool and string
+ *         success: first element is true and the second contains an empty string
+ *         fail: first element is false and the second contains the error-message
+ */
+std::pair<bool, std::string>
+replaceContent(const std::string &filePath,
+               const std::string oldContent,
+               const std::string newContent)
+{
+    // read file
+    std::pair<bool, std::string> result = readFile(filePath);
+    if(result.first == false) {
+        return result;
+    }
+
+    // replace content
+    std::string::size_type pos = 0u;
+    while((pos = result.second.find(oldContent, pos)) != std::string::npos)
+    {
+        result.second.replace(pos, oldContent.length(), newContent);
+        pos += newContent.length();
+    }
+
+    // write file back the new content
+    result = writeFile(filePath, result.second, true);
+
+    return result;
+}
+
+} // namespace Persistence
+} // namespace Kitsune

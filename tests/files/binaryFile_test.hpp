@@ -1,5 +1,5 @@
 /**
- *  @file    stringMethods_test.hpp
+ *  @file    binaryFile_test.hpp
  *
  *  @author  Tobias Anker
  *  Contact: tobias.anker@kitsunemimi.moe
@@ -7,24 +7,35 @@
  *  MIT License
  */
 
-#ifndef STRINGMETHODSTEST_HPP
-#define STRINGMETHODSTEST_HPP
+#ifndef BINARYFILE_TEST_HPP
+#define BINARYFILE_TEST_HPP
 
 #include <testing/commonTest.hpp>
 
 namespace Kitsune
 {
+namespace Persistence
+{
 
-class StringMethods_Test
+class BinaryFile_Test
         : public Kitsune::CommonTest
 {
 public:
-    StringMethods_Test();
+    BinaryFile_Test();
 
 private:
-    void splitString_test();
+    void initTest();
+    void closeFile_test();
+    void allocateStorage_test();
+    void writeSegment_test();
+    void readSegment_test();
+    void closeTest();
+
+    std::string m_filePath = "";
+    void deleteFile();
 };
 
+} // namespace Persistence
 } // namespace Kitsune
 
-#endif // STRINGMETHODSTEST_HPP
+#endif // BINARYFILE_TEST_HPP

@@ -1,4 +1,4 @@
-/**
+﻿/**
  *  @file    binaryFile.h
  *
  *  @author  Tobias Anker
@@ -30,15 +30,15 @@ namespace Kitsune
 namespace Persistence
 {
 
-class StorageMemory
+class BinaryFile
 {
 public:
-    StorageMemory(const std::string filePath,
-                  Kitsune::CommonDataBuffer* buffer);
-    ~StorageMemory();
+    BinaryFile(const std::string filePath,
+               CommonDataBuffer* buffer);
+    ~BinaryFile();
 
     bool allocateStorage(const uint64_t numberOfBlocks);
-    uint64_t getFileSize(const bool makeCheck = false);
+    bool updateFileSize();
 
     bool readSegment(const uint64_t startBlockInFile,
                      const uint64_t numberOfBlocks,
@@ -48,14 +48,16 @@ public:
                       const uint64_t startBlockInBuffer = 0);
     bool closeFile();
 
+    // public variables to avoid stupid getter
+    const uint16_t m_blockSize = 4096;
+    uint64_t m_numberOfBlocks = 0;
+    uint64_t m_totalFileSize = 0;
+
 private:
     std::string m_filePath = "";
     int m_fileDescriptor = -1;
 
-    uint16_t m_blockSize = 4096;
-    uint64_t m_numberOfBlocks = 0;
     uint64_t m_blockPositionInFile = 0;
-    uint64_t m_totalFileSize = 0;
 
     Kitsune::CommonDataBuffer* m_buffer = nullptr;
 
@@ -63,7 +65,7 @@ private:
     bool checkMetaData();
 };
 
-}
-}
+} // namespace Persistence
+} // namespace Kitsune
 
 #endif // BINARYFILE_HPP

@@ -7,8 +7,8 @@
  *  MIT License
  */
 
-#ifndef VECTORMETHODSTEST_HPP
-#define VECTORMETHODSTEST_HPP
+#ifndef TEXTFILE_TEST_HPP
+#define TEXTFILE_TEST_HPP
 
 #include <testing/commonTest.hpp>
 
@@ -24,15 +24,19 @@ public:
     TextFile_Test();
 
 private:
+    void initTest();
     void writeFile_test();
     void readFile_test();
+    void appendText_test();
+    void replaceLine_test();
+    void replaceContent_test();
+    void closeTest();
 
-    std::string m_filePath = "/tmp/textFile_test.txt";
-    std::string m_content = "this is a test\n"
-                            "and this is a second line";
+    std::string m_filePath = "";
+    std::string m_content = "";
 };
 
-}
+} // namespace Persistence
 } // namespace Kitsune
 
-#endif // VECTORMETHODSTEST_HPP
+#endif // TEXTFILE_TEST_HPP
