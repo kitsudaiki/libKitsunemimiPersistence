@@ -139,7 +139,9 @@ BinaryFile::readSegment(const uint64_t startBlockInFile,
                         const uint64_t startBlockInBuffer)
 {
     // precheck
-    if(numberOfBlocks != 0
+    if(numberOfBlocks == 0
+            || startBlockInFile + numberOfBlocks > m_numberOfBlocks
+            || startBlockInBuffer + numberOfBlocks > m_buffer->numberOfBlocks
             || checkMetaData() == false)
     {
         return false;
@@ -155,8 +157,8 @@ BinaryFile::readSegment(const uint64_t startBlockInFile,
           static_cast<long>(startBlockInFile),
           SEEK_SET);
     ssize_t ret = read(m_fileDescriptor,
-                       m_buffer->data,
-                       numberOfBlocks);
+                       static_cast<uint8_t*>(m_buffer->data) + startBlockInBuffer,
+                       numberOfBlocks * m_blockSize);
 
     if(ret == -1)
     {
@@ -179,7 +181,8 @@ BinaryFile::writeSegment(const uint64_t startBlockInFile,
     // precheck
     if(numberOfBlocks == 0
             || startBlockInFile + numberOfBlocks > m_numberOfBlocks
-            || startBlockInBuffer + numberOfBlocks > m_buffer->numberOfBlocks)
+            || startBlockInBuffer + numberOfBlocks > m_buffer->numberOfBlocks
+            || checkMetaData() == false)
     {
         return false;
     }

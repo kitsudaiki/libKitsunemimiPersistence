@@ -112,7 +112,30 @@ BinaryFile_Test::writeSegment_test()
 void
 BinaryFile_Test::readSegment_test()
 {
+    CommonDataBuffer buffer;
+    BinaryFile binaryFile(m_filePath, &buffer);
 
+    TestStruct testStruct;
+    testStruct.a = 42;
+    testStruct.c = 1337;
+
+    buffer.addData(&testStruct);
+
+    UNITTEST(binaryFile.allocateStorage(4), true);
+    UNITTEST(binaryFile.writeSegment(0, 1, 0), true);
+
+    memset(buffer.data, 0, buffer.totalBufferSize);
+
+    UNITTEST(binaryFile.readSegment(0, 1, 0), true);
+    TestStruct resultTestStruct;
+    mempcpy(&resultTestStruct, buffer.data, sizeof(TestStruct));
+
+    UNITTEST(resultTestStruct.a, 42);
+    UNITTEST(resultTestStruct.c, 1337);
+
+    UNITTEST(binaryFile.closeFile(), true);
+
+    deleteFile();
 }
 
 /**
