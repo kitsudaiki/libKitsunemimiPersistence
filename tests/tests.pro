@@ -18,9 +18,9 @@ LIBS += -L../src -lKitsunePersistence
 
 SOURCES += \
     main.cpp \
-    files/binaryFile_test.cpp \
-    files/textFile_test.cpp
+    libKitsunePersistence/files/binaryFile_test.cpp \
+    libKitsunePersistence/files/textFile_test.cpp
 
 HEADERS += \
-    files/binaryFile_test.hpp \
-    files/textFile_test.hpp
+    libKitsunePersistence/files/binaryFile_test.hpp \
+    libKitsunePersistence/files/textFile_test.hpp

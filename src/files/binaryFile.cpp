@@ -147,17 +147,12 @@ BinaryFile::readSegment(const uint64_t startBlockInFile,
         return false;
     }
 
-    // check if requested block is in range of file
-    if(startBlockInFile + numberOfBlocks > m_totalFileSize) {
-       return false;
-    }
-
     // go to the requested position and read the block
     lseek(m_fileDescriptor,
-          static_cast<long>(startBlockInFile),
+          static_cast<long>(startBlockInFile * m_blockSize),
           SEEK_SET);
     ssize_t ret = read(m_fileDescriptor,
-                       static_cast<uint8_t*>(m_buffer->data) + startBlockInBuffer,
+                       static_cast<uint8_t*>(m_buffer->data) + (startBlockInBuffer * m_blockSize),
                        numberOfBlocks * m_blockSize);
 
     if(ret == -1)
@@ -189,11 +184,13 @@ BinaryFile::writeSegment(const uint64_t startBlockInFile,
 
     // go to the requested position and write the block
     long retSeek = lseek(m_fileDescriptor,
-                         static_cast<long>(startBlockInFile),
+                         static_cast<long>(startBlockInFile * m_blockSize),
                          SEEK_SET);
     assert(retSeek >= 0);
+
+    // write data to file
     ssize_t ret = write(m_fileDescriptor,
-                        static_cast<uint8_t*>(m_buffer->data) + startBlockInBuffer,
+                        static_cast<uint8_t*>(m_buffer->data) + (startBlockInBuffer * m_blockSize),
                         numberOfBlocks * m_blockSize);
 
     if(ret == -1)
@@ -201,6 +198,7 @@ BinaryFile::writeSegment(const uint64_t startBlockInFile,
         // TODO: process errno
         return false;
     }
+
     // sync file
     fdatasync(m_fileDescriptor);
 

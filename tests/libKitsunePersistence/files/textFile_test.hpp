@@ -33,7 +33,7 @@ private:
     void closeTest();
 
     std::string m_filePath = "";
-    std::string m_content = "";
+    void deleteFile();
 };
 
 } // namespace Persistence
