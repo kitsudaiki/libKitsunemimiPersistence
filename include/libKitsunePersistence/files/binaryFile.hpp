@@ -1,5 +1,5 @@
 ﻿/**
- *  @file    binaryFile.h
+ *  @file    binaryFile.hpp
  *
  *  @author  Tobias Anker
  *  Contact: tobias.anker@kitsunemimi.moe

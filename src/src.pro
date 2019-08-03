@@ -3,6 +3,7 @@ QT       -= qt core gui
 TARGET = KitsunePersistence
 TEMPLATE = lib
 CONFIG += c++14
+VERSION = 0.1.0
 
 LIBS += -L../../libKitsuneCommon/src -lKitsuneCommon
 LIBS += -L../../libKitsuneCommon/src/debug -lKitsuneCommon
@@ -16,12 +17,9 @@ INCLUDEPATH += $$PWD \
 
 SOURCES += \
         files/textFile.cpp \
-    files/binaryFile.cpp
+        files/binaryFile.cpp
 
 HEADERS += \
         ../include/libKitsunePersistence/files/textFile.hpp \
-    ../include/libKitsunePersistence/files/binaryFile.hpp
-unix {
-    target.path = /usr/lib
-    INSTALLS += target
-}
+        ../include/libKitsunePersistence/files/binaryFile.hpp
+
