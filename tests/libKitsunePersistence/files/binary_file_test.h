@@ -1,5 +1,5 @@
 /**
- *  @file    binaryFile_test.hpp
+ *  @file    binary_file_test.h
  *
  *  @author  Tobias Anker
  *  Contact: tobias.anker@kitsunemimi.moe
@@ -7,10 +7,10 @@
  *  MIT License
  */
 
-#ifndef BINARYFILE_TEST_HPP
-#define BINARYFILE_TEST_HPP
+#ifndef BINARY_FILE_TEST_H
+#define BINARY_FILE_TEST_H
 
-#include <testing/commonTest.hpp>
+#include <testing/test.h>
 
 namespace Kitsune
 {
@@ -18,7 +18,7 @@ namespace Persistence
 {
 
 class BinaryFile_Test
-        : public Kitsune::CommonTest
+        : public Kitsune::Common::Test
 {
 public:
     BinaryFile_Test();
@@ -38,4 +38,4 @@ private:
 } // namespace Persistence
 } // namespace Kitsune
 
-#endif // BINARYFILE_TEST_HPP
+#endif // BINARY_FILE_TEST_H

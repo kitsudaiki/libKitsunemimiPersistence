@@ -1,5 +1,5 @@
 /**
- *  @file    binaryFile_test.cpp
+ *  @file    binary_file_test.cpp
  *
  *  @author  Tobias Anker
  *  Contact: tobias.anker@kitsunemimi.moe
@@ -7,10 +7,10 @@
  *  MIT License
  */
 
-#include "binaryFile_test.hpp"
+#include "binary_file_test.h"
 
 #include <boost/filesystem.hpp>
-#include <files/binaryFile.hpp>
+#include <files/binary_file.h>
 
 namespace fs=boost::filesystem;
 
@@ -27,7 +27,7 @@ struct TestStruct
 } __attribute__((packed));
 
 BinaryFile_Test::BinaryFile_Test()
-    : Kitsune::CommonTest("BinaryFile_Test")
+    : Kitsune::Common::Test("BinaryFile_Test")
 {
     initTest();
     closeFile_test();
@@ -54,7 +54,7 @@ void
 BinaryFile_Test::closeFile_test()
 {
     // init buffer and file
-    CommonDataBuffer buffer;
+    Common::DataBuffer buffer;
     BinaryFile binaryFile(m_filePath, &buffer);
 
     // test close
@@ -71,7 +71,7 @@ void
 BinaryFile_Test::allocateStorage_test()
 {
     // init buffer and file
-    CommonDataBuffer buffer;
+    Common::DataBuffer buffer;
     BinaryFile binaryFile(m_filePath, &buffer);
 
     // test allocation
@@ -98,7 +98,7 @@ void
 BinaryFile_Test::writeSegment_test()
 {
     // init buffer and file
-    CommonDataBuffer buffer(5);
+    Common::DataBuffer buffer(5);
     BinaryFile binaryFile(m_filePath, &buffer);
     binaryFile.allocateStorage(4);
 
@@ -132,7 +132,7 @@ void
 BinaryFile_Test::readSegment_test()
 {
     // init buffer and file
-    CommonDataBuffer buffer(5);
+    Common::DataBuffer buffer(5);
     BinaryFile binaryFile(m_filePath, &buffer);
     binaryFile.allocateStorage(4);
 

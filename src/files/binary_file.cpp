@@ -7,7 +7,9 @@
  *  MIT License
  */
 
-#include <files/binaryFile.hpp>
+#include <files/binary_file.h>
+
+using Kitsune::Common::DataBuffer;
 
 namespace Kitsune
 {
@@ -20,7 +22,7 @@ namespace Persistence
  * @param buffer
  */
 BinaryFile::BinaryFile(const std::string filePath,
-                       CommonDataBuffer* buffer)
+                       DataBuffer* buffer)
 {
     m_filePath = filePath;
     m_buffer = buffer;
@@ -28,7 +30,7 @@ BinaryFile::BinaryFile(const std::string filePath,
 }
 
 /**
- * @brief StorageMemory::~StorageMemory
+ * @brief destructor
  */
 BinaryFile::~BinaryFile()
 {

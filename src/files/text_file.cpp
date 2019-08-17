@@ -1,5 +1,5 @@
 /**
- *  @file    textFile.cpp
+ *  @file    text_file.cpp
  *
  *  @author  Tobias Anker
  *  Contact: tobias.anker@kitsunemimi.moe
@@ -7,7 +7,7 @@
  *  MIT License
  */
 
-#include <files/textFile.hpp>
+#include <files/text_file.h>
 
 #include <iostream>
 #include <sstream>
@@ -15,7 +15,7 @@
 #include <fstream>
 #include <fstream>
 #include <boost/filesystem.hpp>
-#include <commonMethods/stringMethods.hpp>
+#include <commonMethods/string_methods.h>
 
 namespace fs=boost::filesystem;
 
@@ -176,7 +176,7 @@ replaceLine(const std::string &filePath,
     }
 
     // split content into a vector of lines
-    std::vector<std::string> splitedContent = splitString(result.second, '\n');
+    std::vector<std::string> splitedContent = Common::splitString(result.second, '\n');
     if(splitedContent.size() <= lineNumber)
     {
         std::string errorMessage = "failed to replace line in file \""

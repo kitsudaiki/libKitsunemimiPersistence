@@ -8,7 +8,7 @@ build:
 
     - mkdir /builds/build
 
-    - git clone --branch 0.1.0 git@gitlab.com:kitsune_libs/LibKitsuneCommon.git /builds/kitsune_libs/libKitsuneCommon
+    - git clone --branch 0.3.0 git@gitlab.com:kitsune_libs/LibKitsuneCommon.git /builds/kitsune_libs/libKitsuneCommon
 
     - cd /builds/build
     - mkdir libKitsuneCommon
