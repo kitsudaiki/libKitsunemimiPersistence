@@ -8,8 +8,8 @@
  */
 
 #include <iostream>
-#include <libKitsunePersistence/files/textFile_test.hpp>
-#include <libKitsunePersistence/files/binaryFile_test.hpp>
+#include <libKitsunePersistence/files/text_file_test.h>
+#include <libKitsunePersistence/files/binary_file_test.h>
 
 int main()
 {

@@ -1,5 +1,5 @@
 /**
- *  @file    textFile_test.cpp
+ *  @file    text_file_test.cpp
  *
  *  @author  Tobias Anker
  *  Contact: tobias.anker@kitsunemimi.moe
@@ -7,10 +7,10 @@
  *  MIT License
  */
 
-#include "textFile_test.hpp"
+#include "text_file_test.h"
 
 #include <boost/filesystem.hpp>
-#include <files/textFile.hpp>
+#include <files/text_file.h>
 
 namespace fs=boost::filesystem;
 
@@ -20,7 +20,7 @@ namespace Persistence
 {
 
 TextFile_Test::TextFile_Test()
-    : Kitsune::CommonTest("TextFile_Test")
+    : Kitsune::Common::Test("TextFile_Test")
 {
     initTest();
     writeFile_test();

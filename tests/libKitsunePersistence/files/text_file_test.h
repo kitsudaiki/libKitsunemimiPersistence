@@ -1,5 +1,5 @@
 /**
- *  @file    textFile_test.hpp
+ *  @file    text_file_test.h
  *
  *  @author  Tobias Anker
  *  Contact: tobias.anker@kitsunemimi.moe
@@ -7,10 +7,10 @@
  *  MIT License
  */
 
-#ifndef TEXTFILE_TEST_HPP
-#define TEXTFILE_TEST_HPP
+#ifndef TEXT_FILE_TEST_H
+#define TEXT_FILE_TEST_H
 
-#include <testing/commonTest.hpp>
+#include <testing/test.h>
 
 namespace Kitsune
 {
@@ -18,7 +18,7 @@ namespace Persistence
 {
 
 class TextFile_Test
-        : public Kitsune::CommonTest
+        : public Kitsune::Common::Test
 {
 public:
     TextFile_Test();
@@ -39,4 +39,4 @@ private:
 } // namespace Persistence
 } // namespace Kitsune
 
-#endif // TEXTFILE_TEST_HPP
+#endif // TEXT_FILE_TEST_H

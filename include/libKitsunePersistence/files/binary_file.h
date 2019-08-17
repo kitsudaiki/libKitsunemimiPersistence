@@ -1,5 +1,5 @@
 ﻿/**
- *  @file    binaryFile.hpp
+ *  @file    binary_file.h
  *
  *  @author  Tobias Anker
  *  Contact: tobias.anker@kitsunemimi.moe
@@ -7,8 +7,8 @@
  *  MIT License
  */
 
-#ifndef BINARYFILE_HPP
-#define BINARYFILE_HPP
+#ifndef BINARYFILE_H
+#define BINARYFILE_H
 
 #include <deque>
 #include <sstream>
@@ -21,7 +21,7 @@
 #include <assert.h>
 #include <boost/filesystem.hpp>
 
-#include <buffering/commonDataBuffer.hpp>
+#include <buffering/data_buffer.h>
 
 namespace fs=boost::filesystem;
 
@@ -34,7 +34,7 @@ class BinaryFile
 {
 public:
     BinaryFile(const std::string filePath,
-               CommonDataBuffer* buffer);
+               Common::DataBuffer* buffer);
     ~BinaryFile();
 
     bool allocateStorage(const uint64_t numberOfBlocks);
@@ -59,7 +59,7 @@ private:
 
     uint64_t m_blockPositionInFile = 0;
 
-    Kitsune::CommonDataBuffer* m_buffer = nullptr;
+    Common::DataBuffer* m_buffer = nullptr;
 
     void initFile();
     bool checkMetaData();
@@ -68,4 +68,4 @@ private:
 } // namespace Persistence
 } // namespace Kitsune
 
-#endif // BINARYFILE_HPP
+#endif // BINARYFILE_H

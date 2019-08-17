@@ -1,5 +1,5 @@
 /**
- *  @file    textFile.hpp
+ *  @file    text_file.h
  *
  *  @author  Tobias Anker
  *  Contact: tobias.anker@kitsunemimi.moe
@@ -7,8 +7,8 @@
  *  MIT License
  */
 
-#ifndef TEXTFILE_HPP
-#define TEXTFILE_HPP
+#ifndef TEXTFILE_H
+#define TEXTFILE_H
 
 #include <iostream>
 
@@ -42,4 +42,4 @@ replaceContent(const std::string &filePath,
 } // namespace Persistence
 } // namespace Kitsune
 
-#endif // TEXTFILE_HPP
+#endif // TEXTFILE_H

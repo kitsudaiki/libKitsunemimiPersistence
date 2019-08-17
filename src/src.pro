@@ -16,10 +16,10 @@ INCLUDEPATH += $$PWD \
             ../include/libKitsunePersistence
 
 SOURCES += \
-        files/textFile.cpp \
-        files/binaryFile.cpp
+    files/binary_file.cpp \
+    files/text_file.cpp
 
 HEADERS += \
-        ../include/libKitsunePersistence/files/textFile.hpp \
-        ../include/libKitsunePersistence/files/binaryFile.hpp
+    ../include/libKitsunePersistence/files/binary_file.h \
+    ../include/libKitsunePersistence/files/text_file.h
 
