@@ -19,7 +19,7 @@ build:
     - cd /builds/build
     - mkdir libKitsunePersistence
     - cd libKitsunePersistence
-    - /usr/lib/x86_64-linux-gnu/qt5/bin/qmake /builds/kitsune_libs/libKitsunePersistence/libKitsunePersistence.pro -spec linux-g++ 
+    - /usr/lib/x86_64-linux-gnu/qt5/bin/qmake /builds/tobiasanker/libKitsunePersistence/libKitsunePersistence.pro -spec linux-g++ 
     - /usr/bin/make
 
     - cd tests
