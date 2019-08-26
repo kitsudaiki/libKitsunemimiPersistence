@@ -1,10 +1,13 @@
 /**
  *  @file    text_file.cpp
  *
- *  @author  Tobias Anker
- *  Contact: tobias.anker@kitsunemimi.moe
+ *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
- *  MIT License
+ *  @copyright MIT License
+ *
+ *  @brief data-items for universal data-structures
+ *
+ *  @detail different methods for simple text-file-operations
  */
 
 #include <files/text_file.h>
