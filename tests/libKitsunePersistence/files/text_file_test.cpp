@@ -20,7 +20,7 @@ namespace Persistence
 {
 
 TextFile_Test::TextFile_Test()
-    : Kitsune::Common::Test("TextFile_Test")
+    : Kitsune::Common::UnitTest("TextFile_Test")
 {
     initTest();
     writeFile_test();

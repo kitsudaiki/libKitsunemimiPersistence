@@ -15,7 +15,7 @@
 #include <fstream>
 #include <fstream>
 #include <boost/filesystem.hpp>
-#include <commonMethods/string_methods.h>
+#include <common_methods/string_methods.h>
 
 namespace fs=boost::filesystem;
 
