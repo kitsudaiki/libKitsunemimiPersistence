@@ -1,4 +1,4 @@
-/**
+﻿/**
  *  @file    binary_file_test.cpp
  *
  *  @author  Tobias Anker
@@ -27,7 +27,7 @@ struct TestStruct
 } __attribute__((packed));
 
 BinaryFile_Test::BinaryFile_Test()
-    : Kitsune::Common::Test("BinaryFile_Test")
+    : Kitsune::Common::UnitTest("BinaryFile_Test")
 {
     initTest();
     closeFile_test();
