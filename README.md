@@ -93,7 +93,7 @@ HINT: While writing the build-steps below, I figured out, that it would be more 
 
 4. build libKitsuneCommon-lib
 
-`/usr/lib/x86_64-linux-gnu/qt5/bin/qmake /builds/tobiasanker/libKitsuneCommon/libKitsuneCommon.pro`
+`/usr/lib/x86_64-linux-gnu/qt5/bin/qmake <PATH_TO_SOURCE_DIR>/libKitsuneCommon/libKitsuneCommon.pro`
 
 `/usr/bin/make`
 
