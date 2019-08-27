@@ -1,6 +1,16 @@
 # Changelog
 
 
+## [0.2.1] - 2019-08-27
+
+### Added
+- user-documentation
+
+### Changed
+- update for using libKitsuneCommon 0.4.x
+- update comments in files
+
+
 ## [0.2.0] - 2019-08-17
 
 ### Changed
