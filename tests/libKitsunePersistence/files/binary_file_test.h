@@ -1,10 +1,9 @@
 /**
  *  @file    binary_file_test.h
  *
- *  @author  Tobias Anker
- *  Contact: tobias.anker@kitsunemimi.moe
+ *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
- *  MIT License
+ *  @copyright MIT License
  */
 
 #ifndef BINARY_FILE_TEST_H

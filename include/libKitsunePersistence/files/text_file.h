@@ -1,14 +1,17 @@
 /**
  *  @file    text_file.h
  *
- *  @author  Tobias Anker
- *  Contact: tobias.anker@kitsunemimi.moe
+ *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
- *  MIT License
+ *  @copyright MIT License
+ *
+ *  @brief data-items for universal data-structures
+ *
+ *  @detail different methods for simple text-file-operations
  */
 
-#ifndef TEXTFILE_H
-#define TEXTFILE_H
+#ifndef TEXT_FILE_H
+#define TEXT_FILE_H
 
 #include <iostream>
 
@@ -42,4 +45,4 @@ replaceContent(const std::string &filePath,
 } // namespace Persistence
 } // namespace Kitsune
 
-#endif // TEXTFILE_H
+#endif // TEXT_FILE_H
