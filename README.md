@@ -43,9 +43,15 @@ I write my projects with the Qt-creator, but without Qt itself.
 
 #### Official repositories
 
-- g++
-- qt5-qmake
-- libboost-filesystem-dev
+paket | version
+--- | ---
+g++ | 6.3.0
+qt5-qmake | 5.7.1
+libboost-filesystem-dev | 1.62
+
+This are the version I have installed under Debian Stable via apt. Some older or newer version should work as well. I write my projects with the Qt-creator, but without Qt itself. Thats why qmake is required to build my projects.
+
+IMPORTANT: All my projects are only tested on Linux. 
 
 #### Kitsune-repositories
 
@@ -53,51 +59,57 @@ Repository-Name | Version-Tag | Download-Path
 --- | --- | ---
 libKitsuneCommon | 0.4.x |  https://github.com/tobiasanker/libKitsuneCommon.git
 
-Required directory hirarchie:
-
-```
-├── (build-directory)
-│   ├── libKitsuneCommon
-│   └── libKitsunePersistence
-│
-└── (source-file-directory)
-    ├── libKitsuneCommon
-    └── libKitsunePersistence
-```
-
-Directories with the source file have to be in the same directory and the same goes for the build directories.
 
 ### build library
 
-IMPORTANT: qmake normally requires the Qt-framework, but it can also work alone when using `/usr/lib/x86_64-linux-gnu/qt5/bin/qmake` instead of `qmake` (tested on ubuntu).
+In all of my repositories you will find a `build.sh`. You only have to run this script. It doesn't required sudo, because you have to install required tool via apt, for example, by yourself. But if other projects from me are required, it download them from github and build them in the correct version too. This script is also use by the ci-pipeline, so its tested with every commit.
 
-#### build all
+Before running the build-script:
 
-HINT: While writing the build-steps below, I figured out, that it would be more helpful, to add a short bash-script. This will be done with the next update of the readme.
+```bash
+.
+└── libKitsunePersistence
+    ├── build.sh
+    └── ...
+```
 
-1. create a source- and build-directory
+After running the build-script:
 
-`mkdir <PATH_TO_BUILD_DIR>`
+```bash
+.
+├── build
+│   ├── libKitsuneCommon
+│   │   └── ...
+│   └── libKitsunePersistence
+│       └── ...
+│
+├── libKitsuneCommon
+│   └── ...
+├── libKitsunePersistence
+│   ├── build.sh
+│   └── ...
+│
+└── result
+    ├── include
+    │   ├── libKitsuneCommon
+    │   │   └── ...
+    │   └── libKitsunePersistence
+    │       └── ...
+    │
+    ├── libKitsuneCommon.so -> libKitsuneCommon.so.0.4.0
+    ├── libKitsuneCommon.so.0 -> libKitsuneCommon.so.0.4.0
+    ├── libKitsuneCommon.so.0.4 -> libKitsuneCommon.so.0.4.0
+    ├── libKitsuneCommon.so.0.4.0
+    │
+    ├── libKitsunePersistence.so -> libKitsunePersistence.so.0.2.0
+    ├── libKitsunePersistence.so.0 -> libKitsunePersistence.so.0.2.0
+    ├── libKitsunePersistence.so.0.2 -> libKitsunePersistence.so.0.2.0
+    └── libKitsunePersistence.so.0.2.0
+```
 
-`mkdir <PATH_TO_SOURCE_DIR>`
+It create automatic a `build` and `result` directory in the directory, where you have cloned the project. At first it build all into the `build`-directory and after all build-steps are finished, it copy the include directory from the cloned repository and the build library into the `result`-directory. So you have all in one single place.
 
-2. download libKitsuneCommon into 
-
-`git clone --branch <TAG_OF_REQUIREMENTS> https://github.com/tobiasanker/libKitsuneCommon.git <PATH_TO_SOURCE_DIR>/libKitsuneCommon`
-
-3. create build-directory for libKitsuneCommon
-
-`mkdir <PATH_TO_BUILD_DIR>/libKitsuneCommon`
-
-`cd <PATH_TO_BUILD_DIR>/libKitsuneCommon`
-
-4. build libKitsuneCommon-lib
-
-`/usr/lib/x86_64-linux-gnu/qt5/bin/qmake <PATH_TO_SOURCE_DIR>/libKitsuneCommon/libKitsuneCommon.pro`
-
-`/usr/bin/make`
-
-5. redo step 2 - 4 while replacing all `libKitsuneCommon` by `libKitsunePersistence` and replacing `<TAG_OF_REQUIREMENTS>` with the current version of this library.
+Tested on Debian and Ubuntu. If you use Centos, Arch, etc and the build-script fails on your machine, then please write me a mail and I will try to fix the script.
 
 
 ## Usage
