@@ -6,26 +6,11 @@ build:
 
     - apt-get install -y libboost-filesystem-dev
 
-    - mkdir /builds/build
+    - cd /builds/tobiasanker/libKitsunePersistence
+    - ./build.sh
 
-    - git clone --branch 0.4.1 git@gitlab.com:tobiasanker/libKitsuneCommon.git /builds/tobiasanker/libKitsuneCommon
-
-    - cd /builds/build
-    - mkdir libKitsuneCommon
-    - cd libKitsuneCommon
-    - /usr/lib/x86_64-linux-gnu/qt5/bin/qmake /builds/tobiasanker/libKitsuneCommon/libKitsuneCommon.pro -spec linux-g++
-    - /usr/bin/make
-
-    - cd /builds/build
-    - mkdir libKitsunePersistence
-    - cd libKitsunePersistence
-    - /usr/lib/x86_64-linux-gnu/qt5/bin/qmake /builds/tobiasanker/libKitsunePersistence/libKitsunePersistence.pro -spec linux-g++ 
-    - /usr/bin/make
-
-    - cd tests
-    - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:'/builds/build/libKitsuneCommon/src'
-    - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:'/builds/build/libKitsunePersistence/src'
-    - ./tests
+    - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:'/builds/tobiasanker/result'
+    - /builds/tobiasanker/build/libKitsunePersistence/tests/tests
 
   tags:
     - docker
