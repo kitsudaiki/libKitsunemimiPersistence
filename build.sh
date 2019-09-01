@@ -15,7 +15,7 @@ mkdir -p $RESULT_DIR
 #-----------------------------------------------------------------------------------------------------------------
 
 # clone libKitsuneCommon
-git clone --branch 0.4.1 git@gitlab.com:tobiasanker/libKitsuneCommon.git "$PARENT_DIR/libKitsuneCommon"
+git clone --branch 0.5.0 git@gitlab.com:tobiasanker/libKitsuneCommon.git "$PARENT_DIR/libKitsuneCommon"
 
 # create build directory for libKitsuneCommon and go into this directory
 LIB_KITSUNE_COMMON_DIR="$BUILD_DIR/libKitsuneCommon"
@@ -27,7 +27,7 @@ cd $LIB_KITSUNE_COMMON_DIR
 /usr/bin/make -j4
 
 # copy build-result and include-files into the result-directory
-cp "$LIB_KITSUNE_COMMON_DIR/src/libKitsuneCommon.so.0.4.0" "$RESULT_DIR/"
+cp "$LIB_KITSUNE_COMMON_DIR/src/libKitsuneCommon.so.0.5.0" "$RESULT_DIR/"
 cp -r "$PARENT_DIR/libKitsuneCommon/include" "$RESULT_DIR/"
 
 #-----------------------------------------------------------------------------------------------------------------
@@ -49,9 +49,9 @@ cp -r "$PARENT_DIR/libKitsunePersistence/include" "$RESULT_DIR/"
 
 # recreate symlinks
 cd "$RESULT_DIR/"
-ln -s libKitsuneCommon.so.0.4.0 libKitsuneCommon.so.0.4
-ln -s libKitsuneCommon.so.0.4.0 libKitsuneCommon.so.0
-ln -s libKitsuneCommon.so.0.4.0 libKitsuneCommon.so
+ln -s libKitsuneCommon.so.0.5.0 libKitsuneCommon.so.0.5
+ln -s libKitsuneCommon.so.0.5.0 libKitsuneCommon.so.0
+ln -s libKitsuneCommon.so.0.5.0 libKitsuneCommon.so
 
 ln -s libKitsunePersistence.so.0.2.0 libKitsunePersistence.so.0.2
 ln -s libKitsunePersistence.so.0.2.0 libKitsunePersistence.so.0
