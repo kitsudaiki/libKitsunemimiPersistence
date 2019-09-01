@@ -2,7 +2,7 @@
 
 ## Description
 
-This library contains all my functions for interactions with the storage. At the moment its the smalest of my projects and only contains functionality to read, modify and write binaray- and text- files.
+This library contains all my functions for interactions with the storage. At the moment its the smalest of my projects and only contains functionality to read, modify and write binaray- and text- files and handle an sqlite3-database.
 
 ### About my kitsune libraries
 
@@ -18,7 +18,7 @@ I don't really like it to write much comments into header-files. More exactly I 
 
 ## Content Overview
 
-At the moment there are only binaray- and text-files implemented. 
+Following functionality is supported at the moment:
 
 ### binary-files
 
@@ -34,6 +34,9 @@ Following actions on test-files are supported now:
 - replace a line within an existing text-file identified by a line number
 - repace content within an existing text-file identified by matching the old content
 
+### sqlite-database
+
+Simple handling class to connect to a sqlite database and send sql-commands to the database. The results are converted into table-items of libKitsuneCommon for better handling of the results of the database and to easily print the results on commandline.
 
 ## Build
 
@@ -97,10 +100,10 @@ After running the build-script:
     │   └── libKitsunePersistence
     │       └── ...
     │
-    ├── libKitsuneCommon.so -> libKitsuneCommon.so.0.4.0
-    ├── libKitsuneCommon.so.0 -> libKitsuneCommon.so.0.4.0
-    ├── libKitsuneCommon.so.0.4 -> libKitsuneCommon.so.0.4.0
-    ├── libKitsuneCommon.so.0.4.0
+    ├── libKitsuneCommon.so -> libKitsuneCommon.so.0.5.0
+    ├── libKitsuneCommon.so.0 -> libKitsuneCommon.so.0.5.0
+    ├── libKitsuneCommon.so.0.5 -> libKitsuneCommon.so.0.5.0
+    ├── libKitsuneCommon.so.0.5.0
     │
     ├── libKitsunePersistence.so -> libKitsunePersistence.so.0.2.0
     ├── libKitsunePersistence.so.0 -> libKitsunePersistence.so.0.2.0
@@ -205,6 +208,42 @@ ret = readFile(filePath);
 // "and a third line";
 
 ```
+
+### text-files
+
+**Header-file:** `database/sqlite.h`
+
+This is a simple sqlite database handler to run sql-queries against the database and get the result in form of a table-item for easier result-handling and printing. See the following example:
+
+
+```cpp
+#include <database/sqlite.h>
+#include <common_items/table_item.h>
+
+std::pair<bool, std::string> result;
+
+// create and init database
+Sqlite testDB;
+result = testDB.initDB("/tmp/testdb.db");
+// first of the result is, if it was successful or not
+// second of the result is the error-message, if failed
+
+std::string sql = <Any SQL-query>
+
+// run sql-qurey
+Kitsune::Common::TableItem resultItem;
+result = testDB.execSqlCommand(&resultItem, sql);
+// first of the result is, if it was successful or not
+// second of the result is the error-message, if failed
+
+// If successful, the resultItem contains the result of the sql-query. 
+// It can easily converted into a string with `toString()`
+
+
+testDB.close();
+
+```
+
 
 ## Contributing
 
