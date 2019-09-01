@@ -4,7 +4,7 @@ build:
   script:
     - echo Working on branch $CI_COMMIT_REF_NAME
 
-    - apt-get install -y libboost-filesystem-dev
+    - apt-get install -y libboost-filesystem-dev libsqlite3-dev
 
     - cd /builds/tobiasanker/libKitsunePersistence
     - ./build.sh

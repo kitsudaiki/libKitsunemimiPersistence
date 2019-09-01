@@ -48,6 +48,7 @@ paket | version
 g++ | 6.3.0
 qt5-qmake | 5.7.1
 libboost-filesystem-dev | 1.62
+libsqlite3-dev | 3.16.2
 
 This are the version I have installed under Debian Stable via apt. Some older or newer version should work as well. I write my projects with the Qt-creator, but without Qt itself. Thats why qmake is required to build my projects.
 
