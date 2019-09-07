@@ -61,15 +61,13 @@ public:
     bool closeFile();
 
     // public variables to avoid stupid getter
-    const uint16_t m_blockSize = 4096;
+    uint16_t m_blockSize = 4096;
     uint64_t m_numberOfBlocks = 0;
     uint64_t m_totalFileSize = 0;
 
 private:
     std::string m_filePath = "";
     int m_fileDescriptor = -1;
-
-    uint64_t m_blockPositionInFile = 0;
 
     Common::DataBuffer* m_buffer = nullptr;
 

@@ -38,6 +38,8 @@ BinaryFile::BinaryFile(const std::string filePath,
 {
     m_filePath = filePath;
     m_buffer = buffer;
+    m_blockSize = buffer->blockSize;
+
     initFile();
 }
 
@@ -131,8 +133,10 @@ BinaryFile::updateFileSize()
 
     // check if filesize is really 0 or check is requested
     long ret = lseek(m_fileDescriptor, 0, SEEK_END);
-    if(ret >= 0) {
+    if(ret >= 0)
+    {
         m_totalFileSize = static_cast<uint64_t>(ret);
+        m_numberOfBlocks = m_totalFileSize / m_blockSize;
     }
 
     lseek(m_fileDescriptor,

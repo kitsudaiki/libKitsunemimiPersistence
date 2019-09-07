@@ -18,10 +18,12 @@ INCLUDEPATH += $$PWD \
 SOURCES += \
     files/binary_file.cpp \
     files/text_file.cpp \
-    database/sqlite.cpp
+    database/sqlite.cpp \
+    logger/logger.cpp
 
 HEADERS += \
     ../include/libKitsunePersistence/files/binary_file.h \
     ../include/libKitsunePersistence/files/text_file.h \
-    ../include/libKitsunePersistence/database/sqlite.h
+    ../include/libKitsunePersistence/database/sqlite.h \
+    ../include/libKitsunePersistence/logger/logger.h
 

@@ -2,7 +2,7 @@
 
 ## Description
 
-This library contains all my functions for interactions with the storage. At the moment its the smalest of my projects and only contains functionality to read, modify and write binaray- and text- files and handle an sqlite3-database.
+This library contains all my functions for interactions with the storage. At the moment its the smalest of my projects and only contains functionality to read, modify and write binaray- and text- files, handle an sqlite3-database and write log-files.
 
 ### About my kitsune libraries
 
@@ -37,6 +37,10 @@ Following actions on test-files are supported now:
 ### sqlite-database
 
 Simple handling class to connect to a sqlite database and send sql-commands to the database. The results are converted into table-items of libKitsuneCommon for better handling of the results of the database and to easily print the results on commandline.
+
+### log-writer
+
+Its a simple logger to wirte messages with timestamps to a log-file. It use internally the binary-files-class, because its faster.
 
 ## Build
 
@@ -209,7 +213,7 @@ ret = readFile(filePath);
 
 ```
 
-### text-files
+### sqlite-database
 
 **Header-file:** `database/sqlite.h`
 
@@ -244,6 +248,38 @@ testDB.close();
 
 ```
 
+### log-writer
+
+**Header-file:** `logger/logger.h`
+
+Its a simple class to write log-messages together with a timestamp one after another to a log-file. It use internally the binary-files-class, because its faster.
+
+```cpp
+#include <logger/logger.h>
+
+std::pair<bool, std::string> result;
+
+Logger testLogger("/tmp", "testlog");
+// write the log-file "/tmp/testlog.log"
+
+testLogger.error("error-message");
+testLogger.warning("warning-message");
+testLogger.debug("debug-message");
+testLogger.info("info-message");
+
+/**
+The log-file would look like this:
+
+2019-9-7 22:54:1 ERROR: error-message     
+2019-9-7 22:54:1 WARNING: warning-message 
+2019-9-7 22:54:1 DEBUG: debug-message     
+2019-9-7 22:54:1 INFO: info-message  
+*/
+
+testLogger.closeLogFile();
+// not necessary, when the destructor of the logger is triggered
+
+```
 
 ## Contributing
 
