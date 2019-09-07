@@ -69,8 +69,6 @@ private:
     std::string m_filePath = "";
     int m_fileDescriptor = -1;
 
-    uint64_t m_blockPositionInFile = 0;
-
     Common::DataBuffer* m_buffer = nullptr;
 
     void initFile();
