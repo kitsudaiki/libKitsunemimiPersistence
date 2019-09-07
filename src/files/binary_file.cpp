@@ -38,6 +38,8 @@ BinaryFile::BinaryFile(const std::string filePath,
 {
     m_filePath = filePath;
     m_buffer = buffer;
+    m_blockSize = buffer->blockSize;
+
     initFile();
 }
 
