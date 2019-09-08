@@ -12,6 +12,9 @@
 #define LOGGER_H
 
 #include <iostream>
+#include <sstream>
+#include <string>
+#include <fstream>
 #include <ctime>
 #include <atomic>
 
@@ -39,16 +42,12 @@ public:
     std::string m_filePath = "";
 
 private:
-    Common::DataBuffer* m_buffer = nullptr;
-    BinaryFile* m_binaryFile = nullptr;
     std::atomic_flag m_lock = ATOMIC_FLAG_INIT;
-
-    uint64_t m_filePosition = 0;
+    std::ofstream m_outputFile;
     bool m_closed = false;
 
     bool logData(const std::string message);
 
-    void resetBuffer(const uint64_t numberOfBlocks);
     const std::string getDatetime();
 };
 

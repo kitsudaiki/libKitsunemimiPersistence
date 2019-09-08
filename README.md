@@ -40,7 +40,7 @@ Simple handling class to connect to a sqlite database and send sql-commands to t
 
 ### log-writer
 
-Its a simple logger to wirte messages with timestamps to a log-file. It use internally the binary-files-class, because its faster.
+Its a simple logger to wirte messages with timestamps to a log-file. 
 
 ## Build
 
@@ -252,7 +252,7 @@ testDB.close();
 
 **Header-file:** `logger/logger.h`
 
-Its a simple class to write log-messages together with a timestamp one after another to a log-file. It use internally the binary-files-class, because its faster.
+Its a simple class to write log-messages together with a timestamp one after another to a log-file. 
 
 ```cpp
 #include <logger/logger.h>
