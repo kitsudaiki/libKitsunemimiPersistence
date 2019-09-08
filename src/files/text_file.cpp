@@ -142,25 +142,20 @@ appendText(const std::string &filePath,
 {
     fs::path rootPathObj(filePath);
 
-    // check if exist
-    if(fs::exists(rootPathObj))
+    // check for directory
+    if(fs::exists(rootPathObj)
+            && fs::is_regular_file(rootPathObj) == false)
     {
-        // check for directory
-        if(fs::is_directory(rootPathObj))
-        {
-            std::string errorMessage = "failed to read destination of path \""
-                                       + filePath +
-                                       "\", because it already exist and it is a directory, "
-                                       "but must be a file or not existing";
-            return std::pair<bool, std::string>(false, errorMessage);
-        }
+        std::string errorMessage = "Failed to append text to file \""
+                                   + filePath +
+                                   "\", because it is not a regular file.";
+        return std::pair<bool, std::string>(false, errorMessage);
     }
 
+    // open, write and close file again
     std::ofstream outputFile;
     outputFile.open(filePath, std::ios_base::app);
-
     outputFile << newText;
-
     outputFile.flush();
     outputFile.close();
 
