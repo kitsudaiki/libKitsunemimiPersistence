@@ -12,11 +12,6 @@
 
 #include <files/text_file.h>
 
-#include <iostream>
-#include <sstream>
-#include <string>
-#include <fstream>
-#include <fstream>
 #include <boost/filesystem.hpp>
 #include <common_methods/string_methods.h>
 
