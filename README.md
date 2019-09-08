@@ -259,13 +259,21 @@ Its a simple class to write log-messages together with a timestamp one after ano
 
 std::pair<bool, std::string> result;
 
-Logger testLogger("/tmp", "testlog");
 // write the log-file "/tmp/testlog.log"
+Logger testLogger("/tmp", "testlog", false, false);
+// first argument: directory-path
+// second argument: base file name
+// third argument: true to enable debug-output. if false only output of info, warning and error
+// fourth argument: true to write log-output without timestamp additional to commandline
 
-testLogger.error("error-message");
-testLogger.warning("warning-message");
+std::pair<bool, std::string> ret = testLogger.initLogger();
+// first of the result is, if it was successful or not
+// second of the result is the error-message, if failed
+
 testLogger.debug("debug-message");
 testLogger.info("info-message");
+testLogger.warning("warning-message");
+testLogger.error("error-message");
 
 /**
 The log-file would look like this:
