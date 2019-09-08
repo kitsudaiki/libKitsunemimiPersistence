@@ -12,13 +12,7 @@ These are some functions to map the data-buffer of libKitsuneCommon to the stora
 
 #### text-files
 
-Following actions on test-files are supported now:
-
-- read text files
-- write text files
-- append new text to an existing text-file
-- replace a line within an existing text-file identified by a line number
-- repace content within an existing text-file identified by matching the old content
+Methods to read text files, write text files, append new text to an existing text-file, replace a line within an existing text-file identified by a line number and repace content within an existing text-file identified by matching the old content.
 
 #### sqlite-database
 
