@@ -4,6 +4,30 @@
 
 This library contains all my functions for interactions with the storage. At the moment its the smalest of my projects and only contains functionality to read, modify and write binaray- and text- files, handle an sqlite3-database and write log-files.
 
+### Content Overview
+
+#### binary-files
+
+These are some functions to map the data-buffer of libKitsuneCommon to the storage to persist the data of the buffer and restore them. The functions use direct read- and write-oberations to make things faster, but this requires more custom control.
+
+#### text-files
+
+Following actions on test-files are supported now:
+
+- read text files
+- write text files
+- append new text to an existing text-file
+- replace a line within an existing text-file identified by a line number
+- repace content within an existing text-file identified by matching the old content
+
+#### sqlite-database
+
+Simple handling class to connect to a sqlite database and send sql-commands to the database. The results are converted into table-items of libKitsuneCommon for better handling of the results of the database and to easily print the results on commandline.
+
+#### log-writer
+
+Its a simple logger to wirte messages with timestamps to a log-file. 
+
 ### About my kitsune libraries
 
 My first libraries hab really common names like libCommon and so on, but I thought this could be hard to find my code between other libraries, when my projects will become bigger. So I decided to make a common name over all my libraries, similar to the boost-libraries, for a better handling. I decided to use `Kitsune` as name for my projects, because Kitsunemimi are moe. ;)
@@ -15,32 +39,6 @@ At the moment there are over 10 Kitsune-libraries an multiple tools in my privat
 All my projects are mirrored to gitlab, where I have still my gitlab-ci runner. 
 
 I don't really like it to write much comments into header-files. More exactly I absolutly hate it, when I have to search the provided functions of a header between a massive amount of comments. Header-files are for me primary to have an overview, of all provided functions, which I have see as fast as possible. Comments of functions, parameters and return-values in my code are only written into the source-file. So when something is unclear for a specific method, than look into the source-file. If the comment there are not helpful for you, then please write me a mail or an issue to fix this. 
-
-## Content Overview
-
-Following functionality is supported at the moment:
-
-### binary-files
-
-These are some functions to map the data-buffer of libKitsuneCommon to the storage to persist the data of the buffer and restore them. The functions use direct read- and write-oberations to make things faster, but this requires more custom control.
-
-### text-files
-
-Following actions on test-files are supported now:
-
-- read text files
-- write text files
-- append new text to an existing text-file
-- replace a line within an existing text-file identified by a line number
-- repace content within an existing text-file identified by matching the old content
-
-### sqlite-database
-
-Simple handling class to connect to a sqlite database and send sql-commands to the database. The results are converted into table-items of libKitsuneCommon for better handling of the results of the database and to easily print the results on commandline.
-
-### log-writer
-
-Its a simple logger to wirte messages with timestamps to a log-file. 
 
 ## Build
 
@@ -65,7 +63,7 @@ IMPORTANT: All my projects are only tested on Linux.
 
 Repository-Name | Version-Tag | Download-Path
 --- | --- | ---
-libKitsuneCommon | 0.5.x |  https://github.com/tobiasanker/libKitsuneCommon.git
+libKitsuneCommon | 0.5.1 |  https://github.com/tobiasanker/libKitsuneCommon.git
 
 
 ### build library
@@ -104,15 +102,15 @@ After running the build-script:
     │   └── libKitsunePersistence
     │       └── ...
     │
-    ├── libKitsuneCommon.so -> libKitsuneCommon.so.0.5.0
-    ├── libKitsuneCommon.so.0 -> libKitsuneCommon.so.0.5.0
-    ├── libKitsuneCommon.so.0.5 -> libKitsuneCommon.so.0.5.0
-    ├── libKitsuneCommon.so.0.5.0
+    ├── libKitsuneCommon.so -> libKitsuneCommon.so.0.5.1
+    ├── libKitsuneCommon.so.0 -> libKitsuneCommon.so.0.5.1
+    ├── libKitsuneCommon.so.0.5 -> libKitsuneCommon.so.0.5.1
+    ├── libKitsuneCommon.so.0.5.1
     │
-    ├── libKitsunePersistence.so -> libKitsunePersistence.so.0.2.0
-    ├── libKitsunePersistence.so.0 -> libKitsunePersistence.so.0.2.0
-    ├── libKitsunePersistence.so.0.2 -> libKitsunePersistence.so.0.2.0
-    └── libKitsunePersistence.so.0.2.0
+    ├── libKitsunePersistence.so -> libKitsunePersistence.so.0.3.0
+    ├── libKitsunePersistence.so.0 -> libKitsunePersistence.so.0.3.0
+    ├── libKitsunePersistence.so.0.3 -> libKitsunePersistence.so.0.3.0
+    └── libKitsunePersistence.so.0.3.0
 ```
 
 It create automatic a `build` and `result` directory in the directory, where you have cloned the project. At first it build all into the `build`-directory and after all build-steps are finished, it copy the include directory from the cloned repository and the build library into the `result`-directory. So you have all in one single place.
