@@ -28,8 +28,17 @@ Logger_Test::Logger_Test()
 void
 Logger_Test::logger_test()
 {
-    Logger testLogger("/tmp", "testlog");
+    Logger testLogger("/tmp", "testlog", true);
 
+    // init logger
+    std::pair<bool, std::string> ret = testLogger.initLogger();
+    UNITTEST(ret.first, true);
+
+    // negative-test to try reinit the logger
+    ret = testLogger.initLogger();
+    UNITTEST(ret.first, false);
+
+    // write test-data
     UNITTEST(testLogger.error("error1"), true);
     UNITTEST(testLogger.error("error2"), true);
     UNITTEST(testLogger.error("error3"), true);

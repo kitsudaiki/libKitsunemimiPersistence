@@ -14,6 +14,9 @@
 #define TEXT_FILE_H
 
 #include <iostream>
+#include <sstream>
+#include <string>
+#include <fstream>
 
 namespace Kitsune
 {

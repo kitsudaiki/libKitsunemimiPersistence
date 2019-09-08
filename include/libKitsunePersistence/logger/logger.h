@@ -16,7 +16,7 @@
 #include <string>
 #include <fstream>
 #include <ctime>
-#include <atomic>
+#include <mutex>
 
 #include <files/binary_file.h>
 
@@ -29,22 +29,31 @@ class Logger
 {
 public:
     Logger(const std::string directoryPath,
-           const std::string baseFileName);
+           const std::string baseFileName,
+           const bool debugLog=false,
+           const bool logOnConsole=false);
     ~Logger();
 
+    std::pair<bool, std::string> initLogger();
     void closeLogFile();
 
-    bool info(const std::string message);
     bool debug(const std::string message);
+    bool info(const std::string message);
     bool warning(const std::string message);
     bool error(const std::string message);
 
     std::string m_filePath = "";
 
 private:
-    std::atomic_flag m_lock = ATOMIC_FLAG_INIT;
+    bool m_debugLog = false;
+    bool m_logOnConsole = false;
+    std::string m_directoryPath = "";
+    std::string m_baseFileName = "";
+
+    std::mutex m_lock;
     std::ofstream m_outputFile;
-    bool m_closed = false;
+
+    bool m_active = false;
 
     bool logData(const std::string message);
 

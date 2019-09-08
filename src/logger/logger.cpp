@@ -19,12 +19,16 @@ namespace Persistence
  * @brief constructor
  */
 Logger::Logger(const std::string directoryPath,
-               const std::string baseFileName)
+               const std::string baseFileName,
+               const bool debugLog,
+               const bool logOnConsole)
 {
-    m_filePath= directoryPath + "/" + baseFileName + ".log";
-    // TODO: check if directory exist
+    m_debugLog = debugLog;
+    m_logOnConsole = logOnConsole;
+    m_directoryPath = directoryPath;
+    m_baseFileName = baseFileName;
 
-    m_outputFile.open(m_filePath, std::ios_base::app);
+
 }
 
 /**
@@ -36,18 +40,83 @@ Logger::~Logger()
 }
 
 /**
+ * @brief init logger
+ *
+ * @return pair of bool and string
+ *         success: first element is true and the second contains an empty string
+ *         fail: first element is false and the second contains the error-message
+ */
+std::pair<bool, std::string>
+Logger::initLogger()
+{
+    std::pair<bool, std::string> result;
+
+    // check if already init
+    if(m_active)
+    {
+        std::string errorMessage = "logger is already initialized.";
+        return std::pair<bool, std::string>(false, errorMessage);
+    }
+
+    fs::path rootPathObj(m_directoryPath);
+
+    // check if exist
+    if(fs::exists(rootPathObj) == false)
+    {
+        std::string errorMessage = "failed to initialize logger"
+                                   ", because the path \""
+                                   + m_directoryPath
+                                   + "\" does not exist.";
+        return std::pair<bool, std::string>(false, errorMessage);
+    }
+
+    // check for directory
+    if(fs::is_directory(rootPathObj) == false)
+    {
+        std::string errorMessage = "failed to initialize logger"
+                                   ", because the path \""
+                                   + m_directoryPath
+                                   + "\" is not an directory.";
+        return std::pair<bool, std::string>(false, errorMessage);
+    }
+
+    m_lock.lock();
+
+    // create new logger-file
+    m_filePath = m_directoryPath + "/" + m_baseFileName + ".log";
+    m_outputFile.open(m_filePath, std::ios_base::app);
+    m_active = true;
+
+    m_lock.unlock();
+
+    return std::pair<bool, std::string>(true, "");
+}
+
+/**
  * @brief Logger::closeLogFile
  */
 void
 Logger::closeLogFile()
 {
-    while (m_lock.test_and_set(std::memory_order_acquire))
-         ; // spin
+    m_lock.lock();
 
-    m_closed = true;
+    m_active = false;
     m_outputFile.close();
 
-    m_lock.clear(std::memory_order_release);
+    m_lock.unlock();
+}
+
+/**
+ * @brief write debug-message to logfile
+ */
+bool
+Logger::debug(const std::string message)
+{
+    if(m_debugLog == false) {
+        return false;
+    }
+
+    return logData("DEBUG: " + message);
 }
 
 /**
@@ -57,15 +126,6 @@ bool
 Logger::info(const std::string message)
 {
     return logData("INFO: " + message);
-}
-
-/**
- * @brief write debug-message to logfile
- */
-bool
-Logger::debug(const std::string message)
-{
-    return logData("DEBUG: " + message);
 }
 
 /**
@@ -92,19 +152,26 @@ Logger::error(const std::string message)
 bool
 Logger::logData(const std::string message)
 {
-    while (m_lock.test_and_set(std::memory_order_acquire))
-         ; // spin
+    m_lock.lock();
 
-
-    if(m_closed) {
+    // check if log already closed
+    if(m_active == false)
+    {
+        m_lock.unlock();
         return false;
     }
 
+    // write to terminal
+    if(m_logOnConsole) {
+        std::cout<<message<<std::endl;
+    }
+
+    // build and write new line
     const std::string line(getDatetime() + " " + message + "\n");
     m_outputFile << line;
     m_outputFile.flush();
 
-    m_lock.clear(std::memory_order_release);
+    m_lock.unlock();
 
     return true;
 }
