@@ -24,26 +24,7 @@ Logger::Logger(const std::string directoryPath,
     m_filePath= directoryPath + "/" + baseFileName + ".log";
     // TODO: check if directory exist
 
-
-    // init buffer
-    m_buffer = new Common::DataBuffer(100, 512);
-    resetBuffer(100);
-
-    // init binary-file
-    m_binaryFile = new Persistence::BinaryFile(m_filePath, m_buffer);
-    m_binaryFile->updateFileSize();
-    m_filePosition = m_binaryFile->m_numberOfBlocks;
-    m_binaryFile->allocateStorage(10);
-
-    // when opend an already existing log-file, then write a linebreak to be sure
-    if(m_filePosition != 0)
-    {
-        // add a line-break a the end of the last block
-        uint8_t* castedData = static_cast<uint8_t*>(m_buffer->data);
-        castedData[511] = '\n';
-        m_binaryFile->writeSegment(m_filePosition, 1);
-        m_filePosition++;
-    }
+    m_outputFile.open(m_filePath, std::ios_base::app);
 }
 
 /**
@@ -63,12 +44,8 @@ Logger::closeLogFile()
     while (m_lock.test_and_set(std::memory_order_acquire))
          ; // spin
 
-    if(m_closed == false)
-    {
-        m_closed = true;
-        delete m_binaryFile;
-        delete m_buffer;
-    }
+    m_closed = true;
+    m_outputFile.close();
 
     m_lock.clear(std::memory_order_release);
 }
@@ -118,45 +95,18 @@ Logger::logData(const std::string message)
     while (m_lock.test_and_set(std::memory_order_acquire))
          ; // spin
 
+
     if(m_closed) {
         return false;
     }
 
-    // build new line
-    const std::string line(getDatetime() + " " + message);
-
-    // reinit buffer and write new line to buffer
-    const uint64_t numberOfBlocks = static_cast<uint16_t>(line.size() / 512) + 1;
-    resetBuffer(numberOfBlocks);
-    memcpy(m_buffer->data, line.c_str(), line.size());
-
-    // add a line-break a the end of the last block
-    uint8_t* castedData = static_cast<uint8_t*>(m_buffer->data);
-    castedData[(numberOfBlocks * 512) - 1] = '\n';
-
-    // resize file, if necessary and as big as necessary
-    while(m_filePosition + numberOfBlocks > m_binaryFile->m_numberOfBlocks) {
-        m_binaryFile->allocateStorage(10);
-    }
-
-    // write data to file
-    const bool ret = m_binaryFile->writeSegment(m_filePosition, numberOfBlocks);
-    m_filePosition += numberOfBlocks;
+    const std::string line(getDatetime() + " " + message + "\n");
+    m_outputFile << line;
+    m_outputFile.flush();
 
     m_lock.clear(std::memory_order_release);
 
-    return ret;
-}
-
-/**
- * @brief overwrite a number of block of the data-buffer with whitespaces
- *
- * @param numberOfBlocks number of block to overwrite
- */
-void
-Logger::resetBuffer(const uint64_t numberOfBlocks)
-{
-    memset(m_buffer->data, ' ', numberOfBlocks*512);
+    return true;
 }
 
 /**
