@@ -125,6 +125,7 @@ writeFile(const std::string &filePath,
     std::ofstream outputFile;
     outputFile.open(filePath);
     outputFile << content;
+    outputFile.flush();
     outputFile.close();
 
     return std::pair<bool, std::string>(true, "");
@@ -144,16 +145,31 @@ std::pair<bool, std::string>
 appendText(const std::string &filePath,
            const std::string &newText)
 {
-    // read file
-    std::pair<bool, std::string> result = readFile(filePath);
-    if(result.first == false) {
-        return result;
+    fs::path rootPathObj(filePath);
+
+    // check if exist
+    if(fs::exists(rootPathObj))
+    {
+        // check for directory
+        if(fs::is_directory(rootPathObj))
+        {
+            std::string errorMessage = "failed to read destination of path \""
+                                       + filePath +
+                                       "\", because it already exist and it is a directory, "
+                                       "but must be a file or not existing";
+            return std::pair<bool, std::string>(false, errorMessage);
+        }
     }
 
-    // write file back the new content
-    result = writeFile(filePath, result.second + newText, true);
+    std::ofstream outputFile;
+    outputFile.open(filePath, std::ios_base::app);
 
-    return result;
+    outputFile << newText;
+
+    outputFile.flush();
+    outputFile.close();
+
+    return std::pair<bool, std::string>(true, "");
 }
 
 /**
