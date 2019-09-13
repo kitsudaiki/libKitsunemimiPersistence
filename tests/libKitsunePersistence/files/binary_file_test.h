@@ -25,6 +25,7 @@ public:
 private:
     void initTest();
     void closeFile_test();
+    void updateFileSize_test();
     void allocateStorage_test();
     void writeSegment_test();
     void readSegment_test();

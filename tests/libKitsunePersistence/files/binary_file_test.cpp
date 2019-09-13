@@ -64,6 +64,26 @@ BinaryFile_Test::closeFile_test()
 }
 
 /**
+ * @brief BinaryFile_Test::updateFileSize_test
+ */
+void
+BinaryFile_Test::updateFileSize_test()
+{
+    // init buffer and file
+    Common::DataBuffer buffer(5);
+    BinaryFile binaryFile(m_filePath, &buffer);
+    binaryFile.allocateStorage(4);
+    binaryFile.closeFile();
+
+    BinaryFile binaryFileNew(m_filePath, &buffer);
+    UNITTEST(binaryFileNew.updateFileSize(), true);
+    UNITTEST(binaryFileNew.m_numberOfBlocks, 4);
+
+    uint64_t totalReadSize = binaryFileNew.m_numberOfBlocks * binaryFileNew.m_blockSize;
+    UNITTEST(binaryFileNew.m_totalFileSize, totalReadSize);
+}
+
+/**
  * allocateStorage_test
  */
 void
