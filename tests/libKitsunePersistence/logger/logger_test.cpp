@@ -28,34 +28,32 @@ Logger_Test::Logger_Test()
 void
 Logger_Test::logger_test()
 {
-    Logger testLogger("/tmp", "testlog", true);
-
     // init logger
-    std::pair<bool, std::string> ret = testLogger.initLogger();
+    std::pair<bool, std::string> ret = initLogger("/tmp", "testlog", true);
     UNITTEST(ret.first, true);
 
     // negative-test to try reinit the logger
-    ret = testLogger.initLogger();
+    ret = initLogger("/tmp", "testlog", true);
     UNITTEST(ret.first, false);
 
     // write test-data
-    UNITTEST(testLogger.error("error1"), true);
-    UNITTEST(testLogger.error("error2"), true);
-    UNITTEST(testLogger.error("error3"), true);
+    UNITTEST(LOG_error("error1"), true);
+    UNITTEST(LOG_error("error2"), true);
+    UNITTEST(LOG_error("error3"), true);
 
-    UNITTEST(testLogger.warning("warning1"), true);
-    UNITTEST(testLogger.warning("warning2"), true);
-    UNITTEST(testLogger.warning("warning3"), true);
+    UNITTEST(LOG_warning("warning1"), true);
+    UNITTEST(LOG_warning("warning2"), true);
+    UNITTEST(LOG_warning("warning3"), true);
 
-    UNITTEST(testLogger.debug("debug1"), true);
-    UNITTEST(testLogger.debug("debug2"), true);
-    UNITTEST(testLogger.debug("debug3"), true);
+    UNITTEST(LOG_debug("debug1"), true);
+    UNITTEST(LOG_debug("debug2"), true);
+    UNITTEST(LOG_debug("debug3"), true);
 
-    UNITTEST(testLogger.info("info1"), true);
-    UNITTEST(testLogger.info("info2"), true);
-    UNITTEST(testLogger.info("info3"), true);
+    UNITTEST(LOG_info("info1"), true);
+    UNITTEST(LOG_info("info2"), true);
+    UNITTEST(LOG_info("info3"), true);
 
-    const std::string logContent = readFile(testLogger.m_filePath).second;
+    const std::string logContent = readFile(Logger::m_logger->m_filePath).second;
     std::size_t found;
 
     // error
@@ -89,8 +87,8 @@ Logger_Test::logger_test()
     found = logContent.find("poi");
     UNITTEST(found, std::string::npos);
 
-    testLogger.closeLogFile();
-    deleteFile(testLogger.m_filePath);
+    deleteFile(Logger::m_logger->m_filePath);
+    closeLogFile();
 }
 
 /**

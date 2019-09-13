@@ -25,6 +25,20 @@ namespace Kitsune
 namespace Persistence
 {
 
+std::pair<bool, std::string> initLogger(const std::string directoryPath,
+                                        const std::string baseFileName,
+                                        const bool debugLog=false,
+                                        const bool logOnConsole=false);
+
+bool LOG_debug(const std::string message);
+bool LOG_info(const std::string message);
+bool LOG_warning(const std::string message);
+bool LOG_error(const std::string message);
+
+bool closeLogFile();
+
+//==================================================================================================
+
 class Logger
 {
 public:
@@ -37,15 +51,14 @@ public:
     std::pair<bool, std::string> initLogger();
     void closeLogFile();
 
-    bool debug(const std::string message);
-    bool info(const std::string message);
-    bool warning(const std::string message);
-    bool error(const std::string message);
+    bool logData(const std::string message);
 
     std::string m_filePath = "";
+    bool m_debugLog = false;
+
+    static Kitsune::Persistence::Logger* m_logger;
 
 private:
-    bool m_debugLog = false;
     bool m_logOnConsole = false;
     std::string m_directoryPath = "";
     std::string m_baseFileName = "";
@@ -54,8 +67,6 @@ private:
     std::ofstream m_outputFile;
 
     bool m_active = false;
-
-    bool logData(const std::string message);
 
     const std::string getDatetime();
 };
