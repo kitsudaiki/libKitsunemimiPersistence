@@ -15,6 +15,108 @@ namespace Kitsune
 namespace Persistence
 {
 
+Kitsune::Persistence::Logger* Logger::m_logger = nullptr;
+
+/**
+ * @brief initLogger
+ * @param directoryPath
+ * @param baseFileName
+ * @param debugLog
+ * @param logOnConsole
+ * @return
+ */
+std::pair<bool, std::string>
+initLogger(const std::string directoryPath,
+           const std::string baseFileName,
+           const bool debugLog,
+           const bool logOnConsole)
+{
+    if(Logger::m_logger != nullptr)
+    {
+        std::string errorMessage = "logger is already initialized.";
+        return std::pair<bool, std::string>(false, errorMessage);
+    }
+
+    Logger::m_logger = new Kitsune::Persistence::Logger(directoryPath,
+                                                        baseFileName,
+                                                        debugLog,
+                                                        logOnConsole);
+
+    return Logger::m_logger->initLogger();
+}
+
+/**
+ * @brief write debug-message to logfile
+ */
+bool
+LOG_debug(const std::string message)
+{
+    if(Logger::m_logger == nullptr) {
+        return false;
+    }
+
+    if(Logger::m_logger->m_debugLog == false) {
+        return false;
+    }
+
+    return Logger::m_logger->logData("DEBUG: " + message);
+}
+
+/**
+ * @brief write info-message to logfile
+ */
+bool
+LOG_info(const std::string message)
+{
+    if(Logger::m_logger == nullptr) {
+        return false;
+    }
+
+    return Logger::m_logger->logData("INFO: " + message);
+}
+
+/**
+ * @brief write warnign-message to logfile
+ */
+bool
+LOG_warning(const std::string message)
+{
+    if(Logger::m_logger == nullptr) {
+        return false;
+    }
+
+    return Logger::m_logger->logData("WARNING: " + message);
+}
+
+/**
+ * @brief write error-message to logfile
+ */
+bool
+LOG_error(const std::string message)
+{
+    if(Logger::m_logger == nullptr) {
+        return false;
+    }
+
+    return Logger::m_logger->logData("ERROR: " + message);
+}
+
+bool
+closeLogFile()
+{
+    if(Logger::m_logger == nullptr) {
+        return false;
+    }
+
+    Logger::m_logger->closeLogFile();
+    delete Logger::m_logger;
+    Logger::m_logger = nullptr;
+
+    return true;
+}
+
+//==================================================================================================
+
 /**
  * @brief constructor
  */
@@ -27,8 +129,6 @@ Logger::Logger(const std::string directoryPath,
     m_logOnConsole = logOnConsole;
     m_directoryPath = directoryPath;
     m_baseFileName = baseFileName;
-
-
 }
 
 /**
@@ -104,46 +204,6 @@ Logger::closeLogFile()
     m_outputFile.close();
 
     m_lock.unlock();
-}
-
-/**
- * @brief write debug-message to logfile
- */
-bool
-Logger::debug(const std::string message)
-{
-    if(m_debugLog == false) {
-        return false;
-    }
-
-    return logData("DEBUG: " + message);
-}
-
-/**
- * @brief write info-message to logfile
- */
-bool
-Logger::info(const std::string message)
-{
-    return logData("INFO: " + message);
-}
-
-/**
- * @brief write warnign-message to logfile
- */
-bool
-Logger::warning(const std::string message)
-{
-    return logData("WARNING: " + message);
-}
-
-/**
- * @brief write error-message to logfile
- */
-bool
-Logger::error(const std::string message)
-{
-    return logData("ERROR: " + message);
 }
 
 /**
