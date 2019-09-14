@@ -141,7 +141,8 @@ BinaryFile::readSegment(Common::DataBuffer* buffer,
     const uint16_t blockSize = buffer->blockSize;
 
     // precheck
-    if(numberOfBlocks == 0
+    if(buffer == nullptr
+            || numberOfBlocks == 0
             || startBlockInFile + numberOfBlocks > m_totalFileSize / blockSize
             || startBlockInBuffer + numberOfBlocks > buffer->numberOfBlocks
             || m_fileDescriptor < 0)
@@ -171,7 +172,7 @@ BinaryFile::readSegment(Common::DataBuffer* buffer,
  * @return true, if successful, else false
  */
 bool
-BinaryFile::writeSegment(Common::DataBuffer *buffer,
+BinaryFile::writeSegment(Common::DataBuffer* buffer,
                          const uint64_t startBlockInFile,
                          const uint64_t numberOfBlocks,
                          const uint64_t startBlockInBuffer)
@@ -179,7 +180,8 @@ BinaryFile::writeSegment(Common::DataBuffer *buffer,
     const uint16_t blockSize = buffer->blockSize;
 
     // precheck
-    if(numberOfBlocks == 0
+    if(buffer == nullptr
+            || numberOfBlocks == 0
             || startBlockInFile + numberOfBlocks > m_totalFileSize / blockSize
             || startBlockInBuffer + numberOfBlocks > buffer->numberOfBlocks
             || m_fileDescriptor < 0)

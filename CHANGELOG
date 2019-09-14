@@ -2,8 +2,12 @@
 
 [Unreleased]
 
+
+## [0.4.0] - 2019-09-14
+
 ### Changed
-- update logger for eaiser handling
+- update logger-interface for eaiser handling
+- unbind data-buffer from the binary-files
 
 
 ## [0.3.0] - 2019-09-08
