@@ -44,7 +44,7 @@ cd $LIB_KITSUNE_PERSISTENCE_DIR
 /usr/bin/make -j4
 
 # copy build-result and include-files into the result-directory
-cp "$LIB_KITSUNE_PERSISTENCE_DIR/src/libKitsunePersistence.so.0.3.0" "$RESULT_DIR/"
+cp "$LIB_KITSUNE_PERSISTENCE_DIR/src/libKitsunePersistence.so.0.4.0" "$RESULT_DIR/"
 cp -r "$PARENT_DIR/libKitsunePersistence/include" "$RESULT_DIR/"
 
 #-----------------------------------------------------------------------------------------------------------------
@@ -55,6 +55,6 @@ ln -s libKitsuneCommon.so.0.5.1 libKitsuneCommon.so.0.5
 ln -s libKitsuneCommon.so.0.5.1 libKitsuneCommon.so.0
 ln -s libKitsuneCommon.so.0.5.1 libKitsuneCommon.so
 
-ln -s libKitsunePersistence.so.0.3.0 libKitsunePersistence.so.0.3
-ln -s libKitsunePersistence.so.0.3.0 libKitsunePersistence.so.0
-ln -s libKitsunePersistence.so.0.3.0 libKitsunePersistence.so
+ln -s libKitsunePersistence.so.0.4.0 libKitsunePersistence.so.0.4
+ln -s libKitsunePersistence.so.0.4.0 libKitsunePersistence.so.0
+ln -s libKitsunePersistence.so.0.4.0 libKitsunePersistence.so
