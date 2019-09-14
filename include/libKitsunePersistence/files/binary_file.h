@@ -45,34 +45,31 @@ namespace Persistence
 class BinaryFile
 {
 public:
-    BinaryFile(const std::string filePath,
-               Common::DataBuffer* buffer);
+    BinaryFile(const std::string filePath);
     ~BinaryFile();
 
-    bool allocateStorage(const uint64_t numberOfBlocks);
+    bool allocateStorage(const uint64_t numberOfBlocks,
+                         const uint32_t blockSize = 4096);
     bool updateFileSize();
 
-    bool readSegment(const uint64_t startBlockInFile,
+    bool readSegment(Common::DataBuffer *buffer,
+                     const uint64_t startBlockInFile,
                      const uint64_t numberOfBlocks,
                      const uint64_t startBlockInBuffer = 0);
-    bool writeSegment(const uint64_t startBlockInFile,
+    bool writeSegment(Common::DataBuffer* buffer,
+                      const uint64_t startBlockInFile,
                       const uint64_t numberOfBlocks,
                       const uint64_t startBlockInBuffer = 0);
     bool closeFile();
 
     // public variables to avoid stupid getter
-    uint16_t m_blockSize = 4096;
-    uint64_t m_numberOfBlocks = 0;
     uint64_t m_totalFileSize = 0;
+    std::string m_filePath = "";
 
 private:
-    std::string m_filePath = "";
     int m_fileDescriptor = -1;
 
-    Common::DataBuffer* m_buffer = nullptr;
-
     void initFile();
-    bool checkMetaData();
 };
 
 } // namespace Persistence
