@@ -54,7 +54,7 @@ BinaryFile_Test::closeFile_test()
 {
     // init buffer and file
     Common::DataBuffer buffer;
-    BinaryFile binaryFile(m_filePath, &buffer);
+    BinaryFile binaryFile(m_filePath);
 
     // test close
     UNITTEST(binaryFile.closeFile(), true);
@@ -71,16 +71,15 @@ BinaryFile_Test::updateFileSize_test()
 {
     // init buffer and file
     Common::DataBuffer buffer(5);
-    BinaryFile binaryFile(m_filePath, &buffer);
+    BinaryFile binaryFile(m_filePath);
     binaryFile.allocateStorage(4);
     binaryFile.closeFile();
 
-    BinaryFile binaryFileNew(m_filePath, &buffer);
+    BinaryFile binaryFileNew(m_filePath);
     UNITTEST(binaryFileNew.updateFileSize(), true);
-    UNITTEST(binaryFileNew.m_numberOfBlocks, 4);
+    UNITTEST(binaryFileNew.m_totalFileSize, 4*4096);
 
-    uint64_t totalReadSize = binaryFileNew.m_numberOfBlocks * binaryFileNew.m_blockSize;
-    UNITTEST(binaryFileNew.m_totalFileSize, totalReadSize);
+    UNITTEST(binaryFileNew.m_totalFileSize, binaryFileNew.m_totalFileSize);
 }
 
 /**
@@ -91,7 +90,7 @@ BinaryFile_Test::allocateStorage_test()
 {
     // init buffer and file
     Common::DataBuffer buffer;
-    BinaryFile binaryFile(m_filePath, &buffer);
+    BinaryFile binaryFile(m_filePath);
 
     // test allocation
     UNITTEST(binaryFile.allocateStorage(4), true);
@@ -99,8 +98,7 @@ BinaryFile_Test::allocateStorage_test()
     UNITTEST(binaryFile.allocateStorage(0), false);
 
     // check meta-data
-    UNITTEST(binaryFile.m_numberOfBlocks, 8);
-    UNITTEST(binaryFile.m_totalFileSize, 8*binaryFile.m_blockSize);
+    UNITTEST(binaryFile.m_totalFileSize, 8*4096);
 
     binaryFile.closeFile();
 
@@ -118,7 +116,7 @@ BinaryFile_Test::writeSegment_test()
 {
     // init buffer and file
     Common::DataBuffer buffer(5);
-    BinaryFile binaryFile(m_filePath, &buffer);
+    BinaryFile binaryFile(m_filePath);
     binaryFile.allocateStorage(4);
 
     // prepare test-buffer
@@ -130,14 +128,14 @@ BinaryFile_Test::writeSegment_test()
     buffer.addData(&testStruct);
 
     // write-tests
-    UNITTEST(binaryFile.writeSegment(1, 1, 0), true);
-    UNITTEST(binaryFile.writeSegment(2, 1, 2), true);
+    UNITTEST(binaryFile.writeSegment(&buffer, 1, 1, 0), true);
+    UNITTEST(binaryFile.writeSegment(&buffer, 2, 1, 2), true);
 
     // negative tests
-    UNITTEST(binaryFile.writeSegment(2, 0, 3), false);
-    UNITTEST(binaryFile.writeSegment(42, 1, 3), false);
-    UNITTEST(binaryFile.writeSegment(2, 42, 3), false);
-    UNITTEST(binaryFile.writeSegment(2, 1, 42), false);
+    UNITTEST(binaryFile.writeSegment(&buffer, 2, 0, 3), false);
+    UNITTEST(binaryFile.writeSegment(&buffer, 42, 1, 3), false);
+    UNITTEST(binaryFile.writeSegment(&buffer, 2, 42, 3), false);
+    UNITTEST(binaryFile.writeSegment(&buffer, 2, 1, 42), false);
 
     // cleanup
     UNITTEST(binaryFile.closeFile(), true);
@@ -152,7 +150,7 @@ BinaryFile_Test::readSegment_test()
 {
     // init buffer and file
     Common::DataBuffer buffer(5);
-    BinaryFile binaryFile(m_filePath, &buffer);
+    BinaryFile binaryFile(m_filePath);
     binaryFile.allocateStorage(4);
 
     // prepare test-buffer
@@ -166,8 +164,8 @@ BinaryFile_Test::readSegment_test()
     buffer.addData(&testStruct);
 
     // write the two blocks of the buffer
-    UNITTEST(binaryFile.writeSegment(1, 1, 0), true);
-    UNITTEST(binaryFile.writeSegment(2, 1, 2), true);
+    UNITTEST(binaryFile.writeSegment(&buffer, 1, 1, 0), true);
+    UNITTEST(binaryFile.writeSegment(&buffer, 2, 1, 2), true);
 
     // clear orinial buffer
     memset(buffer.data, 0, buffer.totalBufferSize);
@@ -175,14 +173,14 @@ BinaryFile_Test::readSegment_test()
     testStruct.c = 0;
 
     // read the two blocks back
-    UNITTEST(binaryFile.readSegment(1, 1, 1), true);
-    UNITTEST(binaryFile.readSegment(2, 1, 3), true);
+    UNITTEST(binaryFile.readSegment(&buffer, 1, 1, 1), true);
+    UNITTEST(binaryFile.readSegment(&buffer, 2, 1, 3), true);
 
     // negative tests
-    UNITTEST(binaryFile.readSegment(2, 0, 3), false);
-    UNITTEST(binaryFile.readSegment(42, 1, 3), false);
-    UNITTEST(binaryFile.readSegment(2, 42, 3), false);
-    UNITTEST(binaryFile.readSegment(2, 1, 42), false);
+    UNITTEST(binaryFile.readSegment(&buffer, 2, 0, 3), false);
+    UNITTEST(binaryFile.readSegment(&buffer, 42, 1, 3), false);
+    UNITTEST(binaryFile.readSegment(&buffer, 2, 42, 3), false);
+    UNITTEST(binaryFile.readSegment(&buffer, 2, 1, 42), false);
 
     // copy and check the first block
     mempcpy(&testStruct,

@@ -33,12 +33,9 @@ namespace Persistence
  * @param filePath
  * @param buffer
  */
-BinaryFile::BinaryFile(const std::string filePath,
-                       DataBuffer* buffer)
+BinaryFile::BinaryFile(const std::string filePath)
 {
     m_filePath = filePath;
-    m_buffer = buffer;
-    m_blockSize = buffer->blockSize;
 
     initFile();
 }
@@ -66,31 +63,18 @@ BinaryFile::initFile()
 }
 
 /**
- * @brief StorageMemory::checkData
- * @return
- */
-bool
-BinaryFile::checkMetaData()
-{
-    if(m_buffer->data == nullptr
-            || m_fileDescriptor == -1)
-    {
-        return false;
-    }
-    return true;
-}
-
-/**
  * allocate new storage at the end of the file
  *
  * @return true is successful, else false
  */
 bool
-BinaryFile::allocateStorage(const uint64_t numberOfBlocks)
+BinaryFile::allocateStorage(const uint64_t numberOfBlocks,
+                            const uint32_t blockSize)
 {
     // precheck
     if(numberOfBlocks == 0
-            || checkMetaData() == false)
+            || m_fileDescriptor < 0
+            || blockSize % 512 != 0)
     {
         return false;
     }
@@ -99,7 +83,7 @@ BinaryFile::allocateStorage(const uint64_t numberOfBlocks)
     lseek(m_fileDescriptor, 0, SEEK_SET);
     long ret = posix_fallocate(m_fileDescriptor,
                                static_cast<long>(m_totalFileSize),
-                               static_cast<long>(numberOfBlocks * m_blockSize));
+                               static_cast<long>(numberOfBlocks * blockSize));
 
     // check if allocation was successful
     if(ret != 0)
@@ -113,7 +97,6 @@ BinaryFile::allocateStorage(const uint64_t numberOfBlocks)
     if(ret >= 0)
     {
         m_totalFileSize = static_cast<uint64_t>(ret);
-        m_numberOfBlocks += numberOfBlocks;
     }
 
     return true;
@@ -133,10 +116,8 @@ BinaryFile::updateFileSize()
 
     // check if filesize is really 0 or check is requested
     long ret = lseek(m_fileDescriptor, 0, SEEK_END);
-    if(ret >= 0)
-    {
+    if(ret >= 0) {
         m_totalFileSize = static_cast<uint64_t>(ret);
-        m_numberOfBlocks = m_totalFileSize / m_blockSize;
     }
 
     lseek(m_fileDescriptor,
@@ -152,26 +133,29 @@ BinaryFile::updateFileSize()
  * @return true, if successful, else false
  */
 bool
-BinaryFile::readSegment(const uint64_t startBlockInFile,
+BinaryFile::readSegment(Common::DataBuffer* buffer,
+                        const uint64_t startBlockInFile,
                         const uint64_t numberOfBlocks,
                         const uint64_t startBlockInBuffer)
 {
+    const uint16_t blockSize = buffer->blockSize;
+
     // precheck
     if(numberOfBlocks == 0
-            || startBlockInFile + numberOfBlocks > m_numberOfBlocks
-            || startBlockInBuffer + numberOfBlocks > m_buffer->numberOfBlocks
-            || checkMetaData() == false)
+            || startBlockInFile + numberOfBlocks > m_totalFileSize / blockSize
+            || startBlockInBuffer + numberOfBlocks > buffer->numberOfBlocks
+            || m_fileDescriptor < 0)
     {
         return false;
     }
 
     // go to the requested position and read the block
     lseek(m_fileDescriptor,
-          static_cast<long>(startBlockInFile * m_blockSize),
+          static_cast<long>(startBlockInFile * blockSize),
           SEEK_SET);
     ssize_t ret = read(m_fileDescriptor,
-                       static_cast<uint8_t*>(m_buffer->data) + (startBlockInBuffer * m_blockSize),
-                       numberOfBlocks * m_blockSize);
+                       static_cast<uint8_t*>(buffer->data) + (startBlockInBuffer * blockSize),
+                       numberOfBlocks * blockSize);
 
     if(ret == -1)
     {
@@ -187,29 +171,32 @@ BinaryFile::readSegment(const uint64_t startBlockInFile,
  * @return true, if successful, else false
  */
 bool
-BinaryFile::writeSegment(const uint64_t startBlockInFile,
+BinaryFile::writeSegment(Common::DataBuffer *buffer,
+                         const uint64_t startBlockInFile,
                          const uint64_t numberOfBlocks,
                          const uint64_t startBlockInBuffer)
 {
+    const uint16_t blockSize = buffer->blockSize;
+
     // precheck
     if(numberOfBlocks == 0
-            || startBlockInFile + numberOfBlocks > m_numberOfBlocks
-            || startBlockInBuffer + numberOfBlocks > m_buffer->numberOfBlocks
-            || checkMetaData() == false)
+            || startBlockInFile + numberOfBlocks > m_totalFileSize / blockSize
+            || startBlockInBuffer + numberOfBlocks > buffer->numberOfBlocks
+            || m_fileDescriptor < 0)
     {
         return false;
     }
 
     // go to the requested position and write the block
     long retSeek = lseek(m_fileDescriptor,
-                         static_cast<long>(startBlockInFile * m_blockSize),
+                         static_cast<long>(startBlockInFile * blockSize),
                          SEEK_SET);
     assert(retSeek >= 0);
 
     // write data to file
     ssize_t ret = write(m_fileDescriptor,
-                        static_cast<uint8_t*>(m_buffer->data) + (startBlockInBuffer * m_blockSize),
-                        numberOfBlocks * m_blockSize);
+                        static_cast<uint8_t*>(buffer->data) + (startBlockInBuffer * blockSize),
+                        numberOfBlocks * blockSize);
 
     if(ret == -1)
     {

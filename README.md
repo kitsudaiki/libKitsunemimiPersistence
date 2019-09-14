@@ -146,20 +146,23 @@ int testvalue = 42;
 buffer.addData(&testvalue);
 
 // create binary file and bind buffer
-BinaryFile binaryFile(m_filePath, &buffer);
+BinaryFile binaryFile(m_filePath);
 
 // allocate 4 x 4 KiB (4 blocks)
-binaryFile.allocateStorage(4);
+binaryFile.allocateStorage(4,       // <-- number blocks 
+                           4096);   // <-- size of a single block
 
 // write data to the storage
-binaryFile.writeSegment(0, 		// <-- startblock of write-oberation within the file
-	                    1,      // <-- number of blocks (each 4 KiB) to write
-	                    0)      // <-- startblock of the data within the buffer
+binaryFile.writeSegment(&buffer,   // <-- source-buffer
+                        0, 		   // <-- startblock of write-oberation within the file
+	                    1,         // <-- number of blocks (each 4 KiB) to write
+	                    0)         // <-- startblock of the data within the buffer
 
 // read data to the storage
-binaryFile.readSegment(0, 		// <-- startblock of the data within the file
-	                   1,       // <-- number of blocks (each 4 KiB) to write
-	                   1)       // <-- startblock of write-oberation within the buffer
+binaryFile.readSegment(&buffer,    // <-- target-buffer
+                       0, 		   // <-- startblock of the data within the file
+	                   1,          // <-- number of blocks (each 4 KiB) to write
+	                   1)          // <-- startblock of write-oberation within the buffer
 
 // close file
 binaryFile.closeFile()
