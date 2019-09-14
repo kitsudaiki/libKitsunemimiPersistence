@@ -20,7 +20,7 @@ Simple handling class to connect to a sqlite database and send sql-commands to t
 
 #### log-writer
 
-Its a simple logger to wirte messages with timestamps to a log-file. 
+Its a simple and really easy to use logger to wirte messages with timestamps to a log-file. 
 
 ### About my kitsune libraries
 
@@ -244,28 +244,38 @@ testDB.close();
 
 **Header-file:** `logger/logger.h`
 
-Its a simple class to write log-messages together with a timestamp one after another to a log-file. 
+Its a simple class to write log-messages together with a timestamp one after another to a log-file. It only has to be initialized at the beginning of the program and can be used at every point in the same code. When want to add an entry to the log, you don't need to check, if the logger is initialized.
+
+IMPORTANT: Adding entries to the log is thread-save, but initializing and closing the logger is NOT. This is normally no problem, but I only mention it, to be sure that you know this. It is not save to init or close the logger, while other threads with log-calls are running!
+
+
+Initializing at the anytime somewhere in your code.
 
 ```cpp
 #include <logger/logger.h>
 
-std::pair<bool, std::string> result;
+std::pair<bool, std::string> ret = initLogger("/tmp", "testlog", true);
+// arguments:
+//      first argument: directory-path
+//      second argument: base file name
+//      third argument: true to enable debug-output. if false only output of info, warning and error
+//      fourth argument: true to write log-output without timestamp additional to commandline
+//
+// result:
+//      first of the result is, if it was successful or not
+//      second of the result is the error-message, if failed
 
-// write the log-file "/tmp/testlog.log"
-Logger testLogger("/tmp", "testlog", false, false);
-// first argument: directory-path
-// second argument: base file name
-// third argument: true to enable debug-output. if false only output of info, warning and error
-// fourth argument: true to write log-output without timestamp additional to commandline
+```
 
-std::pair<bool, std::string> ret = testLogger.initLogger();
-// first of the result is, if it was successful or not
-// second of the result is the error-message, if failed
+Using the logger somewhere else in your code. You only need to import the header and then call the log-methods. Like already mentioned, there is no check necessary, if the logger is initialized or not. See following example: 
 
-testLogger.debug("debug-message");
-testLogger.info("info-message");
-testLogger.warning("warning-message");
-testLogger.error("error-message");
+```cpp
+#include <logger/logger.h>
+
+LOG_debug("debug-message");
+LOG_info("info-message");
+LOG_warning("warning-message");
+LOG_error("error-message");
 
 /**
 The log-file would look like this:
@@ -275,9 +285,6 @@ The log-file would look like this:
 2019-9-7 22:54:1 DEBUG: debug-message     
 2019-9-7 22:54:1 INFO: info-message  
 */
-
-testLogger.closeLogFile();
-// not necessary, when the destructor of the logger is triggered
 
 ```
 
