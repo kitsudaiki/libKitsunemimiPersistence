@@ -77,7 +77,7 @@ IMPORTANT: All my projects are only tested on Linux.
 
 Repository-Name | Version-Tag | Download-Path
 --- | --- | ---
-libKitsuneCommon | 0.5.1 |  https://github.com/tobiasanker/libKitsuneCommon.git
+libKitsuneCommon | 0.5.2 |  https://github.com/tobiasanker/libKitsuneCommon.git
 
 
 ### build library
