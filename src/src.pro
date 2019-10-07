@@ -8,12 +8,12 @@ VERSION = 0.4.1
 LIBS += -L../../libKitsuneCommon/src -lKitsuneCommon
 LIBS += -L../../libKitsuneCommon/src/debug -lKitsuneCommon
 LIBS += -L../../libKitsuneCommon/src/release -lKitsuneCommon
-INCLUDEPATH += ../../libKitsuneCommon/include/libKitsuneCommon
+INCLUDEPATH += ../../libKitsuneCommon/include
 
 LIBS +=  -lboost_filesystem -lboost_system -lsqlite3
 
 INCLUDEPATH += $$PWD \
-            ../include/libKitsunePersistence
+            ../include
 
 SOURCES += \
     files/binary_file.cpp \

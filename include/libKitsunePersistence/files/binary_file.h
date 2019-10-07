@@ -33,7 +33,7 @@
 #include <assert.h>
 #include <boost/filesystem.hpp>
 
-#include <buffering/data_buffer.h>
+#include <libKitsuneCommon/data_buffer.h>
 
 namespace fs=boost::filesystem;
 

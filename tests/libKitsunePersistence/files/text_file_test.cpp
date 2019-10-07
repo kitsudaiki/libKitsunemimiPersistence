@@ -9,7 +9,7 @@
 #include "text_file_test.h"
 
 #include <boost/filesystem.hpp>
-#include <files/text_file.h>
+#include <libKitsunePersistence/files/text_file.h>
 
 namespace fs=boost::filesystem;
 

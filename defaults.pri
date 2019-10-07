@@ -1,3 +1,3 @@
 INCLUDEPATH += $$PWD/src \
-               $$PWD/include/libKitsunePersistence
+               $$PWD/include
 

@@ -9,7 +9,7 @@
 #include "binary_file_test.h"
 
 #include <boost/filesystem.hpp>
-#include <files/binary_file.h>
+#include <libKitsunePersistence/files/binary_file.h>
 
 namespace fs=boost::filesystem;
 

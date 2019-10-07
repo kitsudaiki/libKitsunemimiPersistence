@@ -10,10 +10,10 @@
  *  @detail different methods for simple text-file-operations
  */
 
-#include <files/text_file.h>
+#include <libKitsunePersistence/files/text_file.h>
 
 #include <boost/filesystem.hpp>
-#include <common_methods/string_methods.h>
+#include <libKitsuneCommon/common_methods/string_methods.h>
 
 namespace fs=boost::filesystem;
 
