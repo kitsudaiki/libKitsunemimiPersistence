@@ -10,6 +10,8 @@
 
 #include <libKitsunePersistence/logger/logger.h>
 
+namespace KS
+{
 
 /**
  * @brief write debug-message to logfile
@@ -65,6 +67,8 @@ LOG_error(const std::string message)
     }
 
     return Kitsune::Persistence::Logger::m_logger->logData("ERROR: " + message);
+}
+
 }
 
 namespace Kitsune

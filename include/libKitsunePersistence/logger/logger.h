@@ -20,11 +20,13 @@
 
 #include <libKitsunePersistence/files/binary_file.h>
 
-
+namespace KS
+{
 bool LOG_debug(const std::string message);
 bool LOG_info(const std::string message);
 bool LOG_warning(const std::string message);
 bool LOG_error(const std::string message);
+}
 
 namespace Kitsune
 {
