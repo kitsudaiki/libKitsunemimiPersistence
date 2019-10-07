@@ -5,7 +5,7 @@
 ### Changed
 - use libKitsuneCommon 0.6.0
 - update includes for new style
-- move logger-methods out of the namespace
+- move logger-methods out of the namespace `Kitsune::Persistence` into the new namespace `KS`
 
 
 ## [0.4.1] - 2019-09-15
