@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0] - 2019-10-07
+
+### Changed
+- use libKitsuneCommon 0.6.0
+- update includes for new style
+- move logger-methods out of the namespace
+
 
 ## [0.4.1] - 2019-09-15
 
