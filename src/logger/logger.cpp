@@ -10,6 +10,63 @@
 
 #include <logger/logger.h>
 
+
+/**
+ * @brief write debug-message to logfile
+ */
+bool
+LOG_debug(const std::string &message)
+{
+    if(Kitsune::Persistence::Logger::m_logger == nullptr) {
+        return false;
+    }
+
+    if(Kitsune::Persistence::Logger::m_logger->m_debugLog == false) {
+        return false;
+    }
+
+    return Kitsune::Persistence::Logger::m_logger->logData("DEBUG: " + message);
+}
+
+/**
+ * @brief write info-message to logfile
+ */
+bool
+LOG_info(const std::string &message)
+{
+    if(Kitsune::Persistence::Logger::m_logger == nullptr) {
+        return false;
+    }
+
+    return Kitsune::Persistence::Logger::m_logger->logData("INFO: " + message);
+}
+
+/**
+ * @brief write warnign-message to logfile
+ */
+bool
+LOG_warning(const std::string &message)
+{
+    if(Kitsune::Persistence::Logger::m_logger == nullptr) {
+        return false;
+    }
+
+    return Kitsune::Persistence::Logger::m_logger->logData("WARNING: " + message);
+}
+
+/**
+ * @brief write error-message to logfile
+ */
+bool
+LOG_error(const std::string &message)
+{
+    if(Kitsune::Persistence::Logger::m_logger == nullptr) {
+        return false;
+    }
+
+    return Kitsune::Persistence::Logger::m_logger->logData("ERROR: " + message);
+}
+
 namespace Kitsune
 {
 namespace Persistence
@@ -43,62 +100,6 @@ initLogger(const std::string directoryPath,
                                                         logOnConsole);
 
     return Logger::m_logger->initLogger();
-}
-
-/**
- * @brief write debug-message to logfile
- */
-bool
-LOG_debug(const std::string message)
-{
-    if(Logger::m_logger == nullptr) {
-        return false;
-    }
-
-    if(Logger::m_logger->m_debugLog == false) {
-        return false;
-    }
-
-    return Logger::m_logger->logData("DEBUG: " + message);
-}
-
-/**
- * @brief write info-message to logfile
- */
-bool
-LOG_info(const std::string message)
-{
-    if(Logger::m_logger == nullptr) {
-        return false;
-    }
-
-    return Logger::m_logger->logData("INFO: " + message);
-}
-
-/**
- * @brief write warnign-message to logfile
- */
-bool
-LOG_warning(const std::string message)
-{
-    if(Logger::m_logger == nullptr) {
-        return false;
-    }
-
-    return Logger::m_logger->logData("WARNING: " + message);
-}
-
-/**
- * @brief write error-message to logfile
- */
-bool
-LOG_error(const std::string message)
-{
-    if(Logger::m_logger == nullptr) {
-        return false;
-    }
-
-    return Logger::m_logger->logData("ERROR: " + message);
 }
 
 bool
