@@ -20,13 +20,10 @@
 
 #include <libKitsunePersistence/files/binary_file.h>
 
-namespace KS
-{
-bool LOG_debug(const std::string message);
-bool LOG_info(const std::string message);
-bool LOG_warning(const std::string message);
-bool LOG_error(const std::string message);
-}
+#define LOG_DEBUG Kitsune::Persistence::LOG_debug
+#define LOG_INFO Kitsune::Persistence::LOG_info
+#define LOG_WARNING Kitsune::Persistence::LOG_warning
+#define LOG_ERROR Kitsune::Persistence::LOG_error
 
 namespace Kitsune
 {
@@ -37,6 +34,12 @@ std::pair<bool, std::string> initLogger(const std::string directoryPath,
                                         const std::string baseFileName,
                                         const bool debugLog=false,
                                         const bool logOnConsole=false);
+
+bool LOG_debug(const std::string message);
+bool LOG_info(const std::string message);
+bool LOG_warning(const std::string message);
+bool LOG_error(const std::string message);
+
 bool closeLogFile();
 
 //==================================================================================================

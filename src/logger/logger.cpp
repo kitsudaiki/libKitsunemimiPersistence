@@ -10,9 +10,40 @@
 
 #include <libKitsunePersistence/logger/logger.h>
 
-namespace KS
+namespace Kitsune
+{
+namespace Persistence
 {
 
+Kitsune::Persistence::Logger* Logger::m_logger = nullptr;
+
+/**
+ * @brief initLogger
+ * @param directoryPath
+ * @param baseFileName
+ * @param debugLog
+ * @param logOnConsole
+ * @return
+ */
+std::pair<bool, std::string>
+initLogger(const std::string directoryPath,
+           const std::string baseFileName,
+           const bool debugLog,
+           const bool logOnConsole)
+{
+    if(Logger::m_logger != nullptr)
+    {
+        std::string errorMessage = "logger is already initialized.";
+        return std::pair<bool, std::string>(false, errorMessage);
+    }
+
+    Logger::m_logger = new Kitsune::Persistence::Logger(directoryPath,
+                                                        baseFileName,
+                                                        debugLog,
+                                                        logOnConsole);
+
+    return Logger::m_logger->initLogger();
+}
 /**
  * @brief write debug-message to logfile
  */
@@ -67,43 +98,6 @@ LOG_error(const std::string message)
     }
 
     return Kitsune::Persistence::Logger::m_logger->logData("ERROR: " + message);
-}
-
-}
-
-namespace Kitsune
-{
-namespace Persistence
-{
-
-Kitsune::Persistence::Logger* Logger::m_logger = nullptr;
-
-/**
- * @brief initLogger
- * @param directoryPath
- * @param baseFileName
- * @param debugLog
- * @param logOnConsole
- * @return
- */
-std::pair<bool, std::string>
-initLogger(const std::string directoryPath,
-           const std::string baseFileName,
-           const bool debugLog,
-           const bool logOnConsole)
-{
-    if(Logger::m_logger != nullptr)
-    {
-        std::string errorMessage = "logger is already initialized.";
-        return std::pair<bool, std::string>(false, errorMessage);
-    }
-
-    Logger::m_logger = new Kitsune::Persistence::Logger(directoryPath,
-                                                        baseFileName,
-                                                        debugLog,
-                                                        logOnConsole);
-
-    return Logger::m_logger->initLogger();
 }
 
 bool

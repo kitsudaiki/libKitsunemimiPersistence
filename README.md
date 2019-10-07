@@ -303,10 +303,10 @@ Using the logger somewhere else in your code. You only need to import the header
 ```cpp
 #include <logger/logger.h>
 
-KS::LOG_debug("debug-message");
-KS::LOG_info("info-message");
-KS::LOG_warning("warning-message");
-KS::LOG_error("error-message");
+LOG_DEBUG("debug-message");
+LOG_INFO("info-message");
+LOG_WARNING("warning-message");
+LOG_ERROR("error-message");
 
 /**
 The log-file would look like this:
@@ -318,9 +318,6 @@ The log-file would look like this:
 */
 
 ```
-
-I wanted to remove the logger completely from any namespace, but this resultet in linking-problems. To the logger has its own shord namespace `KS` (Kitsune-Special). This namespace should be for all, which should be not part of the generic namespaces.
-
 
 ## Contributing
 

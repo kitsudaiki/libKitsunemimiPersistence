@@ -37,21 +37,21 @@ Logger_Test::logger_test()
     UNITTEST(ret.first, false);
 
     // write test-data
-    UNITTEST(KS::LOG_error("error1"), true);
-    UNITTEST(KS::LOG_error("error2"), true);
-    UNITTEST(KS::LOG_error("error3"), true);
+    UNITTEST(LOG_ERROR("error1"), true);
+    UNITTEST(LOG_ERROR("error2"), true);
+    UNITTEST(LOG_ERROR("error3"), true);
 
-    UNITTEST(KS::LOG_warning("warning1"), true);
-    UNITTEST(KS::LOG_warning("warning2"), true);
-    UNITTEST(KS::LOG_warning("warning3"), true);
+    UNITTEST(LOG_WARNING("warning1"), true);
+    UNITTEST(LOG_WARNING("warning2"), true);
+    UNITTEST(LOG_WARNING("warning3"), true);
 
-    UNITTEST(KS::LOG_debug("debug1"), true);
-    UNITTEST(KS::LOG_debug("debug2"), true);
-    UNITTEST(KS::LOG_debug("debug3"), true);
+    UNITTEST(LOG_DEBUG("debug1"), true);
+    UNITTEST(LOG_DEBUG("debug2"), true);
+    UNITTEST(LOG_DEBUG("debug3"), true);
 
-    UNITTEST(KS::LOG_info("info1"), true);
-    UNITTEST(KS::LOG_info("info2"), true);
-    UNITTEST(KS::LOG_info("info3"), true);
+    UNITTEST(LOG_INFO("info1"), true);
+    UNITTEST(LOG_INFO("info2"), true);
+    UNITTEST(LOG_INFO("info3"), true);
 
     const std::string logContent = readFile(Logger::m_logger->m_filePath).second;
     std::size_t found;
