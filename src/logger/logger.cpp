@@ -15,7 +15,7 @@
  * @brief write debug-message to logfile
  */
 bool
-LOG_debug(const std::string &message)
+LOG_debug(const std::string message)
 {
     if(Kitsune::Persistence::Logger::m_logger == nullptr) {
         return false;
@@ -32,7 +32,7 @@ LOG_debug(const std::string &message)
  * @brief write info-message to logfile
  */
 bool
-LOG_info(const std::string &message)
+LOG_info(const std::string message)
 {
     if(Kitsune::Persistence::Logger::m_logger == nullptr) {
         return false;
@@ -45,7 +45,7 @@ LOG_info(const std::string &message)
  * @brief write warnign-message to logfile
  */
 bool
-LOG_warning(const std::string &message)
+LOG_warning(const std::string message)
 {
     if(Kitsune::Persistence::Logger::m_logger == nullptr) {
         return false;
@@ -58,7 +58,7 @@ LOG_warning(const std::string &message)
  * @brief write error-message to logfile
  */
 bool
-LOG_error(const std::string &message)
+LOG_error(const std::string message)
 {
     if(Kitsune::Persistence::Logger::m_logger == nullptr) {
         return false;
