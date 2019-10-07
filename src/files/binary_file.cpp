@@ -19,7 +19,7 @@
  *             makes the whole sync asynchon again.
  */
 
-#include <files/binary_file.h>
+#include <libKitsunePersistence/files/binary_file.h>
 
 using Kitsune::Common::DataBuffer;
 

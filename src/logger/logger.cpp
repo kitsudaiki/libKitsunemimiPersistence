@@ -8,7 +8,7 @@
  *  @brief simple logger for events
  */
 
-#include <logger/logger.h>
+#include <libKitsunePersistence/logger/logger.h>
 
 namespace Kitsune
 {

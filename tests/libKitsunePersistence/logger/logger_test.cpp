@@ -8,8 +8,8 @@
 
 #include "logger_test.h"
 
-#include <logger/logger.h>
-#include <files/text_file.h>
+#include <libKitsunePersistence/logger/logger.h>
+#include <libKitsunePersistence/files/text_file.h>
 
 namespace Kitsune
 {

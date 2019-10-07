@@ -8,8 +8,8 @@
 
 #include "sqlite_test.h"
 
-#include <database/sqlite.h>
-#include <common_items/table_item.h>
+#include <libKitsunePersistence/database/sqlite.h>
+#include <libKitsuneCommon/common_items/table_item.h>
 #include <boost/filesystem.hpp>
 
 namespace fs=boost::filesystem;

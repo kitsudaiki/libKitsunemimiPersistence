@@ -15,9 +15,9 @@
  *              https://www.tutorialspoint.com/sqlite/sqlite_c_cpp.htm
  */
 
-#include <database/sqlite.h>
-#include <common_items/table_item.h>
-#include <common_items/data_items.h>
+#include <libKitsunePersistence/database/sqlite.h>
+#include <libKitsuneCommon/common_items/table_item.h>
+#include <libKitsuneCommon/common_items/data_items.h>
 
 using Kitsune::Common::DataItem;
 using Kitsune::Common::DataMap;
