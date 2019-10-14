@@ -6,7 +6,7 @@
  *  @copyright MIT License
  */
 
-#include "binary_file_test.h"
+#include "binary_file_with_directIO_test.h"
 
 #include <boost/filesystem.hpp>
 #include <libKitsunePersistence/files/binary_file.h>
@@ -25,8 +25,8 @@ struct TestStruct
     uint64_t c = 0;
 } __attribute__((packed));
 
-BinaryFile_Test::BinaryFile_Test()
-    : Kitsune::Common::UnitTest("BinaryFile_Test")
+BinaryFile_withDirectIO_Test::BinaryFile_withDirectIO_Test()
+    : Kitsune::Common::UnitTest("BinaryFile_withDirectIO_Test")
 {
     initTest();
     closeFile_test();
@@ -40,7 +40,7 @@ BinaryFile_Test::BinaryFile_Test()
  * initTest
  */
 void
-BinaryFile_Test::initTest()
+BinaryFile_withDirectIO_Test::initTest()
 {
     m_filePath = "/tmp/binaryFile_test.bin";
     deleteFile();
@@ -50,7 +50,7 @@ BinaryFile_Test::initTest()
  * closeFile_test
  */
 void
-BinaryFile_Test::closeFile_test()
+BinaryFile_withDirectIO_Test::closeFile_test()
 {
     // init buffer and file
     Common::DataBuffer buffer;
@@ -67,7 +67,7 @@ BinaryFile_Test::closeFile_test()
  * @brief BinaryFile_Test::updateFileSize_test
  */
 void
-BinaryFile_Test::updateFileSize_test()
+BinaryFile_withDirectIO_Test::updateFileSize_test()
 {
     // init buffer and file
     Common::DataBuffer buffer(5);
@@ -86,7 +86,7 @@ BinaryFile_Test::updateFileSize_test()
  * allocateStorage_test
  */
 void
-BinaryFile_Test::allocateStorage_test()
+BinaryFile_withDirectIO_Test::allocateStorage_test()
 {
     // init buffer and file
     Common::DataBuffer buffer;
@@ -112,7 +112,7 @@ BinaryFile_Test::allocateStorage_test()
  * writeSegment_test
  */
 void
-BinaryFile_Test::writeSegment_test()
+BinaryFile_withDirectIO_Test::writeSegment_test()
 {
     // init buffer and file
     Common::DataBuffer buffer(5);
@@ -146,7 +146,7 @@ BinaryFile_Test::writeSegment_test()
  * readSegment_test
  */
 void
-BinaryFile_Test::readSegment_test()
+BinaryFile_withDirectIO_Test::readSegment_test()
 {
     // init buffer and file
     Common::DataBuffer buffer(5);
@@ -205,7 +205,7 @@ BinaryFile_Test::readSegment_test()
  * closeTest
  */
 void
-BinaryFile_Test::closeTest()
+BinaryFile_withDirectIO_Test::closeTest()
 {
     deleteFile();
 }
@@ -214,7 +214,7 @@ BinaryFile_Test::closeTest()
  * common usage to delete test-file
  */
 void
-BinaryFile_Test::deleteFile()
+BinaryFile_withDirectIO_Test::deleteFile()
 {
     fs::path rootPathObj(m_filePath);
     if(fs::exists(rootPathObj)) {
