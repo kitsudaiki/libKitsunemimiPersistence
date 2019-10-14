@@ -6,17 +6,6 @@
  *  @copyright MIT License
  *
  *  @brief class for binary-file-handling
- *
- *  @detail This file contains the class for read and write of binary-files.
- *          It use the data-buffer of libKitsuneCommon as cache for all operations.
- *          The operations using posix-method with direct-flag to skip the page-chache
- *          of the linux-kernel. This makes operations with big block a bit faster
- *          because the data are less often copied. This has the result, that all
- *          read and write operations are synchronized.
- *          => segments to read from disc or write to disc should be as big as possible
- *             or else the latency makes the whole thing very very slow.
- *             The class should be run in an extra thread, with handle all operations and
- *             makes the whole sync asynchon again.
  */
 
 #include <libKitsunePersistence/files/binary_file.h>
@@ -29,9 +18,9 @@ namespace Persistence
 {
 
 /**
- * @brief StorageMemory::StorageMemory
+ * @brief BinaryFile::BinaryFile
  * @param filePath
- * @param buffer
+ * @param directIO
  */
 BinaryFile::BinaryFile(const std::string filePath,
                        const bool directIO)
