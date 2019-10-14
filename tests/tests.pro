@@ -18,13 +18,15 @@ LIBS += -L../src -lKitsunePersistence
 
 SOURCES += \
     main.cpp \
-    libKitsunePersistence/files/binary_file_test.cpp \
     libKitsunePersistence/files/text_file_test.cpp \
     libKitsunePersistence/database/sqlite_test.cpp \
-    libKitsunePersistence/logger/logger_test.cpp
+    libKitsunePersistence/logger/logger_test.cpp \
+    libKitsunePersistence/files/binary_file_with_directIO_test.cpp \
+    libKitsunePersistence/files/binary_file_without_directIO_test.cpp
 
 HEADERS += \
-    libKitsunePersistence/files/binary_file_test.h \
     libKitsunePersistence/files/text_file_test.h \
     libKitsunePersistence/database/sqlite_test.h \
-    libKitsunePersistence/logger/logger_test.h
+    libKitsunePersistence/logger/logger_test.h \
+    libKitsunePersistence/files/binary_file_with_directIO_test.h \
+    libKitsunePersistence/files/binary_file_without_directIO_test.h

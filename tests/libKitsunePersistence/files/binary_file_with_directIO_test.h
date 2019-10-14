@@ -6,8 +6,8 @@
  *  @copyright MIT License
  */
 
-#ifndef BINARY_FILE_TEST_H
-#define BINARY_FILE_TEST_H
+#ifndef BINARY_FILE_WITH_DIRECTIO_TEST_H
+#define BINARY_FILE_WITH_DIRECTIO_TEST_H
 
 #include <libKitsuneCommon/unit_test.h>
 
@@ -16,11 +16,11 @@ namespace Kitsune
 namespace Persistence
 {
 
-class BinaryFile_Test
+class BinaryFile_withDirectIO_Test
         : public Kitsune::Common::UnitTest
 {
 public:
-    BinaryFile_Test();
+    BinaryFile_withDirectIO_Test();
 
 private:
     void initTest();
@@ -38,4 +38,4 @@ private:
 } // namespace Persistence
 } // namespace Kitsune
 
-#endif // BINARY_FILE_TEST_H
+#endif // BINARY_FILE_WITH_DIRECTIO_TEST_H
