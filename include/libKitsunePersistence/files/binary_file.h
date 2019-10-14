@@ -45,7 +45,8 @@ namespace Persistence
 class BinaryFile
 {
 public:
-    BinaryFile(const std::string filePath);
+    BinaryFile(const std::string filePath,
+               const bool directIO = true);
     ~BinaryFile();
 
     bool allocateStorage(const uint64_t numberOfBlocks,
@@ -68,6 +69,8 @@ public:
 
 private:
     int m_fileDescriptor = -1;
+    bool m_directIO = true;
+    uint16_t m_blockSize = 512;
 
     void initFile();
 };
