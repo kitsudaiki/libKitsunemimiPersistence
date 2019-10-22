@@ -142,7 +142,7 @@ Tested on Debian and Ubuntu. If you use Centos, Arch, etc and the build-script f
 
 ### binary-files
 
-**Header-file:** `files/binary_file.h`
+**Header-file:** `libKitsunePersistence/files/binary_file.h`
 
 This file contains the class for read and write of binary-files. It use the data-buffer of libKitsuneCommon as cache for all operations. The operations using posix-method with direct-flag to skip the page-chache of the linux-kernel. This makes operations with big block a bit faster because the data are less often copied. This has the result, that all read and write operations are synchronized.
 
@@ -162,7 +162,7 @@ HINT: The data-buffer will be not be binded anymore in the next version.
 Example:
 
 ```cpp
-#include <files/binary_file.h>
+#include <libKitsunePersistence/files/binary_file.h>
 
 std::string filePath = "/tmp/testfile.bin";
 Common::DataBuffer buffer(2);
@@ -196,7 +196,7 @@ binaryFile.closeFile()
 
 ### text-files
 
-**Header-file:** `files/text_file.h`
+**Header-file:** `libKitsunePersistence/files/text_file.h`
 
 Every action open and close the text-file. With this I don't need to handle an additional object-instance and operations on a text-file are really rare compared to working on a binary-file, so the addional time consumption for open and close the file has no special meaning for the performance.
 
@@ -205,7 +205,7 @@ All methods return a pair of bool-value as first element and a string-value as s
 Little example:
 
 ```cpp
-#include <files/text_file.h>
+#include <libKitsunePersistence/files/text_file.h>
 
 std::string filePath = "/tmp/textfile.txt";
 
@@ -236,14 +236,14 @@ ret = readFile(filePath);
 
 ### sqlite-database
 
-**Header-file:** `database/sqlite.h`
+**Header-file:** `libKitsunePersistence/database/sqlite.h`
 
 This is a simple sqlite database handler to run sql-queries against the database and get the result in form of a table-item for easier result-handling and printing. See the following example:
 
 
 ```cpp
-#include <database/sqlite.h>
-#include <common_items/table_item.h>
+#include <libKitsunePersistence/database/sqlite.h>
+#include <libKitsuneCommon/common_items/table_item.h>
 
 std::pair<bool, std::string> result;
 
@@ -271,7 +271,7 @@ testDB.close();
 
 ### log-writer
 
-**Header-file:** `logger/logger.h`
+**Header-file:** `libKitsunePersistence/logger/logger.h`
 
 Its a simple class to write log-messages together with a timestamp one after another to a log-file. It only has to be initialized at the beginning of the program and can be used at every point in the same code. When want to add an entry to the log, you don't need to check, if the logger is initialized.
 
@@ -281,7 +281,7 @@ IMPORTANT: Adding entries to the log is thread-save, but initializing and closin
 Initializing at the anytime somewhere in your code.
 
 ```cpp
-#include <logger/logger.h>
+#include <libKitsunePersistence/logger/logger.h>
 
 std::pair<bool, std::string> ret = Kitsune::Persistence::initLogger("/tmp", "testlog", true);
 // arguments:
@@ -299,7 +299,7 @@ std::pair<bool, std::string> ret = Kitsune::Persistence::initLogger("/tmp", "tes
 Using the logger somewhere else in your code. You only need to import the header and then call the log-methods. Like already mentioned, there is no check necessary, if the logger is initialized or not. See following example: 
 
 ```cpp
-#include <logger/logger.h>
+#include <libKitsunePersistence/logger/logger.h>
 
 LOG_DEBUG("debug-message");
 LOG_INFO("info-message");
