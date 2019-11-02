@@ -9,7 +9,7 @@
  *
  *  @detail This class provides only three abilities: open and close sqlite databases and
  *          execute sql-commands. The results of the database request are converted into
- *          table-itmes of libKitsuneCommon.
+ *          table-itmes of libKitsunemimiCommon.
  *
  *          This class was created with the help of:
  *              https://www.tutorialspoint.com/sqlite/sqlite_c_cpp.htm
@@ -23,7 +23,7 @@
 #include <vector>
 #include <sqlite3.h>
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Common {
 class TableItem;
@@ -50,6 +50,6 @@ private:
 };
 
 } // namespace Persistence
-} // namespace Kitsune
+} // namespace Kitsunemimi
 
 #endif // SQLITE_H

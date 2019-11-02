@@ -10,14 +10,14 @@
  *  @detail different methods for simple text-file-operations
  */
 
-#include <libKitsunePersistence/files/text_file.h>
+#include <libKitsunemimiPersistence/files/text_file.h>
 
 #include <boost/filesystem.hpp>
-#include <libKitsuneCommon/common_methods/string_methods.h>
+#include <libKitsunemimiCommon/common_methods/string_methods.h>
 
 namespace fs=boost::filesystem;
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Persistence
 {
@@ -248,4 +248,4 @@ replaceContent(const std::string &filePath,
 }
 
 } // namespace Persistence
-} // namespace Kitsune
+} // namespace Kitsunemimi

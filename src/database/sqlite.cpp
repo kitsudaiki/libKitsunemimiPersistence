@@ -9,22 +9,22 @@
  *
  *  @detail This class provides only three abilities: open and close sqlite databases and
  *          execute sql-commands. The results of the database request are converted into
- *          table-itmes of libKitsuneCommon.
+ *          table-itmes of libKitsunemimiCommon.
  *
  *          This class was created with the help of:
  *              https://www.tutorialspoint.com/sqlite/sqlite_c_cpp.htm
  */
 
-#include <libKitsunePersistence/database/sqlite.h>
-#include <libKitsuneCommon/common_items/table_item.h>
-#include <libKitsuneCommon/common_items/data_items.h>
+#include <libKitsunemimiPersistence/database/sqlite.h>
+#include <libKitsunemimiCommon/common_items/table_item.h>
+#include <libKitsunemimiCommon/common_items/data_items.h>
 
-using Kitsune::Common::DataItem;
-using Kitsune::Common::DataMap;
-using Kitsune::Common::DataArray;
-using Kitsune::Common::DataValue;
+using Kitsunemimi::Common::DataItem;
+using Kitsunemimi::Common::DataMap;
+using Kitsunemimi::Common::DataArray;
+using Kitsunemimi::Common::DataValue;
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Persistence
 {
@@ -178,4 +178,4 @@ Sqlite::closeDB()
 }
 
 } // namespace Persistence
-} // namespace Kitsune
+} // namespace Kitsunemimi

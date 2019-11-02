@@ -9,15 +9,15 @@
 #ifndef SQLITE_TEST_H
 #define SQLITE_TEST_H
 
-#include <libKitsuneCommon/unit_test.h>
+#include <libKitsunemimiCommon/test.h>
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Persistence
 {
 
 class Sqlite_Test
-        : public Kitsune::Common::UnitTest
+        : public Kitsunemimi::Common::Test
 {
 public:
     Sqlite_Test();
@@ -34,6 +34,6 @@ private:
 };
 
 } // namespace Persistence
-} // namespace Kitsune
+} // namespace Kitsunemimi
 
 #endif // SQLITE_TEST_H

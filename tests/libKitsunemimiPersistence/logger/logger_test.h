@@ -9,15 +9,15 @@
 #ifndef LOGGER_TEST_H
 #define LOGGER_TEST_H
 
-#include <libKitsuneCommon/unit_test.h>
+#include <libKitsunemimiCommon/test.h>
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Persistence
 {
 
 class Logger_Test
-        : public Kitsune::Common::UnitTest
+        : public Kitsunemimi::Common::Test
 {
 public:
     Logger_Test();
@@ -29,6 +29,6 @@ private:
 };
 
 } // namespace Persistence
-} // namespace Kitsune
+} // namespace Kitsunemimi
 
 #endif // LOGGER_TEST_H

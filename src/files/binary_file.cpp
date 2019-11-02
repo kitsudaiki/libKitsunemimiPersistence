@@ -8,11 +8,11 @@
  *  @brief class for binary-file-handling
  */
 
-#include <libKitsunePersistence/files/binary_file.h>
+#include <libKitsunemimiPersistence/files/binary_file.h>
 
-using Kitsune::Common::DataBuffer;
+using Kitsunemimi::Common::DataBuffer;
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Persistence
 {
@@ -248,4 +248,4 @@ BinaryFile::closeFile()
 }
 
 } // namespace Persistence
-} // namespace Kitsune
+} // namespace Kitsunemimi
