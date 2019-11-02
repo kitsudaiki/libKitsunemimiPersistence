@@ -8,16 +8,16 @@
 
 #include "logger_test.h"
 
-#include <libKitsunePersistence/logger/logger.h>
-#include <libKitsunePersistence/files/text_file.h>
+#include <libKitsunemimiPersistence/logger/logger.h>
+#include <libKitsunemimiPersistence/files/text_file.h>
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Persistence
 {
 
 Logger_Test::Logger_Test()
-    : Kitsune::Common::UnitTest("Logger_Test")
+    : Kitsunemimi::Common::Test("Logger_Test")
 {
     logger_test();
 }
@@ -30,62 +30,62 @@ Logger_Test::logger_test()
 {
     // init logger
     std::pair<bool, std::string> ret = initLogger("/tmp", "testlog", true);
-    UNITTEST(ret.first, true);
+    TEST_EQUAL(ret.first, true);
 
     // negative-test to try reinit the logger
     ret = initLogger("/tmp", "testlog", true);
-    UNITTEST(ret.first, false);
+    TEST_EQUAL(ret.first, false);
 
     // write test-data
-    UNITTEST(LOG_ERROR("error1"), true);
-    UNITTEST(LOG_ERROR("error2"), true);
-    UNITTEST(LOG_ERROR("error3"), true);
+    TEST_EQUAL(LOG_ERROR("error1"), true);
+    TEST_EQUAL(LOG_ERROR("error2"), true);
+    TEST_EQUAL(LOG_ERROR("error3"), true);
 
-    UNITTEST(LOG_WARNING("warning1"), true);
-    UNITTEST(LOG_WARNING("warning2"), true);
-    UNITTEST(LOG_WARNING("warning3"), true);
+    TEST_EQUAL(LOG_WARNING("warning1"), true);
+    TEST_EQUAL(LOG_WARNING("warning2"), true);
+    TEST_EQUAL(LOG_WARNING("warning3"), true);
 
-    UNITTEST(LOG_DEBUG("debug1"), true);
-    UNITTEST(LOG_DEBUG("debug2"), true);
-    UNITTEST(LOG_DEBUG("debug3"), true);
+    TEST_EQUAL(LOG_DEBUG("debug1"), true);
+    TEST_EQUAL(LOG_DEBUG("debug2"), true);
+    TEST_EQUAL(LOG_DEBUG("debug3"), true);
 
-    UNITTEST(LOG_INFO("info1"), true);
-    UNITTEST(LOG_INFO("info2"), true);
-    UNITTEST(LOG_INFO("info3"), true);
+    TEST_EQUAL(LOG_INFO("info1"), true);
+    TEST_EQUAL(LOG_INFO("info2"), true);
+    TEST_EQUAL(LOG_INFO("info3"), true);
 
     const std::string logContent = readFile(Logger::m_logger->m_filePath).second;
     std::size_t found;
 
     // error
     found = logContent.find("ERROR");
-    UNITTEST_NEG(found, std::string::npos);
+    TEST_NOT_EQUAL(found, std::string::npos);
     found = logContent.find("error1");
-    UNITTEST_NEG(found, std::string::npos);
+    TEST_NOT_EQUAL(found, std::string::npos);
 
     // warning
     found = logContent.find("WARNING");
-    UNITTEST_NEG(found, std::string::npos);
+    TEST_NOT_EQUAL(found, std::string::npos);
     found = logContent.find("warning1");
-    UNITTEST_NEG(found, std::string::npos);
+    TEST_NOT_EQUAL(found, std::string::npos);
 
     // debug
     found = logContent.find("DEBUG");
-    UNITTEST_NEG(found, std::string::npos);
+    TEST_NOT_EQUAL(found, std::string::npos);
     found = logContent.find("debug2");
-    UNITTEST_NEG(found, std::string::npos);
+    TEST_NOT_EQUAL(found, std::string::npos);
 
     // info
     found = logContent.find("INFO");
-    UNITTEST_NEG(found, std::string::npos);
+    TEST_NOT_EQUAL(found, std::string::npos);
     found = logContent.find("info3");
-    UNITTEST_NEG(found, std::string::npos);
+    TEST_NOT_EQUAL(found, std::string::npos);
 
 
     // negative test
     found = logContent.find("ASDF");
-    UNITTEST(found, std::string::npos);
+    TEST_EQUAL(found, std::string::npos);
     found = logContent.find("poi");
-    UNITTEST(found, std::string::npos);
+    TEST_EQUAL(found, std::string::npos);
 
     deleteFile(Logger::m_logger->m_filePath);
     closeLogFile();
@@ -104,4 +104,4 @@ Logger_Test::deleteFile(const std::string filePath)
 }
 
 } // namespace Persistence
-} // namespace Kitsune
+} // namespace Kitsunemimi

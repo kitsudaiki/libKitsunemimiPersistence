@@ -9,17 +9,17 @@
 #include "text_file_test.h"
 
 #include <boost/filesystem.hpp>
-#include <libKitsunePersistence/files/text_file.h>
+#include <libKitsunemimiPersistence/files/text_file.h>
 
 namespace fs=boost::filesystem;
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Persistence
 {
 
 TextFile_Test::TextFile_Test()
-    : Kitsune::Common::UnitTest("TextFile_Test")
+    : Kitsunemimi::Common::Test("TextFile_Test")
 {
     initTest();
     writeFile_test();
@@ -56,11 +56,11 @@ TextFile_Test::writeFile_test()
 
     // write content to file in three different cases
     ret = writeFile(m_filePath, content, false);
-    UNITTEST(ret.first, true);
+    TEST_EQUAL(ret.first, true);
     ret = writeFile(m_filePath, content, false);
-    UNITTEST(ret.first, false);
+    TEST_EQUAL(ret.first, false);
     ret = writeFile(m_filePath, content, true);
-    UNITTEST(ret.first, true);
+    TEST_EQUAL(ret.first, true);
 
     // cleanup
     deleteFile();
@@ -78,16 +78,16 @@ TextFile_Test::readFile_test()
 
     // write initial file
     ret = writeFile(m_filePath, content, false);
-    UNITTEST(ret.first, true);
+    TEST_EQUAL(ret.first, true);
 
     // run function and check result
     ret = readFile(m_filePath);
-    UNITTEST(ret.first, true);
-    UNITTEST(ret.second, content);
+    TEST_EQUAL(ret.first, true);
+    TEST_EQUAL(ret.second, content);
 
     // negative test: file not exist
     ret = readFile(m_filePath + "_fake");
-    UNITTEST(ret.first, false);
+    TEST_EQUAL(ret.first, false);
 
     // cleanup
     deleteFile();
@@ -105,22 +105,22 @@ TextFile_Test::appendText_test()
 
     // write initial file
     ret = writeFile(m_filePath, content, false);
-    UNITTEST(ret.first, true);
+    TEST_EQUAL(ret.first, true);
 
     // run function
     ret = appendText(m_filePath,
                      "\nasdfasdfasdf");
-    UNITTEST(ret.first, true);
+    TEST_EQUAL(ret.first, true);
 
     // read updated file
     ret = readFile(m_filePath);
-    UNITTEST(ret.first, true);
+    TEST_EQUAL(ret.first, true);
 
     // check result
     std::string compare = "this is a test\n"
                           "and this is a second line\n"
                           "asdfasdfasdf";
-    UNITTEST(ret.second, compare);
+    TEST_EQUAL(ret.second, compare);
 
     // cleanup
     deleteFile();
@@ -139,24 +139,24 @@ TextFile_Test::replaceLine_test()
 
     // write initial file
     ret = writeFile(m_filePath, content, false);
-    UNITTEST(ret.first, true);
+    TEST_EQUAL(ret.first, true);
 
     // run function
     ret = replaceLine(m_filePath,
                       2,
                       "poi");
-    UNITTEST(ret.first, true);
+    TEST_EQUAL(ret.first, true);
 
     // read updated file
     ret = readFile(m_filePath);
-    UNITTEST(ret.first, true);
+    TEST_EQUAL(ret.first, true);
 
     // check result
     std::string compare = "this is a test\n"
                           "and this is a second line\n"
                           "poi";
 
-    UNITTEST(ret.second, compare);
+    TEST_EQUAL(ret.second, compare);
 
     // cleanup
     deleteFile();
@@ -175,23 +175,23 @@ TextFile_Test::replaceContent_test()
 
     // write initial file
     ret = writeFile(m_filePath, content, false);
-    UNITTEST(ret.first, true);
+    TEST_EQUAL(ret.first, true);
 
     // run function
     ret = replaceContent(m_filePath,
                          "poi",
                          "nani");
-    UNITTEST(ret.first, true);
+    TEST_EQUAL(ret.first, true);
 
     // read updated file
     ret = readFile(m_filePath);
-    UNITTEST(ret.first, true);
+    TEST_EQUAL(ret.first, true);
 
     // check result
     std::string compare = "this is a test\n"
                           "and this is a second line\n"
                           "nani";
-    UNITTEST(ret.second, compare);
+    TEST_EQUAL(ret.second, compare);
 
     // cleanup
     deleteFile();
@@ -219,5 +219,5 @@ TextFile_Test::deleteFile()
 }
 
 } // namespace Persistence
-} // namespace Kitsune
+} // namespace Kitsunemimi
 

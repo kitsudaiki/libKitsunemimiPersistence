@@ -9,11 +9,11 @@
 #include "binary_file_with_directIO_test.h"
 
 #include <boost/filesystem.hpp>
-#include <libKitsunePersistence/files/binary_file.h>
+#include <libKitsunemimiPersistence/files/binary_file.h>
 
 namespace fs=boost::filesystem;
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Persistence
 {
@@ -26,7 +26,7 @@ struct TestStruct
 } __attribute__((packed));
 
 BinaryFile_withDirectIO_Test::BinaryFile_withDirectIO_Test()
-    : Kitsune::Common::UnitTest("BinaryFile_withDirectIO_Test")
+    : Kitsunemimi::Common::Test("BinaryFile_withDirectIO_Test")
 {
     initTest();
     closeFile_test();
@@ -57,8 +57,8 @@ BinaryFile_withDirectIO_Test::closeFile_test()
     BinaryFile binaryFile(m_filePath);
 
     // test close
-    UNITTEST(binaryFile.closeFile(), true);
-    UNITTEST(binaryFile.closeFile(), false);
+    TEST_EQUAL(binaryFile.closeFile(), true);
+    TEST_EQUAL(binaryFile.closeFile(), false);
 
     deleteFile();
 }
@@ -76,10 +76,10 @@ BinaryFile_withDirectIO_Test::updateFileSize_test()
     binaryFile.closeFile();
 
     BinaryFile binaryFileNew(m_filePath);
-    UNITTEST(binaryFileNew.updateFileSize(), true);
-    UNITTEST(binaryFileNew.m_totalFileSize, 4*4096);
+    TEST_EQUAL(binaryFileNew.updateFileSize(), true);
+    TEST_EQUAL(binaryFileNew.m_totalFileSize, 4*4096);
 
-    UNITTEST(binaryFileNew.m_totalFileSize, binaryFileNew.m_totalFileSize);
+    TEST_EQUAL(binaryFileNew.m_totalFileSize, binaryFileNew.m_totalFileSize);
 }
 
 /**
@@ -93,17 +93,17 @@ BinaryFile_withDirectIO_Test::allocateStorage_test()
     BinaryFile binaryFile(m_filePath);
 
     // test allocation
-    UNITTEST(binaryFile.allocateStorage(4), true);
-    UNITTEST(binaryFile.allocateStorage(4), true);
-    UNITTEST(binaryFile.allocateStorage(0), false);
+    TEST_EQUAL(binaryFile.allocateStorage(4), true);
+    TEST_EQUAL(binaryFile.allocateStorage(4), true);
+    TEST_EQUAL(binaryFile.allocateStorage(0), false);
 
     // check meta-data
-    UNITTEST(binaryFile.m_totalFileSize, 8*4096);
+    TEST_EQUAL(binaryFile.m_totalFileSize, 8*4096);
 
     binaryFile.closeFile();
 
     // negative test
-    UNITTEST(binaryFile.allocateStorage(4), false);
+    TEST_EQUAL(binaryFile.allocateStorage(4), false);
 
     deleteFile();
 }
@@ -128,17 +128,17 @@ BinaryFile_withDirectIO_Test::writeSegment_test()
     buffer.addData(&testStruct);
 
     // write-tests
-    UNITTEST(binaryFile.writeSegment(&buffer, 1, 1, 0), true);
-    UNITTEST(binaryFile.writeSegment(&buffer, 2, 1, 2), true);
+    TEST_EQUAL(binaryFile.writeSegment(&buffer, 1, 1, 0), true);
+    TEST_EQUAL(binaryFile.writeSegment(&buffer, 2, 1, 2), true);
 
     // negative tests
-    UNITTEST(binaryFile.writeSegment(&buffer, 2, 0, 3), false);
-    UNITTEST(binaryFile.writeSegment(&buffer, 42, 1, 3), false);
-    UNITTEST(binaryFile.writeSegment(&buffer, 2, 42, 3), false);
-    UNITTEST(binaryFile.writeSegment(&buffer, 2, 1, 42), false);
+    TEST_EQUAL(binaryFile.writeSegment(&buffer, 2, 0, 3), false);
+    TEST_EQUAL(binaryFile.writeSegment(&buffer, 42, 1, 3), false);
+    TEST_EQUAL(binaryFile.writeSegment(&buffer, 2, 42, 3), false);
+    TEST_EQUAL(binaryFile.writeSegment(&buffer, 2, 1, 42), false);
 
     // cleanup
-    UNITTEST(binaryFile.closeFile(), true);
+    TEST_EQUAL(binaryFile.closeFile(), true);
     deleteFile();
 }
 
@@ -164,8 +164,8 @@ BinaryFile_withDirectIO_Test::readSegment_test()
     buffer.addData(&testStruct);
 
     // write the two blocks of the buffer
-    UNITTEST(binaryFile.writeSegment(&buffer, 1, 1, 0), true);
-    UNITTEST(binaryFile.writeSegment(&buffer, 2, 1, 2), true);
+    TEST_EQUAL(binaryFile.writeSegment(&buffer, 1, 1, 0), true);
+    TEST_EQUAL(binaryFile.writeSegment(&buffer, 2, 1, 2), true);
 
     // clear orinial buffer
     memset(buffer.data, 0, buffer.totalBufferSize);
@@ -173,31 +173,31 @@ BinaryFile_withDirectIO_Test::readSegment_test()
     testStruct.c = 0;
 
     // read the two blocks back
-    UNITTEST(binaryFile.readSegment(&buffer, 1, 1, 1), true);
-    UNITTEST(binaryFile.readSegment(&buffer, 2, 1, 3), true);
+    TEST_EQUAL(binaryFile.readSegment(&buffer, 1, 1, 1), true);
+    TEST_EQUAL(binaryFile.readSegment(&buffer, 2, 1, 3), true);
 
     // negative tests
-    UNITTEST(binaryFile.readSegment(&buffer, 2, 0, 3), false);
-    UNITTEST(binaryFile.readSegment(&buffer, 42, 1, 3), false);
-    UNITTEST(binaryFile.readSegment(&buffer, 2, 42, 3), false);
-    UNITTEST(binaryFile.readSegment(&buffer, 2, 1, 42), false);
+    TEST_EQUAL(binaryFile.readSegment(&buffer, 2, 0, 3), false);
+    TEST_EQUAL(binaryFile.readSegment(&buffer, 42, 1, 3), false);
+    TEST_EQUAL(binaryFile.readSegment(&buffer, 2, 42, 3), false);
+    TEST_EQUAL(binaryFile.readSegment(&buffer, 2, 1, 42), false);
 
     // copy and check the first block
     mempcpy(&testStruct,
             static_cast<uint8_t*>(buffer.data) + (1 * buffer.blockSize),
             sizeof(TestStruct));
-    UNITTEST(testStruct.a, 42);
-    UNITTEST(testStruct.c, 1337);
+    TEST_EQUAL(testStruct.a, 42);
+    TEST_EQUAL(testStruct.c, 1337);
 
     // copy and check the second block
     mempcpy(&testStruct,
             static_cast<uint8_t*>(buffer.data) + (3 * buffer.blockSize),
             sizeof(TestStruct));
-    UNITTEST(testStruct.a, 10);
-    UNITTEST(testStruct.c, 1234);
+    TEST_EQUAL(testStruct.a, 10);
+    TEST_EQUAL(testStruct.c, 1234);
 
     // cleanup
-    UNITTEST(binaryFile.closeFile(), true);
+    TEST_EQUAL(binaryFile.closeFile(), true);
     deleteFile();
 }
 
@@ -223,5 +223,5 @@ BinaryFile_withDirectIO_Test::deleteFile()
 }
 
 } // namespace Persistence
-} // namespace Kitsune
+} // namespace Kitsunemimi
 

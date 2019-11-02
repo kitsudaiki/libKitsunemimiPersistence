@@ -18,14 +18,14 @@
 #include <ctime>
 #include <mutex>
 
-#include <libKitsunePersistence/files/binary_file.h>
+#include <libKitsunemimiPersistence/files/binary_file.h>
 
-#define LOG_DEBUG Kitsune::Persistence::LOG_debug
-#define LOG_INFO Kitsune::Persistence::LOG_info
-#define LOG_WARNING Kitsune::Persistence::LOG_warning
-#define LOG_ERROR Kitsune::Persistence::LOG_error
+#define LOG_DEBUG Kitsunemimi::Persistence::LOG_debug
+#define LOG_INFO Kitsunemimi::Persistence::LOG_info
+#define LOG_WARNING Kitsunemimi::Persistence::LOG_warning
+#define LOG_ERROR Kitsunemimi::Persistence::LOG_error
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Persistence
 {
@@ -61,7 +61,7 @@ public:
     std::string m_filePath = "";
     bool m_debugLog = false;
 
-    static Kitsune::Persistence::Logger* m_logger;
+    static Kitsunemimi::Persistence::Logger* m_logger;
 
 private:
     bool m_logOnConsole = false;
@@ -77,6 +77,6 @@ private:
 };
 
 } // namespace Persistence
-} // namespace Kitsune
+} // namespace Kitsunemimi
 
 #endif // LOGGER_H

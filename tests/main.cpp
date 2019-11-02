@@ -7,17 +7,17 @@
  */
 
 #include <iostream>
-#include <libKitsunePersistence/files/text_file_test.h>
-#include <libKitsunePersistence/files/binary_file_with_directIO_test.h>
-#include <libKitsunePersistence/files/binary_file_without_directIO_test.h>
-#include <libKitsunePersistence/database/sqlite_test.h>
-#include <libKitsunePersistence/logger/logger_test.h>
+#include <libKitsunemimiPersistence/files/text_file_test.h>
+#include <libKitsunemimiPersistence/files/binary_file_with_directIO_test.h>
+#include <libKitsunemimiPersistence/files/binary_file_without_directIO_test.h>
+#include <libKitsunemimiPersistence/database/sqlite_test.h>
+#include <libKitsunemimiPersistence/logger/logger_test.h>
 
 int main()
 {
-    Kitsune::Persistence::TextFile_Test();
-    Kitsune::Persistence::BinaryFile_withDirectIO_Test();
-    Kitsune::Persistence::BinaryFile_withoutDirectIO_Test();
-    Kitsune::Persistence::Sqlite_Test();
-    Kitsune::Persistence::Logger_Test();
+    Kitsunemimi::Persistence::TextFile_Test();
+    Kitsunemimi::Persistence::BinaryFile_withDirectIO_Test();
+    Kitsunemimi::Persistence::BinaryFile_withoutDirectIO_Test();
+    Kitsunemimi::Persistence::Sqlite_Test();
+    Kitsunemimi::Persistence::Logger_Test();
 }

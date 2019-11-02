@@ -8,14 +8,14 @@
  *  @brief simple logger for events
  */
 
-#include <libKitsunePersistence/logger/logger.h>
+#include <libKitsunemimiPersistence/logger/logger.h>
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Persistence
 {
 
-Kitsune::Persistence::Logger* Logger::m_logger = nullptr;
+Kitsunemimi::Persistence::Logger* Logger::m_logger = nullptr;
 
 /**
  * @brief initLogger
@@ -37,7 +37,7 @@ initLogger(const std::string directoryPath,
         return std::pair<bool, std::string>(false, errorMessage);
     }
 
-    Logger::m_logger = new Kitsune::Persistence::Logger(directoryPath,
+    Logger::m_logger = new Kitsunemimi::Persistence::Logger(directoryPath,
                                                         baseFileName,
                                                         debugLog,
                                                         logOnConsole);
@@ -50,15 +50,15 @@ initLogger(const std::string directoryPath,
 bool
 LOG_debug(const std::string message)
 {
-    if(Kitsune::Persistence::Logger::m_logger == nullptr) {
+    if(Kitsunemimi::Persistence::Logger::m_logger == nullptr) {
         return false;
     }
 
-    if(Kitsune::Persistence::Logger::m_logger->m_debugLog == false) {
+    if(Kitsunemimi::Persistence::Logger::m_logger->m_debugLog == false) {
         return false;
     }
 
-    return Kitsune::Persistence::Logger::m_logger->logData("DEBUG: " + message);
+    return Kitsunemimi::Persistence::Logger::m_logger->logData("DEBUG: " + message);
 }
 
 /**
@@ -67,11 +67,11 @@ LOG_debug(const std::string message)
 bool
 LOG_info(const std::string message)
 {
-    if(Kitsune::Persistence::Logger::m_logger == nullptr) {
+    if(Kitsunemimi::Persistence::Logger::m_logger == nullptr) {
         return false;
     }
 
-    return Kitsune::Persistence::Logger::m_logger->logData("INFO: " + message);
+    return Kitsunemimi::Persistence::Logger::m_logger->logData("INFO: " + message);
 }
 
 /**
@@ -80,11 +80,11 @@ LOG_info(const std::string message)
 bool
 LOG_warning(const std::string message)
 {
-    if(Kitsune::Persistence::Logger::m_logger == nullptr) {
+    if(Kitsunemimi::Persistence::Logger::m_logger == nullptr) {
         return false;
     }
 
-    return Kitsune::Persistence::Logger::m_logger->logData("WARNING: " + message);
+    return Kitsunemimi::Persistence::Logger::m_logger->logData("WARNING: " + message);
 }
 
 /**
@@ -93,11 +93,11 @@ LOG_warning(const std::string message)
 bool
 LOG_error(const std::string message)
 {
-    if(Kitsune::Persistence::Logger::m_logger == nullptr) {
+    if(Kitsunemimi::Persistence::Logger::m_logger == nullptr) {
         return false;
     }
 
-    return Kitsune::Persistence::Logger::m_logger->logData("ERROR: " + message);
+    return Kitsunemimi::Persistence::Logger::m_logger->logData("ERROR: " + message);
 }
 
 bool
@@ -263,4 +263,4 @@ Logger::getDatetime()
 }
 
 } // namespace Persistence
-} // namespace Kitsune
+} // namespace Kitsunemimi

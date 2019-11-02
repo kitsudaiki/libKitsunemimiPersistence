@@ -22,11 +22,11 @@
 #include <assert.h>
 #include <boost/filesystem.hpp>
 
-#include <libKitsuneCommon/data_buffer.h>
+#include <libKitsunemimiCommon/data_buffer.h>
 
 namespace fs=boost::filesystem;
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Persistence
 {
@@ -65,6 +65,6 @@ private:
 };
 
 } // namespace Persistence
-} // namespace Kitsune
+} // namespace Kitsunemimi
 
 #endif // BINARY_FILE_H

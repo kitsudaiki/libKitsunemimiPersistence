@@ -18,7 +18,7 @@
 #include <string>
 #include <fstream>
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Persistence
 {
@@ -46,6 +46,6 @@ replaceContent(const std::string &filePath,
                const std::string newContent);
 
 } // namespace Persistence
-} // namespace Kitsune
+} // namespace Kitsunemimi
 
 #endif // TEXT_FILE_H

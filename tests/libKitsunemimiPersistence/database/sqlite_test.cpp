@@ -8,19 +8,19 @@
 
 #include "sqlite_test.h"
 
-#include <libKitsunePersistence/database/sqlite.h>
-#include <libKitsuneCommon/common_items/table_item.h>
+#include <libKitsunemimiPersistence/database/sqlite.h>
+#include <libKitsunemimiCommon/common_items/table_item.h>
 #include <boost/filesystem.hpp>
 
 namespace fs=boost::filesystem;
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Persistence
 {
 
 Sqlite_Test::Sqlite_Test()
-    : Kitsune::Common::UnitTest("Sqlite_Test")
+    : Kitsunemimi::Common::Test("Sqlite_Test")
 {
     initTest();
     initDB_test();
@@ -50,7 +50,7 @@ Sqlite_Test::initDB_test()
     std::pair<bool, std::string> result;
     result = testDB.initDB(m_filePath);
 
-    UNITTEST(result.first, true);
+    TEST_EQUAL(result.first, true);
 
     deleteFile();
 }
@@ -64,7 +64,7 @@ Sqlite_Test::execSqlCommand_test()
     Sqlite testDB;
     testDB.initDB(m_filePath);
     std::pair<bool, std::string> result;
-    Kitsune::Common::TableItem resultItem;
+    Kitsunemimi::Common::TableItem resultItem;
 
     //-----------------------------------------------------------------
     // CREATE TABLE
@@ -78,7 +78,7 @@ Sqlite_Test::execSqlCommand_test()
             "SALARY         REAL );";
 
     result = testDB.execSqlCommand(nullptr, sql);
-    UNITTEST(result.first, true);
+    TEST_EQUAL(result.first, true);
 
     //-----------------------------------------------------------------
     // INSERT
@@ -93,7 +93,7 @@ Sqlite_Test::execSqlCommand_test()
            "VALUES (4, 'Mark', 25, 'Rich-Mond ', 65000.00 );";
 
     result = testDB.execSqlCommand(nullptr, sql);
-    UNITTEST(result.first, true);
+    TEST_EQUAL(result.first, true);
 
     //-----------------------------------------------------------------
     // SELECT
@@ -102,7 +102,7 @@ Sqlite_Test::execSqlCommand_test()
 
     resultItem.clearTable();
     result = testDB.execSqlCommand(&resultItem, sql);
-    UNITTEST(result.first, true);
+    TEST_EQUAL(result.first, true);
 
     std::string compare =
             "+----+-------+-----+------------+---------+\n"
@@ -116,7 +116,7 @@ Sqlite_Test::execSqlCommand_test()
             "+----+-------+-----+------------+---------+\n"
             "| 4  | Mark  | 25  | Rich-Mond  | 65000.0 |\n"
             "+----+-------+-----+------------+---------+\n";
-    UNITTEST(resultItem.toString(), compare);
+    TEST_EQUAL(resultItem.toString(), compare);
 
     //-----------------------------------------------------------------
     // UPDATE
@@ -126,7 +126,7 @@ Sqlite_Test::execSqlCommand_test()
 
     resultItem.clearTable();
     result = testDB.execSqlCommand(&resultItem, sql);
-    UNITTEST(result.first, true);
+    TEST_EQUAL(result.first, true);
 
     compare =
             "+----+-------+-----+------------+---------+\n"
@@ -140,7 +140,7 @@ Sqlite_Test::execSqlCommand_test()
             "+----+-------+-----+------------+---------+\n"
             "| 4  | Mark  | 25  | Rich-Mond  | 65000.0 |\n"
             "+----+-------+-----+------------+---------+\n";
-    UNITTEST(resultItem.toString(), compare);
+    TEST_EQUAL(resultItem.toString(), compare);
 
     //-----------------------------------------------------------------
     // DELETE
@@ -150,7 +150,7 @@ Sqlite_Test::execSqlCommand_test()
 
     resultItem.clearTable();
     result = testDB.execSqlCommand(&resultItem, sql);
-    UNITTEST(result.first, true);
+    TEST_EQUAL(result.first, true);
 
     compare =
            "+----+-------+-----+------------+---------+\n"
@@ -162,7 +162,7 @@ Sqlite_Test::execSqlCommand_test()
            "+----+-------+-----+------------+---------+\n"
            "| 4  | Mark  | 25  | Rich-Mond  | 65000.0 |\n"
            "+----+-------+-----+------------+---------+\n";
-    UNITTEST(resultItem.toString(), compare);
+    TEST_EQUAL(resultItem.toString(), compare);
 
 
     testDB.closeDB();
@@ -178,12 +178,12 @@ Sqlite_Test::closeDB_test()
 {
     Sqlite testDB;
 
-    UNITTEST(testDB.closeDB(), false);
+    TEST_EQUAL(testDB.closeDB(), false);
 
     testDB.initDB(m_filePath);
 
-    UNITTEST(testDB.closeDB(), true);
-    UNITTEST(testDB.closeDB(), false);
+    TEST_EQUAL(testDB.closeDB(), true);
+    TEST_EQUAL(testDB.closeDB(), false);
 
     deleteFile();
 }
@@ -210,4 +210,4 @@ Sqlite_Test::deleteFile()
 }
 
 } // namespace Persistence
-} // namespace Kitsune
+} // namespace Kitsunemimi

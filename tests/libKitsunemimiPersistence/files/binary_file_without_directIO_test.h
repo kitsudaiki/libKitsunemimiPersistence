@@ -9,15 +9,15 @@
 #ifndef BINARY_FILE_WITHOUT_DIRECTIO_TEST_H
 #define BINARY_FILE_WITHOUT_DIRECTIO_TEST_H
 
-#include <libKitsuneCommon/unit_test.h>
+#include <libKitsunemimiCommon/test.h>
 
-namespace Kitsune
+namespace Kitsunemimi
 {
 namespace Persistence
 {
 
 class BinaryFile_withoutDirectIO_Test
-        : public Kitsune::Common::UnitTest
+        : public Kitsunemimi::Common::Test
 {
 public:
     BinaryFile_withoutDirectIO_Test();
@@ -36,6 +36,6 @@ private:
 };
 
 } // namespace Persistence
-} // namespace Kitsune
+} // namespace Kitsunemimi
 
 #endif // BINARY_FILE_WITHOUT_DIRECTIO_TEST_H
