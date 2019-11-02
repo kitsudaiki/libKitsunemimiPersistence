@@ -128,9 +128,9 @@ After running the build-script:
     ├── libKitsunemimiCommon.so.0.7 -> libKitsunemimiCommon.so.0.7.0
     ├── libKitsunemimiCommon.so.0.7.0
     │
-    ├── libKitsunemimiPersistence.so.0 -> libKitsunemimiPersistence.so.0.5.0
-    ├── libKitsunemimiPersistence.so.0.5 -> libKitsunemimiPersistence.so.0.5.0
-    └── libKitsunemimiPersistence.so.0.5.0
+    ├── libKitsunemimiPersistence.so.0 -> libKitsunemimiPersistence.so.0.6.0
+    ├── libKitsunemimiPersistence.so.0.6 -> libKitsunemimiPersistence.so.0.6.0
+    └── libKitsunemimiPersistence.so.0.6.0
 ```
 
 It create automatic a `build` and `result` directory in the directory, where you have cloned the project. At first it build all into the `build`-directory and after all build-steps are finished, it copy the include directory from the cloned repository and the build library into the `result`-directory. So you have all in one single place.
