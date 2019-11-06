@@ -13,7 +13,7 @@ INCLUDEPATH += ../../libKitsunemimiCommon/include
 LIBS +=  -lboost_filesystem -lboost_system -lsqlite3
 
 INCLUDEPATH += $$PWD \
-            ../include
+               $$PWD/../include
 
 SOURCES += \
     files/binary_file.cpp \
