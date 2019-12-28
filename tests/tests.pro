@@ -21,11 +21,13 @@ SOURCES += \
     libKitsunemimiPersistence/database/sqlite_test.cpp \
     libKitsunemimiPersistence/logger/logger_test.cpp \
     libKitsunemimiPersistence/files/binary_file_with_directIO_test.cpp \
-    libKitsunemimiPersistence/files/binary_file_without_directIO_test.cpp
+    libKitsunemimiPersistence/files/binary_file_without_directIO_test.cpp \
+    libKitsunemimiPersistence/files/file_methods_test.cpp
 
 HEADERS += \
     libKitsunemimiPersistence/files/text_file_test.h \
     libKitsunemimiPersistence/database/sqlite_test.h \
     libKitsunemimiPersistence/logger/logger_test.h \
     libKitsunemimiPersistence/files/binary_file_with_directIO_test.h \
-    libKitsunemimiPersistence/files/binary_file_without_directIO_test.h
+    libKitsunemimiPersistence/files/binary_file_without_directIO_test.h \
+    libKitsunemimiPersistence/files/file_methods_test.h
