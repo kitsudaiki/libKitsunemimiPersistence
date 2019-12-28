@@ -1,9 +1,9 @@
 /**
- * @file        file_methods.cpp
+ *  @file       file_methods.cpp
  *
- *  @author  Tobias Anker <tobias.anker@kitsunemimi.moe>
+ *  @author     Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
- *  @copyright MIT License
+ *  @copyright  MIT License
  */
 
 #include <libKitsunemimiPersistence/files/file_methods.h>
