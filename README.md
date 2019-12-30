@@ -85,7 +85,7 @@ IMPORTANT: All my projects are only tested on Linux.
 
 Repository-Name | Version-Tag | Download-Path
 --- | --- | ---
-libKitsunemimiCommon | v0.7.0 |  https://github.com/tobiasanker/libKitsunemimiCommon.git
+libKitsunemimiCommon | v0.9.0 |  https://github.com/tobiasanker/libKitsunemimiCommon.git
 
 
 ### build library
@@ -124,13 +124,13 @@ After running the build-script:
     │   └── libKitsunemimiPersistence
     │       └── ...
     │
-    ├── libKitsunemimiCommon.so.0 -> libKitsunemimiCommon.so.0.7.0
-    ├── libKitsunemimiCommon.so.0.7 -> libKitsunemimiCommon.so.0.7.0
-    ├── libKitsunemimiCommon.so.0.7.0
+    ├── libKitsunemimiCommon.so.0 -> libKitsunemimiCommon.so.0.9.0
+    ├── libKitsunemimiCommon.so.0.9 -> libKitsunemimiCommon.so.0.9.0
+    ├── libKitsunemimiCommon.so.0.9.0
     │
-    ├── libKitsunemimiPersistence.so.0 -> libKitsunemimiPersistence.so.0.6.0
-    ├── libKitsunemimiPersistence.so.0.6 -> libKitsunemimiPersistence.so.0.6.0
-    └── libKitsunemimiPersistence.so.0.6.0
+    ├── libKitsunemimiPersistence.so.0 -> libKitsunemimiPersistence.so.0.6.1
+    ├── libKitsunemimiPersistence.so.0.6 -> libKitsunemimiPersistence.so.0.6.1
+    └── libKitsunemimiPersistence.so.0.6.1
 ```
 
 It create automatic a `build` and `result` directory in the directory, where you have cloned the project. At first it build all into the `build`-directory and after all build-steps are finished, it copy the include directory from the cloned repository and the build library into the `result`-directory. So you have all in one single place.
