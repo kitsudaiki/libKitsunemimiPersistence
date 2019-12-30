@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.6.1] - 2019-12-30
+
+### Added
+- file-methods for renaming and so on
+
+### Fixed
+- fixed build-script
+
+
 ## [0.6.0] - 2019-11-02
 
 ### Changed
