@@ -14,9 +14,11 @@ namespace Persistence
 {
 
 /**
- * @brief doesPathExist
- * @param path
- * @return
+ * @brief check if a path exist
+ *
+ * @param path path to check
+ *
+ * @return true, if path exist, else false
  */
 bool
 doesPathExist(const std::string path)
@@ -25,9 +27,11 @@ doesPathExist(const std::string path)
 }
 
 /**
- * @brief doesFileExist
- * @param filePath
- * @return
+ * @brief check if a path exist and is a directory
+ *
+ * @param filePath path to check
+ *
+ * @return true, if path exist and is a file, else false
  */
 bool
 isFile(const std::string filePath)
@@ -42,9 +46,11 @@ isFile(const std::string filePath)
 }
 
 /**
- * @brief doesDirExist
- * @param dirPath
- * @return
+ * @brief check if a path exist and is a directory
+ *
+ * @param dirPath path to check
+ *
+ * @return true, if path exist and is a directory, else false
  */
 bool
 isDir(const std::string dirPath)
@@ -59,21 +65,31 @@ isDir(const std::string dirPath)
 }
 
 /**
- * @brief getParent
- * @param path
- * @return
+ * @brief get parent-path of a path
+ *
+ * @param path original path
+ *
+ * @return parent-path, if path exist, else empty string
  */
 const std::string
 getParent(const std::string &path)
 {
+    if(boost::filesystem::exists(path) == false) {
+        return std::string("");
+    }
+
     boost::filesystem::path pathObj(path);
     return pathObj.parent_path().string();
 }
 
 /**
- * @brief getFilesInDir
- * @param fileList
- * @param directory
+ * @brief iterate over a directory and subdirectory to file all containing files
+ *
+ * @param fileList resulting string-list with the absolute path of all found files
+ * @param directory directory-path where to search
+ * @param withSubdirs false, to list only files in the current directory, but not files from
+ *                    subdirectories
+ * @param exceptions list with directory-names, which should be skipped
  */
 void
 getFilesInDir(std::vector<std::string> &fileList,
@@ -109,7 +125,6 @@ getFilesInDir(std::vector<std::string> &fileList,
                     getFilesInDir(fileList, itr->path(), withSubdirs, exceptions);
                 }
             }
-
         }
         else
         {
@@ -119,11 +134,14 @@ getFilesInDir(std::vector<std::string> &fileList,
 }
 
 /**
- * @brief listFiles
- * @param path
- * @param withSubdirs
- * @param exceptions
- * @return
+ * @brief iterate over a directory and subdirectory to file all containing files
+ *
+ * @param fileList resulting string-list with the absolute path of all found files
+ * @param path path where to search. This should be a directory. If this is a file-path, this path
+ *             is the only one in the resulting list
+ * @param withSubdirs false, to list only files in the current directory, but not files from
+ *                    subdirectories (Default: true)
+ * @param exceptions list with directory-names, which should be skipped (Default: empty list)
  */
 void
 listFiles(std::vector<std::string> &fileList,
@@ -147,10 +165,14 @@ listFiles(std::vector<std::string> &fileList,
 }
 
 /**
- * @brief renameFileOrDir
- * @param oldPath
- * @param newPath
- * @return
+ * @brief rename a file or directory
+ *
+ * @param oldPath origial path
+ * @param newPath new path after renaming
+ *
+ * @return pair of boolean and string
+ *         success: first true and second empty string
+ *         failed: first faile and second the error-message
  */
 const std::pair<bool, std::string>
 renameFileOrDir(const std::string oldPath,
@@ -176,10 +198,14 @@ renameFileOrDir(const std::string oldPath,
 }
 
 /**
- * @brief copyPath
- * @param sourcePath
- * @param targetPath
- * @return
+ * @brief copy a file or directory
+ *
+ * @param sourcePath origial path
+ * @param targetPath path of the copy
+ *
+ * @return pair of boolean and string
+ *         success: first true and second empty string
+ *         failed: first faile and second the error-message
  */
 const std::pair<bool, std::string>
 copyPath(const std::string sourcePath,
@@ -209,9 +235,11 @@ copyPath(const std::string sourcePath,
 }
 
 /**
- * @brief deleteFileOrDis
- * @param path
- * @return
+ * @brief delete a file or directory
+ *
+ * @param path path to delete
+ *
+ * @return true, if success, else false
  */
 bool
 deleteFileOrDir(const std::string path)
