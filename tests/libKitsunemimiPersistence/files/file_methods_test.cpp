@@ -44,7 +44,8 @@ FileMethods_Test::FileMethods_Test()
     listFiles_test();
     renameFileOrDir_test();
     copyPath_test();
-    deleteFileOrDis_test();
+    createDirectory_test();
+    deleteFileOrDir_test();
 }
 
 /**
@@ -232,21 +233,60 @@ FileMethods_Test::copyPath_test()
 }
 
 /**
- * @brief deleteFileOrDis_test
+ * @brief createDirectory_test
  */
 void
-FileMethods_Test::deleteFileOrDis_test()
+FileMethods_Test::createDirectory_test()
 {
-    const std::string testPath = "/tmp/deleteFileOrDis_test_testfile";
+    std::pair<bool, std::string> result;
 
-    TEST_EQUAL(deleteFileOrDir(testPath), false);
+    const std::string testDirPath = "/tmp/deleteFileOrDir_test_testdir/test1";
 
-    runSyncProcess(std::string("touch " + testPath).c_str());
+    runSyncProcess(std::string("rm -r " + testDirPath).c_str());
+    TEST_EQUAL(doesPathExist(testDirPath), false);
 
-    TEST_EQUAL(deleteFileOrDir(testPath), true);
-    TEST_EQUAL(deleteFileOrDir(testPath), false);
+    result = createDirectory(testDirPath);
+    TEST_EQUAL(result.first, true);
 
-    TEST_EQUAL(doesPathExist(testPath), false);
+    TEST_EQUAL(doesPathExist(testDirPath), true);
+
+    result = createDirectory(testDirPath);
+    TEST_EQUAL(result.first, false);
+
+    runSyncProcess(std::string("rm -r " + testDirPath).c_str());
+}
+
+/**
+ * @brief deleteFileOrDir_test
+ */
+void
+FileMethods_Test::deleteFileOrDir_test()
+{
+    std::pair<bool, std::string> result;
+
+    const std::string testFilePath = "/tmp/deleteFileOrDir_test_testfile";
+    const std::string testDirPath = "/tmp/deleteFileOrDir_test_testdir";
+
+    runSyncProcess(std::string("touch " + testFilePath).c_str());
+    runSyncProcess(std::string("mkdir " + testDirPath).c_str());
+
+    TEST_EQUAL(doesPathExist(testFilePath), true);
+    TEST_EQUAL(doesPathExist(testDirPath), true);
+
+    result = deleteFileOrDir(testFilePath);
+    TEST_EQUAL(result.first, true);
+
+    result = deleteFileOrDir(testDirPath);
+    TEST_EQUAL(result.first, true);
+
+    result = deleteFileOrDir(testDirPath);
+    TEST_EQUAL(result.first, false);
+
+    TEST_EQUAL(doesPathExist(testFilePath), false);
+    TEST_EQUAL(doesPathExist(testDirPath), false);
+
+    runSyncProcess(std::string("rm " + testFilePath).c_str());
+    runSyncProcess(std::string("rm -r " + testDirPath).c_str());
 }
 
 }

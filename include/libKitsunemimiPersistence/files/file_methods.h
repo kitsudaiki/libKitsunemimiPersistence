@@ -33,7 +33,8 @@ const std::pair<bool, std::string> renameFileOrDir(const std::string oldPath,
 const std::pair<bool, std::string> copyPath(const std::string sourcePath,
                                             const std::string targetPath,
                                             const bool force=true);
-bool deleteFileOrDir(const std::string path);
+const std::pair<bool, std::string> createDirectory(const std::string &path);
+const std::pair<bool, std::string> deleteFileOrDir(const std::string &path);
 
 
 

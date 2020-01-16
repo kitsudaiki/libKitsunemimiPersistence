@@ -235,16 +235,59 @@ copyPath(const std::string sourcePath,
 }
 
 /**
- * @brief delete a file or directory
+ * @brief create a directory
+ *
+ * @param path path to create
+ *
+ * @return pair of boolean and string
+ *         success: first true and second empty string
+ *         failed: first faile and second the error-message
+ */
+const std::pair<bool, std::string>
+createDirectory(const std::string &path)
+{
+    std::pair<bool, std::string> result;
+
+    boost::system::error_code error;
+    error.clear();
+
+    result.first = boost::filesystem::create_directories(path, error);
+
+    if(result.first == false)
+    {
+        result.second = error.message();
+        return result;
+    }
+
+    return result;
+}
+
+/**
+ * @brief delete a path
  *
  * @param path path to delete
  *
- * @return true, if success, else false
+ * @return pair of boolean and string
+ *         success: first true and second empty string
+ *         failed: first faile and second the error-message
  */
-bool
-deleteFileOrDir(const std::string path)
+const std::pair<bool, std::string>
+deleteFileOrDir(const std::string &path)
 {
-    return boost::filesystem::remove(path);
+    std::pair<bool, std::string> result;
+
+    boost::system::error_code error;
+    error.clear();
+
+    result.first = boost::filesystem::remove_all(path, error);
+
+    if(result.first == false)
+    {
+        result.second = error.message();
+        return result;
+    }
+
+    return result;
 }
 
 }

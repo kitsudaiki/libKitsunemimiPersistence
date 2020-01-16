@@ -44,7 +44,8 @@ private:
     void listFiles_test();
     void renameFileOrDir_test();
     void copyPath_test();
-    void deleteFileOrDis_test();
+    void createDirectory_test();
+    void deleteFileOrDir_test();
 };
 
 }
