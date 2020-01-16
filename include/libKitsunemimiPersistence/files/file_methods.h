@@ -19,14 +19,24 @@ namespace Persistence
 {
 
 bool doesPathExist(const std::string path);
-bool doesFileExist(const std::string filePath);
-bool doesDirExist(const std::string dirPath);
+bool isFile(const std::string filePath);
+bool isDir(const std::string dirPath);
+
+const std::string getParent(const std::string &path);
+void listFiles(std::vector<std::string> &fileList,
+               const std::string &path,
+               const bool withSubdirs=true,
+               const std::vector<std::string> &exceptions = {});
+
 const std::pair<bool, std::string> renameFileOrDir(const std::string oldPath,
                                                    const std::string newPath);
 const std::pair<bool, std::string> copyPath(const std::string sourcePath,
                                             const std::string targetPath,
                                             const bool force=true);
 bool deleteFileOrDir(const std::string path);
+
+
+
 
 }
 }

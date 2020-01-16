@@ -30,7 +30,7 @@ doesPathExist(const std::string path)
  * @return
  */
 bool
-doesFileExist(const std::string filePath)
+isFile(const std::string filePath)
 {
     if(boost::filesystem::exists(filePath) == false
             || boost::filesystem::is_directory(filePath))
@@ -47,7 +47,7 @@ doesFileExist(const std::string filePath)
  * @return
  */
 bool
-doesDirExist(const std::string dirPath)
+isDir(const std::string dirPath)
 {
     if(boost::filesystem::exists(dirPath) == false
             || boost::filesystem::is_directory(dirPath) == false)
@@ -56,6 +56,94 @@ doesDirExist(const std::string dirPath)
     }
 
     return true;
+}
+
+/**
+ * @brief getParent
+ * @param path
+ * @return
+ */
+const std::string
+getParent(const std::string &path)
+{
+    boost::filesystem::path pathObj(path);
+    return pathObj.parent_path().string();
+}
+
+/**
+ * @brief getFilesInDir
+ * @param fileList
+ * @param directory
+ */
+void
+getFilesInDir(std::vector<std::string> &fileList,
+              const boost::filesystem::path &directory,
+              const bool withSubdirs,
+              const std::vector<std::string> &exceptions)
+{
+    boost::filesystem::directory_iterator end_itr;
+    for(boost::filesystem::directory_iterator itr(directory);
+        itr != end_itr;
+        ++itr)
+    {
+        if(is_directory(itr->path()))
+        {
+            if(withSubdirs == true)
+            {
+                if(exceptions.size() != 0)
+                {
+                    for(uint64_t i = 0; i < exceptions.size(); i++)
+                    {
+                        bool found = false;
+                        if(itr->path().leaf().string() == exceptions.at(i)) {
+                            found = true;
+                        }
+
+                        if(found == false) {
+                            getFilesInDir(fileList, itr->path(), withSubdirs, exceptions);
+                        }
+                    }
+                }
+                else
+                {
+                    getFilesInDir(fileList, itr->path(), withSubdirs, exceptions);
+                }
+            }
+
+        }
+        else
+        {
+            fileList.push_back(itr->path().string());
+        }
+    }
+}
+
+/**
+ * @brief listFiles
+ * @param path
+ * @param withSubdirs
+ * @param exceptions
+ * @return
+ */
+void
+listFiles(std::vector<std::string> &fileList,
+          const std::string &path,
+          const bool withSubdirs,
+          const std::vector<std::string> &exceptions)
+{
+    boost::filesystem::path pathObj(path);
+
+    if(is_directory(pathObj))
+    {
+        getFilesInDir(fileList,
+                      pathObj,
+                      withSubdirs,
+                      exceptions);
+    }
+    else
+    {
+        fileList.push_back(path);
+    }
 }
 
 /**
