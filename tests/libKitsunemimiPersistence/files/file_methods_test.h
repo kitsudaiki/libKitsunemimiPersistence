@@ -38,11 +38,14 @@ public:
 
 private:
     void doesPathExist_test();
-    void doesFileExist_test();
-    void doesDirExist_test();
+    void isFile_test();
+    void isDir_test();
+    void getParent_test();
+    void listFiles_test();
     void renameFileOrDir_test();
     void copyPath_test();
-    void deleteFileOrDis_test();
+    void createDirectory_test();
+    void deleteFileOrDir_test();
 };
 
 }

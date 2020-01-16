@@ -24,6 +24,8 @@
 #include <libKitsunemimiPersistence/files/file_methods.h>
 #include <libKitsunemimiCommon/process_execution.h>
 
+using Kitsunemimi::Common::runSyncProcess;
+
 namespace Kitsunemimi
 {
 namespace Persistence
@@ -36,11 +38,14 @@ FileMethods_Test::FileMethods_Test()
     : Kitsunemimi::Common::Test("FileMethods_Test")
 {
     doesPathExist_test();
-    doesFileExist_test();
-    doesDirExist_test();
+    isFile_test();
+    isDir_test();
+    getParent_test();
+    listFiles_test();
     renameFileOrDir_test();
     copyPath_test();
-    deleteFileOrDis_test();
+    createDirectory_test();
+    deleteFileOrDir_test();
 }
 
 /**
@@ -50,65 +55,127 @@ void
 FileMethods_Test::doesPathExist_test()
 {
     const std::string testPath = "/tmp/doesPathExist_test_testfile";
-    Kitsunemimi::Common::runSyncProcess(std::string("rm " + testPath).c_str());
+    runSyncProcess(std::string("rm " + testPath).c_str());
 
     TEST_EQUAL(doesPathExist(testPath), false);
 
-    Kitsunemimi::Common::runSyncProcess(std::string("touch " + testPath).c_str());
+    runSyncProcess(std::string("touch " + testPath).c_str());
 
     TEST_EQUAL(doesPathExist(testPath), true);
 
-    Kitsunemimi::Common::runSyncProcess(std::string("rm " + testPath).c_str());
+    runSyncProcess(std::string("rm " + testPath).c_str());
 }
 
 /**
- * @brief doesFileExist_test
+ * @brief isFile_test
  */
 void
-FileMethods_Test::doesFileExist_test()
+FileMethods_Test::isFile_test()
 {
-    const std::string testFilePath = "/tmp/doesFileExist_test_testfile";
-    const std::string testDirPath = "/tmp/doesFileExist_test_testdir";
+    const std::string testFilePath = "/tmp/isFile_test_testfile";
+    const std::string testDirPath = "/tmp/isFile_test_testdir";
 
-    Kitsunemimi::Common::runSyncProcess(std::string("rm " + testFilePath).c_str());
-    Kitsunemimi::Common::runSyncProcess(std::string("rm -r " + testDirPath).c_str());
+    runSyncProcess(std::string("rm " + testFilePath).c_str());
+    runSyncProcess(std::string("rm -r " + testDirPath).c_str());
 
-    TEST_EQUAL(doesFileExist(testFilePath), false);
-    TEST_EQUAL(doesFileExist(testDirPath), false);
+    TEST_EQUAL(isFile(testFilePath), false);
+    TEST_EQUAL(isFile(testDirPath), false);
 
-    Kitsunemimi::Common::runSyncProcess(std::string("touch " + testFilePath).c_str());
-    Kitsunemimi::Common::runSyncProcess(std::string("mkdir " + testDirPath).c_str());
+    runSyncProcess(std::string("touch " + testFilePath).c_str());
+    runSyncProcess(std::string("mkdir " + testDirPath).c_str());
 
-    TEST_EQUAL(doesFileExist(testFilePath), true);
-    TEST_EQUAL(doesFileExist(testDirPath), false);
+    TEST_EQUAL(isFile(testFilePath), true);
+    TEST_EQUAL(isFile(testDirPath), false);
 
-    Kitsunemimi::Common::runSyncProcess(std::string("rm " + testFilePath).c_str());
-    Kitsunemimi::Common::runSyncProcess(std::string("rm -r " + testDirPath).c_str());
+    runSyncProcess(std::string("rm " + testFilePath).c_str());
+    runSyncProcess(std::string("rm -r " + testDirPath).c_str());
 }
 
 /**
- * @brief doesDirExist_test
+ * @brief isDir_test
  */
 void
-FileMethods_Test::doesDirExist_test()
+FileMethods_Test::isDir_test()
 {
-    const std::string testFilePath = "/tmp/doesDirExist_test_testfile";
-    const std::string testDirPath = "/tmp/doesDirExist_test_testdir";
+    const std::string testFilePath = "/tmp/isDir_test_testfile";
+    const std::string testDirPath = "/tmp/isDir_test_testdir";
 
-    Kitsunemimi::Common::runSyncProcess(std::string("rm " + testFilePath).c_str());
-    Kitsunemimi::Common::runSyncProcess(std::string("rm -r " + testDirPath).c_str());
+    runSyncProcess(std::string("rm " + testFilePath).c_str());
+    runSyncProcess(std::string("rm -r " + testDirPath).c_str());
 
-    TEST_EQUAL(doesDirExist(testFilePath), false);
-    TEST_EQUAL(doesDirExist(testDirPath), false);
+    TEST_EQUAL(isDir(testFilePath), false);
+    TEST_EQUAL(isDir(testDirPath), false);
 
-    Kitsunemimi::Common::runSyncProcess(std::string("touch " + testFilePath).c_str());
-    Kitsunemimi::Common::runSyncProcess(std::string("mkdir " + testDirPath).c_str());
+    runSyncProcess(std::string("touch " + testFilePath).c_str());
+    runSyncProcess(std::string("mkdir " + testDirPath).c_str());
 
-    TEST_EQUAL(doesDirExist(testFilePath), false);
-    TEST_EQUAL(doesDirExist(testDirPath), true);
+    TEST_EQUAL(isDir(testFilePath), false);
+    TEST_EQUAL(isDir(testDirPath), true);
 
-    Kitsunemimi::Common::runSyncProcess(std::string("rm " + testFilePath).c_str());
-    Kitsunemimi::Common::runSyncProcess(std::string("rm -r " + testDirPath).c_str());
+    runSyncProcess(std::string("rm " + testFilePath).c_str());
+    runSyncProcess(std::string("rm -r " + testDirPath).c_str());
+}
+
+/**
+ * @brief getParent_test
+ */
+void
+FileMethods_Test::getParent_test()
+{
+    const std::string testFilePath = "/tmp/isFile_test_testdir/isFile_test_testfile";
+    const std::string testDirPath = "/tmp/isFile_test_testdir";
+
+    runSyncProcess(std::string("mkdir " + testDirPath).c_str());
+    runSyncProcess(std::string("touch " + testFilePath).c_str());
+
+    TEST_EQUAL(getParent(testFilePath), testDirPath);
+    TEST_EQUAL(getParent(testDirPath), std::string("/tmp"));
+
+    runSyncProcess(std::string("rm " + testFilePath).c_str());
+    runSyncProcess(std::string("rm -r " + testDirPath).c_str());
+}
+
+/**
+ * @brief listFiles_test
+ */
+void
+FileMethods_Test::listFiles_test()
+{
+    runSyncProcess(std::string("rm -r /tmp/listFiles_test/").c_str());
+    runSyncProcess(std::string("mkdir /tmp/listFiles_test/").c_str());
+    runSyncProcess(std::string("touch /tmp/listFiles_test/poi1").c_str());
+    runSyncProcess(std::string("mkdir /tmp/listFiles_test/test1").c_str());
+    runSyncProcess(std::string("touch /tmp/listFiles_test/test1/poi1").c_str());
+    runSyncProcess(std::string("touch /tmp/listFiles_test/test1/poi2").c_str());
+    runSyncProcess(std::string("mkdir /tmp/listFiles_test/test2").c_str());
+    runSyncProcess(std::string("touch /tmp/listFiles_test/test2/poi1").c_str());
+    runSyncProcess(std::string("touch /tmp/listFiles_test/test2/poi2").c_str());
+    runSyncProcess(std::string("touch /tmp/listFiles_test/test2/poi3").c_str());
+
+    std::vector<std::string> fileList;
+
+    listFiles(fileList, "/tmp/listFiles_test/");
+    TEST_EQUAL(fileList.size(), 6);
+    fileList.clear();
+
+    listFiles(fileList, "/tmp/listFiles_test/poi1");
+    TEST_EQUAL(fileList.size(), 1);
+    fileList.clear();
+
+    listFiles(fileList, "/tmp/listFiles_test/test1");
+    TEST_EQUAL(fileList.size(), 2);
+    fileList.clear();
+
+    listFiles(fileList, "/tmp/listFiles_test/", false);
+    TEST_EQUAL(fileList.size(), 1);
+    fileList.clear();
+
+    listFiles(fileList, "/tmp/listFiles_test/", true, std::vector<std::string>() = {"test1"});
+    TEST_EQUAL(fileList.size(), 4);
+    fileList.clear();
+
+
+    runSyncProcess(std::string("rm -r /tmp/listFiles_test/").c_str());
 }
 
 /**
@@ -122,8 +189,8 @@ FileMethods_Test::renameFileOrDir_test()
     const std::string oldFilePath = "/tmp/renameFileOrDir_test_testfile_ALT";
     const std::string newFileName = "/tmp/renameFileOrDir_test_testfile_NEU";
 
-    Kitsunemimi::Common::runSyncProcess(std::string("touch " + oldFilePath).c_str());
-    Kitsunemimi::Common::runSyncProcess(std::string("rm " + newFileName).c_str());
+    runSyncProcess(std::string("touch " + oldFilePath).c_str());
+    runSyncProcess(std::string("rm " + newFileName).c_str());
 
     result = renameFileOrDir(oldFilePath, newFileName);
     TEST_EQUAL(result.first, true);
@@ -134,8 +201,8 @@ FileMethods_Test::renameFileOrDir_test()
     TEST_EQUAL(doesPathExist(oldFilePath), false);
     TEST_EQUAL(doesPathExist(newFileName), true);
 
-    Kitsunemimi::Common::runSyncProcess(std::string("rm " + oldFilePath).c_str());
-    Kitsunemimi::Common::runSyncProcess(std::string("rm " + newFileName).c_str());
+    runSyncProcess(std::string("rm " + oldFilePath).c_str());
+    runSyncProcess(std::string("rm " + newFileName).c_str());
 }
 
 /**
@@ -149,8 +216,8 @@ FileMethods_Test::copyPath_test()
     const std::string oldFilePath = "/tmp/copyFile_test_testfile_ALT";
     const std::string newFileName = "/tmp/copyFile_test_testfile_NEU";
 
-    Kitsunemimi::Common::runSyncProcess(std::string("touch " + oldFilePath).c_str());
-    Kitsunemimi::Common::runSyncProcess(std::string("rm " + newFileName).c_str());
+    runSyncProcess(std::string("touch " + oldFilePath).c_str());
+    runSyncProcess(std::string("rm " + newFileName).c_str());
 
     result = copyPath(oldFilePath, newFileName);
     TEST_EQUAL(result.first, true);
@@ -161,26 +228,65 @@ FileMethods_Test::copyPath_test()
     TEST_EQUAL(doesPathExist(oldFilePath), true);
     TEST_EQUAL(doesPathExist(newFileName), true);
 
-    Kitsunemimi::Common::runSyncProcess(std::string("rm " + oldFilePath).c_str());
-    Kitsunemimi::Common::runSyncProcess(std::string("rm " + newFileName).c_str());
+    runSyncProcess(std::string("rm " + oldFilePath).c_str());
+    runSyncProcess(std::string("rm " + newFileName).c_str());
 }
 
 /**
- * @brief deleteFileOrDis_test
+ * @brief createDirectory_test
  */
 void
-FileMethods_Test::deleteFileOrDis_test()
+FileMethods_Test::createDirectory_test()
 {
-    const std::string testPath = "/tmp/deleteFileOrDis_test_testfile";
+    std::pair<bool, std::string> result;
 
-    TEST_EQUAL(deleteFileOrDir(testPath), false);
+    const std::string testDirPath = "/tmp/deleteFileOrDir_test_testdir/test1";
 
-    Kitsunemimi::Common::runSyncProcess(std::string("touch " + testPath).c_str());
+    runSyncProcess(std::string("rm -r " + testDirPath).c_str());
+    TEST_EQUAL(doesPathExist(testDirPath), false);
 
-    TEST_EQUAL(deleteFileOrDir(testPath), true);
-    TEST_EQUAL(deleteFileOrDir(testPath), false);
+    result = createDirectory(testDirPath);
+    TEST_EQUAL(result.first, true);
 
-    TEST_EQUAL(doesPathExist(testPath), false);
+    TEST_EQUAL(doesPathExist(testDirPath), true);
+
+    result = createDirectory(testDirPath);
+    TEST_EQUAL(result.first, false);
+
+    runSyncProcess(std::string("rm -r " + testDirPath).c_str());
+}
+
+/**
+ * @brief deleteFileOrDir_test
+ */
+void
+FileMethods_Test::deleteFileOrDir_test()
+{
+    std::pair<bool, std::string> result;
+
+    const std::string testFilePath = "/tmp/deleteFileOrDir_test_testfile";
+    const std::string testDirPath = "/tmp/deleteFileOrDir_test_testdir";
+
+    runSyncProcess(std::string("touch " + testFilePath).c_str());
+    runSyncProcess(std::string("mkdir " + testDirPath).c_str());
+
+    TEST_EQUAL(doesPathExist(testFilePath), true);
+    TEST_EQUAL(doesPathExist(testDirPath), true);
+
+    result = deleteFileOrDir(testFilePath);
+    TEST_EQUAL(result.first, true);
+
+    result = deleteFileOrDir(testDirPath);
+    TEST_EQUAL(result.first, true);
+
+    result = deleteFileOrDir(testDirPath);
+    TEST_EQUAL(result.first, false);
+
+    TEST_EQUAL(doesPathExist(testFilePath), false);
+    TEST_EQUAL(doesPathExist(testDirPath), false);
+
+    runSyncProcess(std::string("rm " + testFilePath).c_str());
+    runSyncProcess(std::string("rm -r " + testDirPath).c_str());
 }
 
 }
