@@ -28,13 +28,17 @@ void listFiles(std::vector<std::string> &fileList,
                const bool withSubdirs=true,
                const std::vector<std::string> &exceptions = {});
 
-const std::pair<bool, std::string> renameFileOrDir(const std::string oldPath,
-                                                   const std::string newPath);
-const std::pair<bool, std::string> copyPath(const std::string sourcePath,
-                                            const std::string targetPath,
-                                            const bool force=true);
-const std::pair<bool, std::string> createDirectory(const std::string &path);
-const std::pair<bool, std::string> deleteFileOrDir(const std::string &path);
+bool renameFileOrDir(const std::string &oldPath,
+                     const std::string &newPath,
+                     std::string &errorMessage);
+bool copyPath(const std::string &sourcePath,
+              const std::string &targetPath,
+              std::string &errorMessage,
+              const bool force=true);
+bool createDirectory(const std::string &path,
+                     std::string &errorMessage);
+bool deleteFileOrDir(const std::string &path,
+                     std::string &errorMessage);
 
 
 

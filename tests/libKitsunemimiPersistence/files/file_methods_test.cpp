@@ -24,7 +24,7 @@
 #include <libKitsunemimiPersistence/files/file_methods.h>
 #include <libKitsunemimiCommon/process_execution.h>
 
-using Kitsunemimi::Common::runSyncProcess;
+using Kitsunemimi::runSyncProcess;
 
 namespace Kitsunemimi
 {
@@ -35,7 +35,7 @@ namespace Persistence
  * @brief constructor
  */
 FileMethods_Test::FileMethods_Test()
-    : Kitsunemimi::Common::Test("FileMethods_Test")
+    : Kitsunemimi::Test("FileMethods_Test")
 {
     doesPathExist_test();
     isFile_test();
@@ -184,7 +184,7 @@ FileMethods_Test::listFiles_test()
 void
 FileMethods_Test::renameFileOrDir_test()
 {
-    std::pair<bool, std::string> result;
+    bool result = false;
 
     const std::string oldFilePath = "/tmp/renameFileOrDir_test_testfile_ALT";
     const std::string newFileName = "/tmp/renameFileOrDir_test_testfile_NEU";
@@ -192,11 +192,13 @@ FileMethods_Test::renameFileOrDir_test()
     runSyncProcess(std::string("touch " + oldFilePath).c_str());
     runSyncProcess(std::string("rm " + newFileName).c_str());
 
-    result = renameFileOrDir(oldFilePath, newFileName);
-    TEST_EQUAL(result.first, true);
+    std::string errorMessage = "";
 
-    result = renameFileOrDir(oldFilePath, newFileName);
-    TEST_EQUAL(result.first, false);
+    result = renameFileOrDir(oldFilePath, newFileName, errorMessage);
+    TEST_EQUAL(result, true);
+
+    result = renameFileOrDir(oldFilePath, newFileName, errorMessage);
+    TEST_EQUAL(result, false);
 
     TEST_EQUAL(doesPathExist(oldFilePath), false);
     TEST_EQUAL(doesPathExist(newFileName), true);
@@ -211,7 +213,7 @@ FileMethods_Test::renameFileOrDir_test()
 void
 FileMethods_Test::copyPath_test()
 {
-    std::pair<bool, std::string> result;
+    bool result = false;
 
     const std::string oldFilePath = "/tmp/copyFile_test_testfile_ALT";
     const std::string newFileName = "/tmp/copyFile_test_testfile_NEU";
@@ -219,11 +221,13 @@ FileMethods_Test::copyPath_test()
     runSyncProcess(std::string("touch " + oldFilePath).c_str());
     runSyncProcess(std::string("rm " + newFileName).c_str());
 
-    result = copyPath(oldFilePath, newFileName);
-    TEST_EQUAL(result.first, true);
+    std::string errorMessage = "";
 
-    result = copyPath(oldFilePath, newFileName, false);
-    TEST_EQUAL(result.first, false);
+    result = copyPath(oldFilePath, newFileName, errorMessage);
+    TEST_EQUAL(result, true);
+
+    result = copyPath(oldFilePath, newFileName, errorMessage, false);
+    TEST_EQUAL(result, false);
 
     TEST_EQUAL(doesPathExist(oldFilePath), true);
     TEST_EQUAL(doesPathExist(newFileName), true);
@@ -238,20 +242,22 @@ FileMethods_Test::copyPath_test()
 void
 FileMethods_Test::createDirectory_test()
 {
-    std::pair<bool, std::string> result;
+    bool result = false;
 
     const std::string testDirPath = "/tmp/deleteFileOrDir_test_testdir/test1";
 
     runSyncProcess(std::string("rm -r " + testDirPath).c_str());
     TEST_EQUAL(doesPathExist(testDirPath), false);
 
-    result = createDirectory(testDirPath);
-    TEST_EQUAL(result.first, true);
+    std::string errorMessage = "";
+
+    result = createDirectory(testDirPath, errorMessage);
+    TEST_EQUAL(result, true);
 
     TEST_EQUAL(doesPathExist(testDirPath), true);
 
-    result = createDirectory(testDirPath);
-    TEST_EQUAL(result.first, false);
+    result = createDirectory(testDirPath, errorMessage);
+    TEST_EQUAL(result, false);
 
     runSyncProcess(std::string("rm -r " + testDirPath).c_str());
 }
@@ -262,7 +268,7 @@ FileMethods_Test::createDirectory_test()
 void
 FileMethods_Test::deleteFileOrDir_test()
 {
-    std::pair<bool, std::string> result;
+    bool result = false;
 
     const std::string testFilePath = "/tmp/deleteFileOrDir_test_testfile";
     const std::string testDirPath = "/tmp/deleteFileOrDir_test_testdir";
@@ -270,17 +276,19 @@ FileMethods_Test::deleteFileOrDir_test()
     runSyncProcess(std::string("touch " + testFilePath).c_str());
     runSyncProcess(std::string("mkdir " + testDirPath).c_str());
 
+    std::string errorMessage = "";
+
     TEST_EQUAL(doesPathExist(testFilePath), true);
     TEST_EQUAL(doesPathExist(testDirPath), true);
 
-    result = deleteFileOrDir(testFilePath);
-    TEST_EQUAL(result.first, true);
+    result = deleteFileOrDir(testFilePath, errorMessage);
+    TEST_EQUAL(result, true);
 
-    result = deleteFileOrDir(testDirPath);
-    TEST_EQUAL(result.first, true);
+    result = deleteFileOrDir(testDirPath, errorMessage);
+    TEST_EQUAL(result, true);
 
-    result = deleteFileOrDir(testDirPath);
-    TEST_EQUAL(result.first, false);
+    result = deleteFileOrDir(testDirPath, errorMessage);
+    TEST_EQUAL(result, true);
 
     TEST_EQUAL(doesPathExist(testFilePath), false);
     TEST_EQUAL(doesPathExist(testDirPath), false);

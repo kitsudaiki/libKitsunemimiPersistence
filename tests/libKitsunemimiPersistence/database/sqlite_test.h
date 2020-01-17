@@ -17,7 +17,7 @@ namespace Persistence
 {
 
 class Sqlite_Test
-        : public Kitsunemimi::Common::Test
+        : public Kitsunemimi::Test
 {
 public:
     Sqlite_Test();

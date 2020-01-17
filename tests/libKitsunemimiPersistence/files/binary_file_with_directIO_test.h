@@ -17,7 +17,7 @@ namespace Persistence
 {
 
 class BinaryFile_withDirectIO_Test
-        : public Kitsunemimi::Common::Test
+        : public Kitsunemimi::Test
 {
 public:
     BinaryFile_withDirectIO_Test();

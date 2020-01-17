@@ -19,7 +19,7 @@ namespace Persistence
 {
 
 TextFile_Test::TextFile_Test()
-    : Kitsunemimi::Common::Test("TextFile_Test")
+    : Kitsunemimi::Test("TextFile_Test")
 {
     initTest();
     writeFile_test();
