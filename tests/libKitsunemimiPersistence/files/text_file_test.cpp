@@ -50,17 +50,18 @@ TextFile_Test::initTest()
 void
 TextFile_Test::writeFile_test()
 {
-    std::pair<bool, std::string> ret;
+    bool ret;
+    std::string errorMessage = "";
     std::string content = "this is a test\n"
                           "and this is a second line";
 
     // write content to file in three different cases
-    ret = writeFile(m_filePath, content, false);
-    TEST_EQUAL(ret.first, true);
-    ret = writeFile(m_filePath, content, false);
-    TEST_EQUAL(ret.first, false);
-    ret = writeFile(m_filePath, content, true);
-    TEST_EQUAL(ret.first, true);
+    ret = writeFile(m_filePath, content, errorMessage, false);
+    TEST_EQUAL(ret, true);
+    ret = writeFile(m_filePath, content, errorMessage, false);
+    TEST_EQUAL(ret, false);
+    ret = writeFile(m_filePath, content, errorMessage, true);
+    TEST_EQUAL(ret, true);
 
     // cleanup
     deleteFile();
@@ -73,20 +74,20 @@ void
 TextFile_Test::readFile_test()
 {
     std::pair<bool, std::string> ret;
+    std::string errorMessage = "";
     std::string content = "this is a test\n"
                           "and this is a second line";
 
     // write initial file
-    ret = writeFile(m_filePath, content, false);
-    TEST_EQUAL(ret.first, true);
+    writeFile(m_filePath, content, errorMessage, true);
 
     // run function and check result
-    ret = readFile(m_filePath);
+    ret = readFile(m_filePath, errorMessage);
     TEST_EQUAL(ret.first, true);
     TEST_EQUAL(ret.second, content);
 
     // negative test: file not exist
-    ret = readFile(m_filePath + "_fake");
+    ret = readFile(m_filePath + "_fake", errorMessage);
     TEST_EQUAL(ret.first, false);
 
     // cleanup
@@ -99,28 +100,27 @@ TextFile_Test::readFile_test()
 void
 TextFile_Test::appendText_test()
 {
-    std::pair<bool, std::string> ret;
+    bool ret;
+    std::string errorMessage = "";
     std::string content = "this is a test\n"
                           "and this is a second line";
 
     // write initial file
-    ret = writeFile(m_filePath, content, false);
-    TEST_EQUAL(ret.first, true);
+    writeFile(m_filePath, content, errorMessage, false);
 
     // run function
-    ret = appendText(m_filePath,
-                     "\nasdfasdfasdf");
-    TEST_EQUAL(ret.first, true);
+    ret = appendText(m_filePath, "\nasdfasdfasdf", errorMessage);
+    TEST_EQUAL(ret, true);
 
     // read updated file
-    ret = readFile(m_filePath);
-    TEST_EQUAL(ret.first, true);
+    std::pair<bool, std::string> readResult = readFile(m_filePath, errorMessage);
+    TEST_EQUAL(readResult.first, true);
 
     // check result
     std::string compare = "this is a test\n"
                           "and this is a second line\n"
                           "asdfasdfasdf";
-    TEST_EQUAL(ret.second, compare);
+    TEST_EQUAL(readResult.second, compare);
 
     // cleanup
     deleteFile();
@@ -132,31 +132,32 @@ TextFile_Test::appendText_test()
 void
 TextFile_Test::replaceLine_test()
 {
-    std::pair<bool, std::string> ret;
+    bool ret;
+    std::string errorMessage = "";
     std::string content = "this is a test\n"
                           "and this is a second line\n"
                           "asdfasdfasdf";
 
     // write initial file
-    ret = writeFile(m_filePath, content, false);
-    TEST_EQUAL(ret.first, true);
+    writeFile(m_filePath, content, errorMessage, false);
 
     // run function
     ret = replaceLine(m_filePath,
                       2,
-                      "poi");
-    TEST_EQUAL(ret.first, true);
+                      "poi",
+                      errorMessage);
+    TEST_EQUAL(ret, true);
 
     // read updated file
-    ret = readFile(m_filePath);
-    TEST_EQUAL(ret.first, true);
+    std::pair<bool, std::string> readResult = readFile(m_filePath, errorMessage);
+    TEST_EQUAL(readResult.first, true);
 
     // check result
     std::string compare = "this is a test\n"
                           "and this is a second line\n"
                           "poi";
 
-    TEST_EQUAL(ret.second, compare);
+    TEST_EQUAL(readResult.second, compare);
 
     // cleanup
     deleteFile();
@@ -168,30 +169,31 @@ TextFile_Test::replaceLine_test()
 void
 TextFile_Test::replaceContent_test()
 {
-    std::pair<bool, std::string> ret;
+    bool ret;
+    std::string errorMessage = "";
     std::string content = "this is a test\n"
                           "and this is a second line\n"
                           "poi";
 
     // write initial file
-    ret = writeFile(m_filePath, content, false);
-    TEST_EQUAL(ret.first, true);
+    writeFile(m_filePath, content, errorMessage, false);
 
     // run function
     ret = replaceContent(m_filePath,
                          "poi",
-                         "nani");
-    TEST_EQUAL(ret.first, true);
+                         "nani",
+                         errorMessage);
+    TEST_EQUAL(ret, true);
 
     // read updated file
-    ret = readFile(m_filePath);
-    TEST_EQUAL(ret.first, true);
+    std::pair<bool, std::string> readResult = readFile(m_filePath, errorMessage);
+    TEST_EQUAL(readResult.first, true);
 
     // check result
     std::string compare = "this is a test\n"
                           "and this is a second line\n"
                           "nani";
-    TEST_EQUAL(ret.second, compare);
+    TEST_EQUAL(readResult.second, compare);
 
     // cleanup
     deleteFile();
