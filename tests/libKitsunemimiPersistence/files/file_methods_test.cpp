@@ -24,7 +24,7 @@
 #include <libKitsunemimiPersistence/files/file_methods.h>
 #include <libKitsunemimiCommon/process_execution.h>
 
-using Kitsunemimi::Common::runSyncProcess;
+using Kitsunemimi::runSyncProcess;
 
 namespace Kitsunemimi
 {
@@ -35,7 +35,7 @@ namespace Persistence
  * @brief constructor
  */
 FileMethods_Test::FileMethods_Test()
-    : Kitsunemimi::Common::Test("FileMethods_Test")
+    : Kitsunemimi::Test("FileMethods_Test")
 {
     doesPathExist_test();
     isFile_test();

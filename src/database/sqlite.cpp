@@ -19,10 +19,10 @@
 #include <libKitsunemimiCommon/common_items/table_item.h>
 #include <libKitsunemimiCommon/common_items/data_items.h>
 
-using Kitsunemimi::Common::DataItem;
-using Kitsunemimi::Common::DataMap;
-using Kitsunemimi::Common::DataArray;
-using Kitsunemimi::Common::DataValue;
+using Kitsunemimi::DataItem;
+using Kitsunemimi::DataMap;
+using Kitsunemimi::DataArray;
+using Kitsunemimi::DataValue;
 
 namespace Kitsunemimi
 {
@@ -90,7 +90,7 @@ static int callback(void* data,
         return 0;
     }
 
-    Common::TableItem* result = static_cast<Common::TableItem*>(data);
+    TableItem* result = static_cast<TableItem*>(data);
 
     // add columns to the table-item, but only the first time
     // because this callback is called for every row
@@ -127,7 +127,7 @@ static int callback(void* data,
  *         if failed: first is false and second is the error-message
  */
 std::pair<bool, std::string>
-Sqlite::execSqlCommand(Common::TableItem* resultTable,
+Sqlite::execSqlCommand(TableItem* resultTable,
                        const std::string command)
 {
     // init

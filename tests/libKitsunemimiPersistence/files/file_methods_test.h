@@ -31,7 +31,7 @@ namespace Persistence
 {
 
 class FileMethods_Test
-        : public Kitsunemimi::Common::Test
+        : public Kitsunemimi::Test
 {
 public:
     FileMethods_Test();

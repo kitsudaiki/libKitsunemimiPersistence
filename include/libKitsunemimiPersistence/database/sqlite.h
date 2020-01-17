@@ -25,9 +25,7 @@
 
 namespace Kitsunemimi
 {
-namespace Common {
 class TableItem;
-}
 namespace Persistence
 {
 
@@ -39,7 +37,7 @@ public:
 
     std::pair<bool, std::string> initDB(const std::string path);
 
-    std::pair<bool, std::string> execSqlCommand(Common::TableItem*resultTable,
+    std::pair<bool, std::string> execSqlCommand(TableItem*resultTable,
                                                 const std::string command);
 
     bool closeDB();

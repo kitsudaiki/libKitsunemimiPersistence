@@ -186,7 +186,7 @@ replaceLine(const std::string &filePath,
 
     // split content into a vector of lines
     std::vector<std::string> splitedContent;
-    Common::splitStringByDelimiter(splitedContent, result.second, '\n');
+    splitStringByDelimiter(splitedContent, result.second, '\n');
     if(splitedContent.size() <= lineNumber)
     {
         std::string errorMessage = "failed to replace line in file \""

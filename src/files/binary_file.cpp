@@ -10,7 +10,7 @@
 
 #include <libKitsunemimiPersistence/files/binary_file.h>
 
-using Kitsunemimi::Common::DataBuffer;
+using Kitsunemimi::DataBuffer;
 
 namespace Kitsunemimi
 {
@@ -136,7 +136,7 @@ BinaryFile::updateFileSize()
  * @return true, if successful, else false
  */
 bool
-BinaryFile::readSegment(Common::DataBuffer* buffer,
+BinaryFile::readSegment(DataBuffer* buffer,
                         const uint64_t startBlockInFile,
                         const uint64_t numberOfBlocks,
                         const uint64_t startBlockInBuffer)
@@ -182,7 +182,7 @@ BinaryFile::readSegment(Common::DataBuffer* buffer,
  * @return true, if successful, else false
  */
 bool
-BinaryFile::writeSegment(Common::DataBuffer* buffer,
+BinaryFile::writeSegment(DataBuffer* buffer,
                          const uint64_t startBlockInFile,
                          const uint64_t numberOfBlocks,
                          const uint64_t startBlockInBuffer)

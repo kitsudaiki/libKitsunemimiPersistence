@@ -26,7 +26,7 @@ struct TestStruct
 } __attribute__((packed));
 
 BinaryFile_withoutDirectIO_Test::BinaryFile_withoutDirectIO_Test()
-    : Kitsunemimi::Common::Test("BinaryFile_withoutDirectIO_Test")
+    : Kitsunemimi::Test("BinaryFile_withoutDirectIO_Test")
 {
     initTest();
     closeFile_test();
@@ -53,7 +53,7 @@ void
 BinaryFile_withoutDirectIO_Test::closeFile_test()
 {
     // init buffer and file
-    Common::DataBuffer buffer;
+    DataBuffer buffer;
     BinaryFile binaryFile(m_filePath, false);
 
     // test close
@@ -70,7 +70,7 @@ void
 BinaryFile_withoutDirectIO_Test::updateFileSize_test()
 {
     // init buffer and file
-    Common::DataBuffer buffer(5);
+    DataBuffer buffer(5);
     BinaryFile binaryFile(m_filePath, false);
     binaryFile.allocateStorage(4, 4000);
     binaryFile.closeFile();
@@ -89,7 +89,7 @@ void
 BinaryFile_withoutDirectIO_Test::allocateStorage_test()
 {
     // init buffer and file
-    Common::DataBuffer buffer;
+    DataBuffer buffer;
     BinaryFile binaryFile(m_filePath, false);
 
     // test allocation
@@ -115,7 +115,7 @@ void
 BinaryFile_withoutDirectIO_Test::writeSegment_test()
 {
     // init buffer and file
-    Common::DataBuffer buffer(5);
+    DataBuffer buffer(5);
     BinaryFile binaryFile(m_filePath, false);
     binaryFile.allocateStorage(4);
 
@@ -123,9 +123,9 @@ BinaryFile_withoutDirectIO_Test::writeSegment_test()
     TestStruct testStruct;
     testStruct.a = 42;
     testStruct.c = 1337;
-    buffer.addData(&testStruct);
+    addData(&buffer, &testStruct);
     buffer.bufferPosition = 2000;
-    buffer.addData(&testStruct);
+    addData(&buffer, &testStruct);
 
     // write-tests
     TEST_EQUAL(binaryFile.writeSegment(&buffer, 1000, 1000, 0), true);
@@ -149,7 +149,7 @@ void
 BinaryFile_withoutDirectIO_Test::readSegment_test()
 {
     // init buffer and file
-    Common::DataBuffer buffer(5);
+    DataBuffer buffer(5);
     BinaryFile binaryFile(m_filePath, false);
     binaryFile.allocateStorage(4);
 
@@ -157,11 +157,11 @@ BinaryFile_withoutDirectIO_Test::readSegment_test()
     TestStruct testStruct;
     testStruct.a = 42;
     testStruct.c = 1337;
-    buffer.addData(&testStruct);
+    addData(&buffer, &testStruct);
     testStruct.a = 10;
     testStruct.c = 1234;
     buffer.bufferPosition = 2000;
-    buffer.addData(&testStruct);
+    addData(&buffer, &testStruct);
 
     // write the two blocks of the buffer
     TEST_EQUAL(binaryFile.writeSegment(&buffer, 1000, 1000, 0), true);

@@ -20,7 +20,7 @@ namespace Persistence
 {
 
 Sqlite_Test::Sqlite_Test()
-    : Kitsunemimi::Common::Test("Sqlite_Test")
+    : Kitsunemimi::Test("Sqlite_Test")
 {
     initTest();
     initDB_test();
@@ -64,7 +64,7 @@ Sqlite_Test::execSqlCommand_test()
     Sqlite testDB;
     testDB.initDB(m_filePath);
     std::pair<bool, std::string> result;
-    Kitsunemimi::Common::TableItem resultItem;
+    Kitsunemimi::TableItem resultItem;
 
     //-----------------------------------------------------------------
     // CREATE TABLE

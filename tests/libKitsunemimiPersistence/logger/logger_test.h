@@ -17,7 +17,7 @@ namespace Persistence
 {
 
 class Logger_Test
-        : public Kitsunemimi::Common::Test
+        : public Kitsunemimi::Test
 {
 public:
     Logger_Test();

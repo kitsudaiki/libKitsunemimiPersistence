@@ -42,11 +42,11 @@ public:
                          const uint32_t blockSize = 4096);
     bool updateFileSize();
 
-    bool readSegment(Common::DataBuffer* buffer,
+    bool readSegment(DataBuffer* buffer,
                      const uint64_t startBlockInFile,
                      const uint64_t numberOfBlocks,
                      const uint64_t startBlockInBuffer = 0);
-    bool writeSegment(Common::DataBuffer* buffer,
+    bool writeSegment(DataBuffer* buffer,
                       const uint64_t startBlockInFile,
                       const uint64_t numberOfBlocks,
                       const uint64_t startBlockInBuffer = 0);
