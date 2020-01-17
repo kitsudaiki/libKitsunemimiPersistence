@@ -169,32 +169,25 @@ listFiles(std::vector<std::string> &fileList,
  *
  * @param oldPath origial path
  * @param newPath new path after renaming
+ * @param errorMessage reference for error-message output
  *
- * @return pair of boolean and string
- *         success: first true and second empty string
- *         failed: first faile and second the error-message
+ * @return true, if successful, else false
  */
-const std::pair<bool, std::string>
-renameFileOrDir(const std::string oldPath,
-                const std::string newPath)
+bool
+renameFileOrDir(const std::string &oldPath,
+                const std::string &newPath,
+                std::string &errorMessage)
 {
-    std::pair<bool, std::string> result;
+    boost::system::error_code boostError;
+    boost::filesystem::rename(oldPath, newPath, boostError);
 
-    boost::system::error_code error;
-    error.clear();
-
-    boost::filesystem::rename(oldPath, newPath, error);
-
-    if(error.value() != 0)
+    if(boostError.value() != 0)
     {
-        result.first = false;
-        result.second = error.message();
-        return result;
+        errorMessage = boostError.message();
+        return false;
     }
 
-    result.first = true;
-
-    return result;
+    return true;
 }
 
 /**
@@ -202,61 +195,50 @@ renameFileOrDir(const std::string oldPath,
  *
  * @param sourcePath origial path
  * @param targetPath path of the copy
+ * @param errorMessage reference for error-message output
+ * @param force true to delete target, if already exist, if something exist at the target-location
+ *              (Default: true)
  *
- * @return pair of boolean and string
- *         success: first true and second empty string
- *         failed: first faile and second the error-message
+ * @return true, if successful, else false
  */
-const std::pair<bool, std::string>
-copyPath(const std::string sourcePath,
-         const std::string targetPath,
+bool
+copyPath(const std::string &sourcePath,
+         const std::string &targetPath,
+         std::string &errorMessage,
          const bool force)
 {
-    std::pair<bool, std::string> result;
-
-    boost::system::error_code error;
-    error.clear();
-
+    boost::system::error_code boostError;
     if(force) {
-        boost::filesystem::remove(targetPath);
+        boost::filesystem::remove_all(targetPath);
     }
-    boost::filesystem::copy(sourcePath, targetPath, error);
+    boost::filesystem::copy(sourcePath, targetPath, boostError);
 
-    if(error.value() != 0)
+    if(boostError.value() != 0)
     {
-        result.first = false;
-        result.second = error.message();
-        return result;
+        errorMessage = boostError.message();
+        return false;
     }
 
-    result.first = true;
-
-    return result;
+    return true;
 }
 
 /**
  * @brief create a directory
  *
  * @param path path to create
+ * @param errorMessage reference for error-message output
  *
- * @return pair of boolean and string
- *         success: first true and second empty string
- *         failed: first faile and second the error-message
+ * @return true, if successful, else false
  */
-const std::pair<bool, std::string>
-createDirectory(const std::string &path)
+bool
+createDirectory(const std::string &path,
+                std::string &errorMessage)
 {
-    std::pair<bool, std::string> result;
+    boost::system::error_code boostError;
+    const bool result = boost::filesystem::create_directories(path, boostError);
 
-    boost::system::error_code error;
-    error.clear();
-
-    result.first = boost::filesystem::create_directories(path, error);
-
-    if(result.first == false)
-    {
-        result.second = error.message();
-        return result;
+    if(result == false) {
+        errorMessage = boostError.message();
     }
 
     return result;
@@ -266,25 +248,19 @@ createDirectory(const std::string &path)
  * @brief delete a path
  *
  * @param path path to delete
+ * @param errorMessage reference for error-message output
  *
- * @return pair of boolean and string
- *         success: first true and second empty string
- *         failed: first faile and second the error-message
+ * @return true, if successful, else false
  */
-const std::pair<bool, std::string>
-deleteFileOrDir(const std::string &path)
+bool
+deleteFileOrDir(const std::string &path,
+                std::string &errorMessage)
 {
-    std::pair<bool, std::string> result;
+    boost::system::error_code boostError;
+    const bool result = boost::filesystem::remove_all(path, boostError);
 
-    boost::system::error_code error;
-    error.clear();
-
-    result.first = boost::filesystem::remove_all(path, error);
-
-    if(result.first == false)
-    {
-        result.second = error.message();
-        return result;
+    if(result == false) {
+        errorMessage = boostError.message();
     }
 
     return result;
