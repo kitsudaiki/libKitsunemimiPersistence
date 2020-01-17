@@ -23,27 +23,32 @@ namespace Kitsunemimi
 namespace Persistence
 {
 
-std::pair<bool, std::string>
-readFile(const std::string &filePath);
+const std::pair<bool, std::string>
+readFile(const std::string &filePath,
+         std::string &errorMessage);
 
-std::pair<bool, std::string>
+bool
 writeFile(const std::string &filePath,
           const std::string &content,
-          const bool force);
+          std::string &errorMessage,
+          const bool force=true);
 
-std::pair<bool, std::string>
+bool
 appendText(const std::string &filePath,
-           const std::string &newText);
+           const std::string &newText,
+           std::string &errorMessage);
 
-std::pair<bool, std::string>
+bool
 replaceLine(const std::string &filePath,
             const uint32_t lineNumber,
-            const std::string newLineContent);
+            const std::string &newLineContent,
+            std::string &errorMessage);
 
-std::pair<bool, std::string>
+bool
 replaceContent(const std::string &filePath,
-               const std::string oldContent,
-               const std::string newContent);
+               const std::string &oldContent,
+               const std::string &newContent,
+               std::string &errorMessage);
 
 } // namespace Persistence
 } // namespace Kitsunemimi

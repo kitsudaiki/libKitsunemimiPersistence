@@ -14,6 +14,7 @@
 
 #include <boost/filesystem.hpp>
 #include <libKitsunemimiCommon/common_methods/string_methods.h>
+#include <libKitsunemimiPersistence/files/file_methods.h>
 
 namespace fs=boost::filesystem;
 
@@ -26,33 +27,33 @@ namespace Persistence
  * read text from a text-file
  *
  * @param filePath path the to file
+ * @param errorMessage reference for error-message output
  *
  * @return pair of bool and string
  *         success: first element is true and the second contains the content of the file
- *         fail: first element is false and the second contains the error-message
+ *         fail: first element is false and the second contains empty string
  */
-std::pair<bool, std::string>
-readFile(const std::string &filePath)
+const std::pair<bool, std::string>
+readFile(const std::string &filePath,
+         std::string &errorMessage)
 {
-    fs::path rootPathObj(filePath);
-
     // check if exist
-    if(fs::exists(rootPathObj))
+    if(doesPathExist(filePath))
     {
         // check for directory
-        if(fs::is_directory(rootPathObj))
+        if(isDir(filePath))
         {
-            std::string errorMessage = "failed to read destination of path \""
-                                       + filePath +
-                                       "\", because it already exist and it is a directory, "
-                                       "but must be a file or not existing";
-            return std::pair<bool, std::string>(false, errorMessage);
+            errorMessage = "failed to read destination of path \""
+                           + filePath +
+                           "\", because it already exist and it is a directory, "
+                           "but must be a file or not existing";
+            return std::pair<bool, std::string>(false, "");
         }
     }
     else
     {
-        std::string errorMessage = "destination of path \"" + filePath + "\", doesn't exist";
-        return std::pair<bool, std::string>(false, errorMessage);
+        errorMessage = "destination of path \"" + filePath + "\", doesn't exist";
+        return std::pair<bool, std::string>(false, "");
     }
 
     std::ifstream inFile;
@@ -60,7 +61,7 @@ readFile(const std::string &filePath)
 
     std::stringstream strStream;
     strStream << inFile.rdbuf();
-    std::string fileContent = strStream.str();
+    const std::string fileContent = strStream.str();
 
     inFile.close();
 
@@ -72,39 +73,37 @@ readFile(const std::string &filePath)
  *
  * @param filePath path the to file
  * @param content text which be wirtten into the file
- * @param force if true, it overwrites the file, if there already exist one
+ * @param errorMessage reference for error-message output
+ * @param force if true, it overwrites the file, if there already exist one (Default: true)
  *
- * @return pair of bool and string
- *         success: first element is true and the second contains an empty string
- *         fail: first element is false and the second contains the error-message
+ * @return true, if successful, else false
  */
-std::pair<bool, std::string>
+bool
 writeFile(const std::string &filePath,
           const std::string &content,
+          std::string &errorMessage,
           const bool force)
 {
-    fs::path rootPathObj(filePath);
-
     // check if exist
-    if(fs::exists(rootPathObj))
+    if(doesPathExist(filePath))
     {
         // check for directory
-        if(fs::is_directory(rootPathObj))
+        if(isDir(filePath))
         {
-            std::string errorMessage = "failed to write destination of path \""
-                                       + filePath +
-                                       "\", because it already exist and it is a directory, "
-                                       "but must be a file or not existing";
-            return std::pair<bool, std::string>(false, errorMessage);
+            errorMessage = "failed to write destination of path \""
+                           + filePath +
+                           "\", because it already exist and it is a directory, "
+                           "but must be a file or not existing";
+            return false;
         }
 
         // check for override
         if(force == false)
         {
-            std::string errorMessage = "failed to write destination of path \""
-                                       + filePath +
-                                       "\", because it already exist, but should not be overwrite";
-            return std::pair<bool, std::string>(false, errorMessage);
+            errorMessage = "failed to write destination of path \""
+                           + filePath +
+                           "\", because it already exist, but should not be overwrite";
+            return false;
         }
 
         // TODO: check access-rights
@@ -113,7 +112,7 @@ writeFile(const std::string &filePath,
         // printf("%o\n",s.permissions());
 
         // remove file
-        fs::remove(rootPathObj);
+        deleteFileOrDir(filePath, errorMessage);
     }
 
     // create new file and write content
@@ -123,7 +122,7 @@ writeFile(const std::string &filePath,
     outputFile.flush();
     outputFile.close();
 
-    return std::pair<bool, std::string>(true, "");
+    return true;
 }
 
 /**
@@ -131,25 +130,22 @@ writeFile(const std::string &filePath,
  *
  * @param filePath path the to file
  * @param newText text which should be append to the file
+ * @param errorMessage reference for error-message output
  *
- * @return pair of bool and string
- *         success: first element is true and the second contains an empty string
- *         fail: first element is false and the second contains the error-message
+ * @return true, if successful, else false
  */
-std::pair<bool, std::string>
+bool
 appendText(const std::string &filePath,
-           const std::string &newText)
+           const std::string &newText,
+           std::string &errorMessage)
 {
-    fs::path rootPathObj(filePath);
-
     // check for directory
-    if(fs::exists(rootPathObj)
-            && fs::is_regular_file(rootPathObj) == false)
+    if(isFile(filePath) == false)
     {
-        std::string errorMessage = "Failed to append text to file \""
-                                   + filePath +
-                                   "\", because it is not a regular file.";
-        return std::pair<bool, std::string>(false, errorMessage);
+        errorMessage = "Failed to append text to file \""
+                       + filePath +
+                       "\", because it is not a regular file.";
+        return false;
     }
 
     // open, write and close file again
@@ -159,7 +155,7 @@ appendText(const std::string &filePath,
     outputFile.flush();
     outputFile.close();
 
-    return std::pair<bool, std::string>(true, "");
+    return true;
 }
 
 /**
@@ -168,20 +164,20 @@ appendText(const std::string &filePath,
  * @param filePath path the to file
  * @param lineNumber number of the line inside the file, which should be replaced (beginning with 0)
  * @param newLineContent the new content string for the line, which should be replaced
+ * @param errorMessage reference for error-message output
  *
- * @return pair of bool and string
- *         success: first element is true and the second contains an empty string
- *         fail: first element is false and the second contains the error-message
+ * @return true, if successful, else false
  */
-std::pair<bool, std::string>
+bool
 replaceLine(const std::string &filePath,
             const uint32_t lineNumber,
-            const std::string newLineContent)
+            const std::string &newLineContent,
+            std::string &errorMessage)
 {
     // read file
-    std::pair<bool, std::string> result = readFile(filePath);
+    std::pair<bool, std::string> result = readFile(filePath, errorMessage);
     if(result.first == false) {
-        return result;
+        return false;
     }
 
     // split content into a vector of lines
@@ -189,10 +185,10 @@ replaceLine(const std::string &filePath,
     splitStringByDelimiter(splitedContent, result.second, '\n');
     if(splitedContent.size() <= lineNumber)
     {
-        std::string errorMessage = "failed to replace line in file \""
-                                   + filePath +
-                                   "\", because linenumber is too big for the file";
-        return std::pair<bool, std::string>(false, errorMessage);
+        errorMessage = "failed to replace line in file \""
+                       + filePath +
+                       "\", because linenumber is too big for the file";
+        return false;
     }
 
     // build new file-content
@@ -207,9 +203,12 @@ replaceLine(const std::string &filePath,
     }
 
     // write file back the new content
-    result = writeFile(filePath, newFileContent, true);
+    const bool writeResult = writeFile(filePath,
+                                       newFileContent,
+                                       errorMessage,
+                                       true);
 
-    return result;
+    return writeResult;
 }
 
 /**
@@ -218,20 +217,20 @@ replaceLine(const std::string &filePath,
  * @param filePath path the to file
  * @param oldContent substring which should be replaced
  * @param newContent new string for the replacement
+ * @param errorMessage reference for error-message output
  *
- * @return pair of bool and string
- *         success: first element is true and the second contains an empty string
- *         fail: first element is false and the second contains the error-message
+ * @return true, if successful, else false
  */
-std::pair<bool, std::string>
+bool
 replaceContent(const std::string &filePath,
-               const std::string oldContent,
-               const std::string newContent)
+               const std::string &oldContent,
+               const std::string &newContent,
+               std::string &errorMessage)
 {
     // read file
-    std::pair<bool, std::string> result = readFile(filePath);
+    std::pair<bool, std::string> result = readFile(filePath, errorMessage);
     if(result.first == false) {
-        return result;
+        return false;
     }
 
     // replace content
@@ -243,9 +242,12 @@ replaceContent(const std::string &filePath,
     }
 
     // write file back the new content
-    result = writeFile(filePath, result.second, true);
+    const bool writeResult = writeFile(filePath,
+                                       result.second,
+                                       errorMessage,
+                                       true);
 
-    return result;
+    return writeResult;
 }
 
 } // namespace Persistence
