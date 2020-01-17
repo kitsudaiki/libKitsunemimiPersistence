@@ -3,7 +3,7 @@ QT       -= qt core gui
 TARGET = KitsunemimiPersistence
 TEMPLATE = lib
 CONFIG += c++14
-VERSION = 0.6.1
+VERSION = 0.7.0
 
 LIBS += -L../../libKitsunemimiCommon/src -lKitsunemimiCommon
 LIBS += -L../../libKitsunemimiCommon/src/debug -lKitsunemimiCommon

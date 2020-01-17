@@ -11,12 +11,8 @@
  */
 
 #include <libKitsunemimiPersistence/files/text_file.h>
-
-#include <boost/filesystem.hpp>
 #include <libKitsunemimiCommon/common_methods/string_methods.h>
 #include <libKitsunemimiPersistence/files/file_methods.h>
-
-namespace fs=boost::filesystem;
 
 namespace Kitsunemimi
 {
