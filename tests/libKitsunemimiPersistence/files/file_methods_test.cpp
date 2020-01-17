@@ -288,7 +288,7 @@ FileMethods_Test::deleteFileOrDir_test()
     TEST_EQUAL(result, true);
 
     result = deleteFileOrDir(testDirPath, errorMessage);
-    TEST_EQUAL(result, false);
+    TEST_EQUAL(result, true);
 
     TEST_EQUAL(doesPathExist(testFilePath), false);
     TEST_EQUAL(doesPathExist(testDirPath), false);
