@@ -181,14 +181,14 @@ binaryFile.allocateStorage(4,       // <-- number blocks
 // write data to the storage
 binaryFile.writeSegment(&buffer,   // <-- source-buffer
                         0, 		   // <-- startblock of write-oberation within the file
-	                    1,         // <-- number of blocks (each 4 KiB) to write
-	                    0)         // <-- startblock of the data within the buffer
+	                1,         // <-- number of blocks (each 4 KiB) to write
+	                0)         // <-- startblock of the data within the buffer
 
 // read data to the storage
 binaryFile.readSegment(&buffer,    // <-- target-buffer
                        0, 		   // <-- startblock of the data within the file
-	                   1,          // <-- number of blocks (each 4 KiB) to write
-	                   1)          // <-- startblock of write-oberation within the buffer
+	               1,          // <-- number of blocks (each 4 KiB) to write
+	               1)          // <-- startblock of write-oberation within the buffer
 
 // close file
 binaryFile.closeFile()
@@ -213,20 +213,23 @@ std::string content = "this is a test\n"
                       "and this is a second line";
 
 std::pair<bool, std::string> ret;
+std::string errorMessage = "";
 
 // write text to file
-ret = writeFile(filePath, 
-	            content, 
-	            false);		// <-- force-flag, 
-                            //     with false it fails if file already existing
+bool writeResult = writeFile(filePath, 
+	                     content, 
+			     errorMessage,
+	                     false);		// <-- force-flag, 
+                            			//     with false it fails if file already existing
                                   
 // add new text to the file
-ret = appendText(filePath,
-                 "\nand a third line");
+bool appendResult = appendText(filePath,
+                               "\nand a third line",
+			       errorMessage);
 
 // read updated file
-ret = readFile(filePath);
-// ret.second would now contans:
+std::pair<bool, std::string> readResult = readFile(filePath, errorMessage);
+// readResult.second would now contans:
 //
 // "this is a test\n"
 // "and this is a second line\n"
