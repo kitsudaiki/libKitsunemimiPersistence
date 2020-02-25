@@ -9,7 +9,7 @@
 #ifndef TEXT_FILE_TEST_H
 #define TEXT_FILE_TEST_H
 
-#include <libKitsunemimiCommon/test.h>
+#include <libKitsunemimiCommon/test_helper/compare_test_helper.h>
 
 namespace Kitsunemimi
 {
@@ -17,7 +17,7 @@ namespace Persistence
 {
 
 class TextFile_Test
-        : public Kitsunemimi::Test
+        : public Kitsunemimi::CompareTestHelper
 {
 public:
     TextFile_Test();

@@ -20,7 +20,7 @@ namespace Persistence
 {
 
 Sqlite_Test::Sqlite_Test()
-    : Kitsunemimi::Test("Sqlite_Test")
+    : Kitsunemimi::CompareTestHelper("Sqlite_Test")
 {
     initTest();
     initDB_test();

@@ -35,7 +35,7 @@ namespace Persistence
  * @brief constructor
  */
 FileMethods_Test::FileMethods_Test()
-    : Kitsunemimi::Test("FileMethods_Test")
+    : Kitsunemimi::CompareTestHelper("FileMethods_Test")
 {
     doesPathExist_test();
     isFile_test();

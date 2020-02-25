@@ -17,7 +17,7 @@ namespace Persistence
 {
 
 Logger_Test::Logger_Test()
-    : Kitsunemimi::Test("Logger_Test")
+    : Kitsunemimi::CompareTestHelper("Logger_Test")
 {
     logger_test();
 }

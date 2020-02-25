@@ -9,7 +9,7 @@
 #ifndef BINARY_FILE_WITHOUT_DIRECTIO_TEST_H
 #define BINARY_FILE_WITHOUT_DIRECTIO_TEST_H
 
-#include <libKitsunemimiCommon/test.h>
+#include <libKitsunemimiCommon/test_helper/compare_test_helper.h>
 
 namespace Kitsunemimi
 {
@@ -17,7 +17,7 @@ namespace Persistence
 {
 
 class BinaryFile_withoutDirectIO_Test
-        : public Kitsunemimi::Test
+        : public Kitsunemimi::CompareTestHelper
 {
 public:
     BinaryFile_withoutDirectIO_Test();

@@ -9,7 +9,7 @@
 #ifndef SQLITE_TEST_H
 #define SQLITE_TEST_H
 
-#include <libKitsunemimiCommon/test.h>
+#include <libKitsunemimiCommon/test_helper/compare_test_helper.h>
 
 namespace Kitsunemimi
 {
@@ -17,7 +17,7 @@ namespace Persistence
 {
 
 class Sqlite_Test
-        : public Kitsunemimi::Test
+        : public Kitsunemimi::CompareTestHelper
 {
 public:
     Sqlite_Test();

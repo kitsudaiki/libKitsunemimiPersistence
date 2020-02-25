@@ -26,7 +26,7 @@ struct TestStruct
 } __attribute__((packed));
 
 BinaryFile_withDirectIO_Test::BinaryFile_withDirectIO_Test()
-    : Kitsunemimi::Test("BinaryFile_withDirectIO_Test")
+    : Kitsunemimi::CompareTestHelper("BinaryFile_withDirectIO_Test")
 {
     initTest();
     closeFile_test();

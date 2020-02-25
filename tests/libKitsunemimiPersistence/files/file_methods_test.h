@@ -23,7 +23,7 @@
 #ifndef FILE_METHODS_TEST_H
 #define FILE_METHODS_TEST_H
 
-#include <libKitsunemimiCommon/test.h>
+#include <libKitsunemimiCommon/test_helper/compare_test_helper.h>
 
 namespace Kitsunemimi
 {
@@ -31,7 +31,7 @@ namespace Persistence
 {
 
 class FileMethods_Test
-        : public Kitsunemimi::Test
+        : public Kitsunemimi::CompareTestHelper
 {
 public:
     FileMethods_Test();
