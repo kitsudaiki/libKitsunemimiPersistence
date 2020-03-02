@@ -22,7 +22,7 @@
 #include <assert.h>
 #include <boost/filesystem.hpp>
 
-#include <libKitsunemimiCommon/data_buffer.h>
+#include <libKitsunemimiCommon/buffer/data_buffer.h>
 
 namespace fs=boost::filesystem;
 

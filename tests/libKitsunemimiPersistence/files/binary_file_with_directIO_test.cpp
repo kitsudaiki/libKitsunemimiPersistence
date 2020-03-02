@@ -123,9 +123,9 @@ BinaryFile_withDirectIO_Test::writeSegment_test()
     TestStruct testStruct;
     testStruct.a = 42;
     testStruct.c = 1337;
-    addData(&buffer, &testStruct);
+    addObjectToBuffer(buffer, &testStruct);
     buffer.bufferPosition = 2 * buffer.blockSize;
-    addData(&buffer, &testStruct);
+    addObjectToBuffer(buffer, &testStruct);
 
     // write-tests
     TEST_EQUAL(binaryFile.writeSegment(&buffer, 1, 1, 0), true);
@@ -157,11 +157,11 @@ BinaryFile_withDirectIO_Test::readSegment_test()
     TestStruct testStruct;
     testStruct.a = 42;
     testStruct.c = 1337;
-    addData(&buffer, &testStruct);
+    addObjectToBuffer(buffer, &testStruct);
     testStruct.a = 10;
     testStruct.c = 1234;
     buffer.bufferPosition = 2 * buffer.blockSize;
-    addData(&buffer, &testStruct);
+    addObjectToBuffer(buffer, &testStruct);
 
     // write the two blocks of the buffer
     TEST_EQUAL(binaryFile.writeSegment(&buffer, 1, 1, 0), true);
