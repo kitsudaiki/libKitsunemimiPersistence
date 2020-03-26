@@ -38,9 +38,9 @@ initLogger(const std::string directoryPath,
     }
 
     Logger::m_logger = new Kitsunemimi::Persistence::Logger(directoryPath,
-                                                        baseFileName,
-                                                        debugLog,
-                                                        logOnConsole);
+                                                            baseFileName,
+                                                            debugLog,
+                                                            logOnConsole);
 
     return Logger::m_logger->initLogger();
 }

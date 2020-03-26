@@ -23,7 +23,7 @@ function build_kitsune_lib_repo () {
     cd $REPO_DIR
 
     # build repo library with qmake
-    /usr/lib/x86_64-linux-gnu/qt5/bin/qmake "$PARENT_DIR/$REPO_NAME/$REPO_NAME.pro" -spec linux-g++ "CONFIG += optimize_full"
+    /usr/lib/x86_64-linux-gnu/qt5/bin/qmake "$PARENT_DIR/$REPO_NAME/$REPO_NAME.pro" -spec linux-g++ "CONFIG += optimize_full with_sqlite"
     /usr/bin/make -j4
 
     # copy build-result and include-files into the result-directory
