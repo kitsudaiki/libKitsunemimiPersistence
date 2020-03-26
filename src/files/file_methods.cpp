@@ -69,15 +69,11 @@ isDir(const std::string dirPath)
  *
  * @param path original path
  *
- * @return parent-path, if path exist, else empty string
+ * @return parent-path
  */
 const std::string
 getParent(const std::string &path)
 {
-    if(boost::filesystem::exists(path) == false) {
-        return std::string("");
-    }
-
     boost::filesystem::path pathObj(path);
     return pathObj.parent_path().string();
 }
