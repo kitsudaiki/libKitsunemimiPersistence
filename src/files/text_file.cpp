@@ -80,6 +80,16 @@ writeFile(const std::string &filePath,
           std::string &errorMessage,
           const bool force)
 {
+    // check and create parent-directory, if necessary
+    const std::string parentDirectory = getParent(filePath);
+    if(doesPathExist(parentDirectory) == false)
+    {
+        bool result = createDirectory(parentDirectory, errorMessage);
+        if(result == false) {
+            return false;
+        }
+    }
+
     // check if exist
     if(doesPathExist(filePath))
     {
