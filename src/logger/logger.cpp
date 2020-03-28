@@ -18,32 +18,41 @@ namespace Persistence
 Kitsunemimi::Persistence::Logger* Logger::m_logger = nullptr;
 
 /**
- * @brief initLogger
- * @param directoryPath
- * @param baseFileName
- * @param debugLog
- * @param logOnConsole
- * @return
+ * @brief initialize file logger
+ *
+ * @param directoryPath directory path where the log should be written
+ * @param baseFileName base name of the log-file
+ * @param debugLog true to enable debug-output
+ *
+ * @return false, if initializing failed, else true
  */
-std::pair<bool, std::string>
-initLogger(const std::string directoryPath,
-           const std::string baseFileName,
-           const bool debugLog,
-           const bool logOnConsole)
+bool initFileLogger(const std::string directoryPath,
+                    const std::string baseFileName,
+                    const bool debugLog)
 {
-    if(Logger::m_logger != nullptr)
-    {
-        std::string errorMessage = "logger is already initialized.";
-        return std::pair<bool, std::string>(false, errorMessage);
+    if(Logger::m_logger == nullptr) {
+        Logger::m_logger = new Kitsunemimi::Persistence::Logger();
     }
 
-    Logger::m_logger = new Kitsunemimi::Persistence::Logger(directoryPath,
-                                                            baseFileName,
-                                                            debugLog,
-                                                            logOnConsole);
-
-    return Logger::m_logger->initLogger();
+    return Logger::m_logger->initFileLogger(directoryPath, baseFileName, debugLog);
 }
+
+/**
+ * @brief initialize console logger
+ *
+ * @param debugLog true to enable debug-output
+ *
+ * @return always true
+ */
+bool initConsoleLogger(const bool debugLog)
+{
+    if(Logger::m_logger == nullptr) {
+        Logger::m_logger = new Kitsunemimi::Persistence::Logger();
+    }
+
+    return Logger::m_logger->initConsoleLogger(debugLog);
+}
+
 /**
  * @brief write debug-message to logfile
  */
@@ -51,10 +60,6 @@ bool
 LOG_debug(const std::string message)
 {
     if(Kitsunemimi::Persistence::Logger::m_logger == nullptr) {
-        return false;
-    }
-
-    if(Kitsunemimi::Persistence::Logger::m_logger->m_debugLog == false) {
         return false;
     }
 
@@ -100,6 +105,10 @@ LOG_error(const std::string message)
     return Kitsunemimi::Persistence::Logger::m_logger->logData("ERROR: " + message);
 }
 
+/**
+ * @brief closeLogFile
+ * @return
+ */
 bool
 closeLogFile()
 {
@@ -119,15 +128,8 @@ closeLogFile()
 /**
  * @brief constructor
  */
-Logger::Logger(const std::string directoryPath,
-               const std::string baseFileName,
-               const bool debugLog,
-               const bool logOnConsole)
+Logger::Logger()
 {
-    m_debugLog = debugLog;
-    m_logOnConsole = logOnConsole;
-    m_directoryPath = directoryPath;
-    m_baseFileName = baseFileName;
 }
 
 /**
@@ -139,22 +141,28 @@ Logger::~Logger()
 }
 
 /**
- * @brief init logger
+ * @brief initialize file logger
  *
- * @return pair of bool and string
- *         success: first element is true and the second contains an empty string
- *         fail: first element is false and the second contains the error-message
+ * @param directoryPath directory path where the log should be written
+ * @param baseFileName base name of the log-file
+ * @param debugLog true to enable debug-output
+ *
+ * @return false, if initializing failed, else true
  */
-std::pair<bool, std::string>
-Logger::initLogger()
+bool
+Logger::initFileLogger(const std::string directoryPath,
+                       const std::string baseFileName,
+                       const bool debugLog)
 {
-    std::pair<bool, std::string> result;
+    m_directoryPath = directoryPath;
+    m_baseFileName = baseFileName;
+    m_fileDebugLog = debugLog;
 
     // check if already init
-    if(m_active)
+    if(m_enableFileLog)
     {
-        std::string errorMessage = "logger is already initialized.";
-        return std::pair<bool, std::string>(false, errorMessage);
+        std::cout<<"file logger is already initialized."<<std::endl;
+        return false;
     }
 
     fs::path rootPathObj(m_directoryPath);
@@ -162,21 +170,21 @@ Logger::initLogger()
     // check if exist
     if(fs::exists(rootPathObj) == false)
     {
-        std::string errorMessage = "failed to initialize logger"
-                                   ", because the path \""
-                                   + m_directoryPath
-                                   + "\" does not exist.";
-        return std::pair<bool, std::string>(false, errorMessage);
+        std::cout<<"failed to initialize logger, because the path \""
+                 << m_directoryPath
+                 << "\" does not exist."
+                 <<std::endl;
+        return false;
     }
 
     // check for directory
     if(fs::is_directory(rootPathObj) == false)
     {
-        std::string errorMessage = "failed to initialize logger"
-                                   ", because the path \""
-                                   + m_directoryPath
-                                   + "\" is not an directory.";
-        return std::pair<bool, std::string>(false, errorMessage);
+        std::cout<<"failed to initialize logger, because the path \""
+                 << m_directoryPath
+                 << "\" is not an directory."
+                 <<std::endl;
+        return false;
     }
 
     m_lock.lock();
@@ -184,23 +192,40 @@ Logger::initLogger()
     // create new logger-file
     m_filePath = m_directoryPath + "/" + m_baseFileName + ".log";
     m_outputFile.open(m_filePath, std::ios_base::app);
-    m_active = true;
+    m_enableFileLog = true;
 
     m_lock.unlock();
 
-    return std::pair<bool, std::string>(true, "");
+    return true;
 }
 
 /**
- * @brief Logger::closeLogFile
+ * @brief initialize console logger
+ *
+ * @param debugLog true to enable debug-output
+ *
+ * @return always true
+ */
+bool
+Logger::initConsoleLogger(const bool debugLog)
+{
+    m_enableConsoleLog = true;
+    m_consoleDebugLog = debugLog;
+
+    return true;
+}
+
+/**
+ * @brief close log-file if file-logging was initialized
  */
 void
 Logger::closeLogFile()
 {
     m_lock.lock();
 
-    m_active = false;
-    m_outputFile.close();
+    if(m_enableFileLog) {
+        m_outputFile.close();
+    }
 
     m_lock.unlock();
 }
@@ -209,26 +234,36 @@ Logger::closeLogFile()
  * @brief write message to logfile
  */
 bool
-Logger::logData(const std::string message)
+Logger::logData(const std::string message,
+                const bool debug)
 {
     m_lock.lock();
 
-    // check if log already closed
-    if(m_active == false)
-    {
-        m_lock.unlock();
-        return false;
-    }
-
     // write to terminal
-    if(m_logOnConsole) {
+    if(m_enableConsoleLog)
+    {
+        if(debug
+                && m_consoleDebugLog == false)
+        {
+            return false;
+        }
+
         std::cout<<message<<std::endl;
     }
 
     // build and write new line
-    const std::string line(getDatetime() + " " + message + "\n");
-    m_outputFile << line;
-    m_outputFile.flush();
+    if(m_enableFileLog)
+    {
+        if(debug
+                && m_fileDebugLog == false)
+        {
+            return false;
+        }
+
+        const std::string line(getDatetime() + " " + message + "\n");
+        m_outputFile << line;
+        m_outputFile.flush();
+    }
 
     m_lock.unlock();
 

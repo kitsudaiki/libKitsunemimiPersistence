@@ -29,12 +29,12 @@ void
 Logger_Test::logger_test()
 {
     // init logger
-    std::pair<bool, std::string> ret = initLogger("/tmp", "testlog", true);
-    TEST_EQUAL(ret.first, true);
+    bool ret = initFileLogger("/tmp", "testlog", true);
+    TEST_EQUAL(ret, true);
 
     // negative-test to try reinit the logger
-    ret = initLogger("/tmp", "testlog", true);
-    TEST_EQUAL(ret.first, false);
+    ret = initFileLogger("/tmp", "testlog", true);
+    TEST_EQUAL(ret, false);
 
     // write test-data
     TEST_EQUAL(LOG_ERROR("error1"), true);

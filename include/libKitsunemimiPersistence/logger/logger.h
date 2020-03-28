@@ -30,10 +30,10 @@ namespace Kitsunemimi
 namespace Persistence
 {
 
-std::pair<bool, std::string> initLogger(const std::string directoryPath,
-                                        const std::string baseFileName,
-                                        const bool debugLog=false,
-                                        const bool logOnConsole=false);
+bool initFileLogger(const std::string directoryPath,
+                    const std::string baseFileName,
+                    const bool debugLog);
+bool initConsoleLogger(const bool debugLog);
 
 bool LOG_debug(const std::string message);
 bool LOG_info(const std::string message);
@@ -47,16 +47,18 @@ bool closeLogFile();
 class Logger
 {
 public:
-    Logger(const std::string directoryPath,
-           const std::string baseFileName,
-           const bool debugLog=false,
-           const bool logOnConsole=false);
+    Logger();
     ~Logger();
 
-    std::pair<bool, std::string> initLogger();
+    bool initFileLogger(const std::string directoryPath,
+                        const std::string baseFileName,
+                        const bool debugLog);
+    bool initConsoleLogger(const bool debugLog);
+
     void closeLogFile();
 
-    bool logData(const std::string message);
+    bool logData(const std::string message,
+                 const bool debug = false);
 
     std::string m_filePath = "";
     bool m_debugLog = false;
@@ -64,14 +66,16 @@ public:
     static Kitsunemimi::Persistence::Logger* m_logger;
 
 private:
-    bool m_logOnConsole = false;
+    bool m_enableConsoleLog = false;
+    bool m_consoleDebugLog = false;
+
+    bool m_enableFileLog = false;
+    bool m_fileDebugLog = false;
     std::string m_directoryPath = "";
     std::string m_baseFileName = "";
 
     std::mutex m_lock;
     std::ofstream m_outputFile;
-
-    bool m_active = false;
 
     const std::string getDatetime();
 };
