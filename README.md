@@ -221,16 +221,19 @@ Initializing at the anytime somewhere in your code.
 ```cpp
 #include <libKitsunemimiPersistence/logger/logger.h>
 
-std::pair<bool, std::string> ret = Kitsunemimi::Persistence::initLogger("/tmp", "testlog", true);
+// initializing logger to write into a file
+bool ret1 = Kitsunemimi::Persistence::initFileLogger("/tmp", "testlog", true);
 // arguments:
 //      first argument: directory-path
 //      second argument: base file name
 //      third argument: true to enable debug-output. if false only output of info, warning and error
-//      fourth argument: true to write log-output without timestamp additional to commandline
 //
 // result:
-//      first of the result is, if it was successful or not
-//      second of the result is the error-message, if failed
+//      true, if initializing was successfule, else false
+
+// initializing logger to write log-messages on the console output
+Kitsunemimi::Persistence::initConsoleLogger(true);
+// argument: true to enable debug-output. if false only output of info, warning and error
 
 ```
 
