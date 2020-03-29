@@ -1,17 +1,17 @@
-include(../defaults.pri)
+include(../../defaults.pri)
 
 QT -= qt core gui
 
 CONFIG   -= app_bundle
 CONFIG += c++14 console
 
-LIBS += -L../src -lKitsunemimiPersistence
-INCLUDEPATH += $$PWD
+LIBS += -L../../../libKitsunemimiCommon/src -lKitsunemimiCommon
+LIBS += -L../../../libKitsunemimiCommon/src/debug -lKitsunemimiCommon
+LIBS += -L../../../libKitsunemimiCommon/src/release -lKitsunemimiCommon
+INCLUDEPATH += ../../../libKitsunemimiCommon/include
 
-LIBS += -L../../libKitsunemimiCommon/src -lKitsunemimiCommon
-LIBS += -L../../libKitsunemimiCommon/src/debug -lKitsunemimiCommon
-LIBS += -L../../libKitsunemimiCommon/src/release -lKitsunemimiCommon
-INCLUDEPATH += ../../libKitsunemimiCommon/include
+LIBS += -L../../src -lKitsunemimiPersistence
+INCLUDEPATH += $$PWD
 
 LIBS +=  -lboost_filesystem -lboost_system
 
