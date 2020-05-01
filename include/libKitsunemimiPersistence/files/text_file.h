@@ -23,8 +23,9 @@ namespace Kitsunemimi
 namespace Persistence
 {
 
-const std::pair<bool, std::string>
-readFile(const std::string &filePath,
+bool
+readFile(std::string &readContentconst,
+         const std::string &filePath,
          std::string &errorMessage);
 
 bool

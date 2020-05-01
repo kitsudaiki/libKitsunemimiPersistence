@@ -54,7 +54,8 @@ Logger_Test::logger_test()
     TEST_EQUAL(LOG_INFO("info3"), true);
 
     std::string errorMessage = "";
-    const std::string logContent = readFile(Logger::m_logger->m_filePath, errorMessage).second;
+    std::string logContent = "";
+    ret = readFile(logContent, Logger::m_logger->m_filePath, errorMessage);
     std::size_t found;
 
     // error

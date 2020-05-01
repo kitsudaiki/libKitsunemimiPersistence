@@ -29,8 +29,9 @@ namespace Persistence
  *         success: first element is true and the second contains the content of the file
  *         fail: first element is false and the second contains empty string
  */
-const std::pair<bool, std::string>
-readFile(const std::string &filePath,
+bool
+readFile(std::string &readContentconst,
+         const std::string &filePath,
          std::string &errorMessage)
 {
     // check if exist
@@ -43,13 +44,13 @@ readFile(const std::string &filePath,
                            + filePath +
                            "\", because it already exist and it is a directory, "
                            "but must be a file or not existing";
-            return std::pair<bool, std::string>(false, "");
+            return false;
         }
     }
     else
     {
         errorMessage = "destination of path \"" + filePath + "\", doesn't exist";
-        return std::pair<bool, std::string>(false, "");
+        return false;
     }
 
     std::ifstream inFile;
@@ -57,11 +58,11 @@ readFile(const std::string &filePath,
 
     std::stringstream strStream;
     strStream << inFile.rdbuf();
-    const std::string fileContent = strStream.str();
+    readContentconst = strStream.str();
 
     inFile.close();
 
-    return std::pair<bool, std::string>(true, fileContent);
+    return true;
 }
 
 /**
@@ -181,14 +182,15 @@ replaceLine(const std::string &filePath,
             std::string &errorMessage)
 {
     // read file
-    std::pair<bool, std::string> result = readFile(filePath, errorMessage);
-    if(result.first == false) {
+    std::string fileContent = "";
+    bool result = readFile(fileContent, filePath, errorMessage);
+    if(result == false) {
         return false;
     }
 
     // split content into a vector of lines
     std::vector<std::string> splitedContent;
-    splitStringByDelimiter(splitedContent, result.second, '\n');
+    splitStringByDelimiter(splitedContent, fileContent, '\n');
     if(splitedContent.size() <= lineNumber)
     {
         errorMessage = "failed to replace line in file \""
@@ -234,22 +236,23 @@ replaceContent(const std::string &filePath,
                std::string &errorMessage)
 {
     // read file
-    std::pair<bool, std::string> result = readFile(filePath, errorMessage);
-    if(result.first == false) {
+    std::string fileContent = "";
+    bool result = readFile(fileContent, filePath, errorMessage);
+    if(result == false) {
         return false;
     }
 
     // replace content
     std::string::size_type pos = 0u;
-    while((pos = result.second.find(oldContent, pos)) != std::string::npos)
+    while((pos = fileContent.find(oldContent, pos)) != std::string::npos)
     {
-        result.second.replace(pos, oldContent.length(), newContent);
+        fileContent.replace(pos, oldContent.length(), newContent);
         pos += newContent.length();
     }
 
     // write file back the new content
     const bool writeResult = writeFile(filePath,
-                                       result.second,
+                                       fileContent,
                                        errorMessage,
                                        true);
 
