@@ -22,12 +22,11 @@ namespace Persistence
 /**
  * read text from a text-file
  *
+ * @param readContentconst reference to the variable, where the content should be written into
  * @param filePath path the to file
  * @param errorMessage reference for error-message output
  *
- * @return pair of bool and string
- *         success: first element is true and the second contains the content of the file
- *         fail: first element is false and the second contains empty string
+ * @return true if successful, else false
  */
 bool
 readFile(std::string &readContentconst,
