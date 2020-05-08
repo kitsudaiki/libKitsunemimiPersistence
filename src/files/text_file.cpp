@@ -189,7 +189,7 @@ replaceLine(const std::string &filePath,
 
     // split content into a vector of lines
     std::vector<std::string> splitedContent;
-    splitStringByDelimiter(splitedContent, fileContent, '\n');
+    Kitsunemimi::splitStringByDelimiter(splitedContent, fileContent, '\n');
     if(splitedContent.size() <= lineNumber)
     {
         errorMessage = "failed to replace line in file \""
