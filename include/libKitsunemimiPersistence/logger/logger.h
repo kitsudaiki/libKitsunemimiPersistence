@@ -32,8 +32,8 @@ namespace Persistence
 
 bool initFileLogger(const std::string directoryPath,
                     const std::string baseFileName,
-                    const bool debugLog);
-bool initConsoleLogger(const bool debugLog);
+                    const bool debugLog = false);
+bool initConsoleLogger(const bool debugLog = false);
 
 bool LOG_debug(const std::string message);
 bool LOG_info(const std::string message);
