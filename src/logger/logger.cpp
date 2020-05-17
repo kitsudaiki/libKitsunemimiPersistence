@@ -81,7 +81,7 @@ LOG_debug(const std::string message)
         return false;
     }
 
-    return Kitsunemimi::Persistence::Logger::m_logger->logData("DEBUG: " + message);
+    return Kitsunemimi::Persistence::Logger::m_logger->logData("DEBUG: " + message, true);
 }
 
 /**
@@ -279,6 +279,7 @@ Logger::logData(const std::string message,
         if(debug
                 && m_consoleDebugLog == false)
         {
+            m_lock.unlock();
             return false;
         }
 
@@ -291,6 +292,7 @@ Logger::logData(const std::string message,
         if(debug
                 && m_fileDebugLog == false)
         {
+            m_lock.unlock();
             return false;
         }
 
