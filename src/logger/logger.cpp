@@ -53,6 +53,24 @@ bool initConsoleLogger(const bool debugLog)
     return Logger::m_logger->initConsoleLogger(debugLog);
 }
 
+
+/**
+ * @brief set debug-flag after the logger was already created
+ *
+ * @param debugLog new debug-flag
+ *
+ * @return false, if logger is not initialized, else true
+ */
+bool
+setDebugFlag(const bool debugLog)
+{
+    if(Logger::m_logger == nullptr) {
+        return false;
+    }
+
+    return Logger::m_logger->setDebugFlag(debugLog);
+}
+
 /**
  * @brief write debug-message to logfile
  */
@@ -211,6 +229,22 @@ Logger::initConsoleLogger(const bool debugLog)
 {
     m_enableConsoleLog = true;
     m_consoleDebugLog = debugLog;
+
+    return true;
+}
+
+/**
+ * @brief set debug-flag after the logger was already created
+ *
+ * @param debugLog new debug-flag
+ *
+ * @return always true
+ */
+bool
+Logger::setDebugFlag(const bool debugLog)
+{
+    m_consoleDebugLog = debugLog;
+    m_fileDebugLog = debugLog;
 
     return true;
 }

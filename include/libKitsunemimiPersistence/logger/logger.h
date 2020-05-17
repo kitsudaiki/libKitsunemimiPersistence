@@ -34,6 +34,7 @@ bool initFileLogger(const std::string directoryPath,
                     const std::string baseFileName,
                     const bool debugLog = false);
 bool initConsoleLogger(const bool debugLog = false);
+bool setDebugFlag(const bool debugLog);
 
 bool LOG_debug(const std::string message);
 bool LOG_info(const std::string message);
@@ -54,6 +55,7 @@ public:
                         const std::string baseFileName,
                         const bool debugLog);
     bool initConsoleLogger(const bool debugLog);
+    bool setDebugFlag(const bool debugLog);
 
     void closeLogFile();
 
