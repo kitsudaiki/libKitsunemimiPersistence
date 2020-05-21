@@ -161,6 +161,27 @@ listFiles(std::vector<std::string> &fileList,
 }
 
 /**
+ * @brief get relative path of one to another
+ *
+ * @param childPath child path
+ * @param parentPath parent path
+ *
+ * @return relative path of the child in relation to the parent
+ */
+const std::string
+getRelativePath(const std::string &childPath,
+                const std::string &parentPath)
+{
+    std::string newParent = parentPath;
+
+    if(newParent.at(newParent.size()-1) == '/') {
+        newParent = parentPath.substr(0, parentPath.size()-1);
+    }
+
+    return boost::filesystem::relative(childPath, newParent).string();
+}
+
+/**
  * @brief rename a file or directory
  *
  * @param oldPath origial path

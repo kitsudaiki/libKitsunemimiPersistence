@@ -42,6 +42,7 @@ FileMethods_Test::FileMethods_Test()
     isDir_test();
     getParent_test();
     listFiles_test();
+    getRelativePath_test();
     renameFileOrDir_test();
     copyPath_test();
     createDirectory_test();
@@ -174,8 +175,21 @@ FileMethods_Test::listFiles_test()
     TEST_EQUAL(fileList.size(), 4);
     fileList.clear();
 
-
     runSyncProcess(std::string("rm -r /tmp/listFiles_test/").c_str());
+}
+
+/**
+ * @brief getRelativePath_test
+ */
+void
+FileMethods_Test::getRelativePath_test()
+{
+    std::string child = "/tmp/asdf/poi/meh.txt";
+    std::string parent = "/tmp/asdf/";
+
+    const std::string relative = getRelativePath(child, parent);
+
+    TEST_EQUAL(relative, "poi/meh.txt");
 }
 
 /**

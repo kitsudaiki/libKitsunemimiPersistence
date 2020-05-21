@@ -27,6 +27,8 @@ void listFiles(std::vector<std::string> &fileList,
                const std::string &path,
                const bool withSubdirs=true,
                const std::vector<std::string> &exceptions = {});
+const std::string getRelativePath(const std::string &childPath,
+                              const std::string &parentPath);
 
 bool renameFileOrDir(const std::string &oldPath,
                      const std::string &newPath,
