@@ -138,6 +138,10 @@ BinaryFile::updateFileSize()
 bool
 BinaryFile::readCompleteFile(DataBuffer &buffer)
 {
+    if(m_directIO) {
+        return false;
+    }
+
     const long size = lseek(m_fileDescriptor, 0, SEEK_END);
     assert(size > 0);
 
@@ -155,6 +159,36 @@ BinaryFile::readCompleteFile(DataBuffer &buffer)
 
     buffer.bufferPosition = static_cast<uint64_t>(size);
 
+    return true;
+}
+
+/**
+ * @brief BinaryFile::writeCompleteFile
+ * @param buffer
+ * @return
+ */
+bool
+BinaryFile::writeCompleteFile(DataBuffer &buffer)
+{
+    if(m_directIO) {
+        return false;
+    }
+
+    bool success = allocateStorage(buffer.bufferPosition, 1);
+    if(success == false) {
+        return false;
+    }
+
+    lseek(m_fileDescriptor, 0, SEEK_SET);
+
+    // write data to file
+    ssize_t ret = write(m_fileDescriptor, buffer.data, buffer.bufferPosition);
+
+    if(ret == -1)
+    {
+        // TODO: process errno
+        return false;
+    }
     return true;
 }
 

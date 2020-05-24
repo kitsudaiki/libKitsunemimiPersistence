@@ -43,6 +43,7 @@ public:
     bool updateFileSize();
 
     bool readCompleteFile(DataBuffer &buffer);
+    bool writeCompleteFile(DataBuffer &buffer);
 
     bool readSegment(DataBuffer &buffer,
                      const uint64_t startBlockInFile,
