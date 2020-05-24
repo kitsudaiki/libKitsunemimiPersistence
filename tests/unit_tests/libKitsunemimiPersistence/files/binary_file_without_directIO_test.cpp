@@ -33,6 +33,7 @@ BinaryFile_withoutDirectIO_Test::BinaryFile_withoutDirectIO_Test()
     allocateStorage_test();
     writeSegment_test();
     readSegment_test();
+    readCompleteFile_test();
     closeTest();
 }
 
@@ -199,6 +200,15 @@ BinaryFile_withoutDirectIO_Test::readSegment_test()
     // cleanup
     TEST_EQUAL(binaryFile.closeFile(), true);
     deleteFile();
+}
+
+/**
+ * readCompleteFile_test
+ */
+void
+BinaryFile_withoutDirectIO_Test::readCompleteFile_test()
+{
+
 }
 
 /**
