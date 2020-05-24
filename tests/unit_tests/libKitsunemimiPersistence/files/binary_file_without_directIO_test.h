@@ -29,6 +29,7 @@ private:
     void allocateStorage_test();
     void writeSegment_test();
     void readSegment_test();
+    void readCompleteFile_test();
     void closeTest();
 
     std::string m_filePath = "";

@@ -33,6 +33,7 @@ BinaryFile_withoutDirectIO_Test::BinaryFile_withoutDirectIO_Test()
     allocateStorage_test();
     writeSegment_test();
     readSegment_test();
+    readCompleteFile_test();
     closeTest();
 }
 
@@ -128,14 +129,14 @@ BinaryFile_withoutDirectIO_Test::writeSegment_test()
     addObject_DataBuffer(buffer, &testStruct);
 
     // write-tests
-    TEST_EQUAL(binaryFile.writeSegment(&buffer, 1000, 1000, 0), true);
-    TEST_EQUAL(binaryFile.writeSegment(&buffer, 2000, 1000, 2000), true);
+    TEST_EQUAL(binaryFile.writeSegment(buffer, 1000, 1000, 0), true);
+    TEST_EQUAL(binaryFile.writeSegment(buffer, 2000, 1000, 2000), true);
 
     // negative tests
-    TEST_EQUAL(binaryFile.writeSegment(&buffer, 2000, 0, 3000), false);
-    TEST_EQUAL(binaryFile.writeSegment(&buffer, 42000, 1000, 3000), false);
-    TEST_EQUAL(binaryFile.writeSegment(&buffer, 2000, 42000, 3000), false);
-    TEST_EQUAL(binaryFile.writeSegment(&buffer, 2000, 1000, 42000), false);
+    TEST_EQUAL(binaryFile.writeSegment(buffer, 2000, 0, 3000), false);
+    TEST_EQUAL(binaryFile.writeSegment(buffer, 42000, 1000, 3000), false);
+    TEST_EQUAL(binaryFile.writeSegment(buffer, 2000, 42000, 3000), false);
+    TEST_EQUAL(binaryFile.writeSegment(buffer, 2000, 1000, 42000), false);
 
     // cleanup
     TEST_EQUAL(binaryFile.closeFile(), true);
@@ -164,8 +165,8 @@ BinaryFile_withoutDirectIO_Test::readSegment_test()
     addObject_DataBuffer(buffer, &testStruct);
 
     // write the two blocks of the buffer
-    TEST_EQUAL(binaryFile.writeSegment(&buffer, 1000, 1000, 0), true);
-    TEST_EQUAL(binaryFile.writeSegment(&buffer, 2000, 1000, 2000), true);
+    TEST_EQUAL(binaryFile.writeSegment(buffer, 1000, 1000, 0), true);
+    TEST_EQUAL(binaryFile.writeSegment(buffer, 2000, 1000, 2000), true);
 
     // clear orinial buffer
     memset(buffer.data, 0, buffer.totalBufferSize);
@@ -173,14 +174,14 @@ BinaryFile_withoutDirectIO_Test::readSegment_test()
     testStruct.c = 0;
 
     // read the two blocks back
-    TEST_EQUAL(binaryFile.readSegment(&buffer, 1000, 1000, 1000), true);
-    TEST_EQUAL(binaryFile.readSegment(&buffer, 2000, 1000, 3000), true);
+    TEST_EQUAL(binaryFile.readSegment(buffer, 1000, 1000, 1000), true);
+    TEST_EQUAL(binaryFile.readSegment(buffer, 2000, 1000, 3000), true);
 
     // negative tests
-    TEST_EQUAL(binaryFile.readSegment(&buffer, 2000, 0, 3000), false);
-    TEST_EQUAL(binaryFile.readSegment(&buffer, 42000, 1000, 3000), false);
-    TEST_EQUAL(binaryFile.readSegment(&buffer, 2000, 42000, 3000), false);
-    TEST_EQUAL(binaryFile.readSegment(&buffer, 2000, 1000, 42000), false);
+    TEST_EQUAL(binaryFile.readSegment(buffer, 2000, 0, 3000), false);
+    TEST_EQUAL(binaryFile.readSegment(buffer, 42000, 1000, 3000), false);
+    TEST_EQUAL(binaryFile.readSegment(buffer, 2000, 42000, 3000), false);
+    TEST_EQUAL(binaryFile.readSegment(buffer, 2000, 1000, 42000), false);
 
     // copy and check the first block
     mempcpy(&testStruct,
@@ -199,6 +200,15 @@ BinaryFile_withoutDirectIO_Test::readSegment_test()
     // cleanup
     TEST_EQUAL(binaryFile.closeFile(), true);
     deleteFile();
+}
+
+/**
+ * readCompleteFile_test
+ */
+void
+BinaryFile_withoutDirectIO_Test::readCompleteFile_test()
+{
+
 }
 
 /**

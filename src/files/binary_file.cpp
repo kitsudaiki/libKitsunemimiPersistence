@@ -131,17 +131,45 @@ BinaryFile::updateFileSize()
 }
 
 /**
+ * @brief BinaryFile::readCompleteFile
+ * @param buffer
+ * @return
+ */
+bool
+BinaryFile::readCompleteFile(DataBuffer &buffer)
+{
+    const long size = lseek(m_fileDescriptor, 0, SEEK_END);
+    assert(size > 0);
+
+    const uint64_t numberOfBlocks = (static_cast<uint64_t>(size) / buffer.blockSize) + 1;
+    allocateBlocks_DataBuffer(buffer, numberOfBlocks);
+
+    lseek(m_fileDescriptor, 0, SEEK_SET);
+    const ssize_t ret = read(m_fileDescriptor, buffer.data, static_cast<uint64_t>(size));
+
+    if(ret == -1)
+    {
+        // TODO: process errno
+        return false;
+    }
+
+    buffer.bufferPosition = static_cast<uint64_t>(size);
+
+    return true;
+}
+
+/**
  * read a readSegment of the file
  *
  * @return true, if successful, else false
  */
 bool
-BinaryFile::readSegment(DataBuffer* buffer,
+BinaryFile::readSegment(DataBuffer &buffer,
                         const uint64_t startBlockInFile,
                         const uint64_t numberOfBlocks,
                         const uint64_t startBlockInBuffer)
 {
-    uint16_t blockSize = buffer->blockSize;
+    uint16_t blockSize = buffer.blockSize;
     if(m_directIO == false) {
         blockSize = 1;
     }
@@ -151,10 +179,9 @@ BinaryFile::readSegment(DataBuffer* buffer,
     const uint64_t startBytesInBuffer = startBlockInBuffer * blockSize;
 
     // precheck
-    if(buffer == nullptr
-            || numberOfBlocks == 0
+    if(numberOfBlocks == 0
             || startBytesInFile + numberOfBytes > m_totalFileSize
-            || startBytesInBuffer + numberOfBytes > buffer->numberOfBlocks * buffer->blockSize
+            || startBytesInBuffer + numberOfBytes > buffer.numberOfBlocks * buffer.blockSize
             || m_fileDescriptor < 0)
     {
         return false;
@@ -165,7 +192,7 @@ BinaryFile::readSegment(DataBuffer* buffer,
           static_cast<long>(startBytesInFile),
           SEEK_SET);
     ssize_t ret = read(m_fileDescriptor,
-                       static_cast<uint8_t*>(buffer->data) + (startBytesInBuffer),
+                       static_cast<uint8_t*>(buffer.data) + (startBytesInBuffer),
                        numberOfBytes);
 
     if(ret == -1)
@@ -182,12 +209,12 @@ BinaryFile::readSegment(DataBuffer* buffer,
  * @return true, if successful, else false
  */
 bool
-BinaryFile::writeSegment(DataBuffer* buffer,
+BinaryFile::writeSegment(DataBuffer &buffer,
                          const uint64_t startBlockInFile,
                          const uint64_t numberOfBlocks,
                          const uint64_t startBlockInBuffer)
 {
-    uint16_t blockSize = buffer->blockSize;
+    uint16_t blockSize = buffer.blockSize;
     if(m_directIO == false) {
         blockSize = 1;
     }
@@ -197,10 +224,9 @@ BinaryFile::writeSegment(DataBuffer* buffer,
     const uint64_t startBytesInBuffer = startBlockInBuffer * blockSize;
 
     // precheck
-    if(buffer == nullptr
-            || numberOfBlocks == 0
+    if(numberOfBlocks == 0
             || startBytesInFile + numberOfBytes > m_totalFileSize
-            || startBytesInBuffer + numberOfBytes > buffer->numberOfBlocks * buffer->blockSize
+            || startBytesInBuffer + numberOfBytes > buffer.numberOfBlocks * buffer.blockSize
             || m_fileDescriptor < 0)
     {
         return false;
@@ -214,7 +240,7 @@ BinaryFile::writeSegment(DataBuffer* buffer,
 
     // write data to file
     ssize_t ret = write(m_fileDescriptor,
-                        static_cast<uint8_t*>(buffer->data) + startBytesInBuffer,
+                        static_cast<uint8_t*>(buffer.data) + startBytesInBuffer,
                         numberOfBytes);
 
     if(ret == -1)
