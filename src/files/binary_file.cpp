@@ -153,6 +153,8 @@ BinaryFile::readCompleteFile(DataBuffer &buffer)
         return false;
     }
 
+    buffer.bufferPosition = static_cast<uint64_t>(size);
+
     return true;
 }
 
