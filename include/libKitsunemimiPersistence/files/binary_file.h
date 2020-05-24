@@ -35,12 +35,14 @@ class BinaryFile
 {
 public:
     BinaryFile(const std::string filePath,
-               const bool directIO = true);
+               const bool directIO = false);
     ~BinaryFile();
 
     bool allocateStorage(const uint64_t numberOfBlocks,
                          const uint32_t blockSize = 4096);
     bool updateFileSize();
+
+    bool readCompleteFile(DataBuffer* buffer);
 
     bool readSegment(DataBuffer* buffer,
                      const uint64_t startBlockInFile,

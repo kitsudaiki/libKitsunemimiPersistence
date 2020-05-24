@@ -131,6 +131,32 @@ BinaryFile::updateFileSize()
 }
 
 /**
+ * @brief BinaryFile::readCompleteFile
+ * @param buffer
+ * @return
+ */
+bool
+BinaryFile::readCompleteFile(DataBuffer *buffer)
+{
+    const long size = lseek(m_fileDescriptor, 0, SEEK_END);
+    assert(size > 0);
+
+    const uint64_t numberOfBlocks = (static_cast<uint64_t>(size) / buffer->blockSize) + 1;
+    allocateBlocks_DataBuffer(*buffer, numberOfBlocks);
+
+    lseek(m_fileDescriptor, 0, SEEK_SET);
+    const ssize_t ret = read(m_fileDescriptor, buffer->data, static_cast<uint64_t>(size));
+
+    if(ret == -1)
+    {
+        // TODO: process errno
+        return false;
+    }
+
+    return true;
+}
+
+/**
  * read a readSegment of the file
  *
  * @return true, if successful, else false

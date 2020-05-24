@@ -102,22 +102,14 @@ getFilesInDir(std::vector<std::string> &fileList,
         {
             if(withSubdirs == true)
             {
-                if(exceptions.size() != 0)
+                bool foundInExceptions = false;
+                for(uint64_t i = 0; i < exceptions.size(); i++)
                 {
-                    for(uint64_t i = 0; i < exceptions.size(); i++)
-                    {
-                        bool found = false;
-                        if(itr->path().leaf().string() == exceptions.at(i)) {
-                            found = true;
-                        }
-
-                        if(found == false) {
-                            getFilesInDir(fileList, itr->path(), withSubdirs, exceptions);
-                        }
+                    if(itr->path().leaf().string() == exceptions.at(i)) {
+                        foundInExceptions = true;
                     }
                 }
-                else
-                {
+                if(foundInExceptions == false) {
                     getFilesInDir(fileList, itr->path(), withSubdirs, exceptions);
                 }
             }
