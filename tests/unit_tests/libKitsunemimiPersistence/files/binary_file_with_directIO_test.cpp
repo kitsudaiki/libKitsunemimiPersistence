@@ -54,7 +54,7 @@ BinaryFile_withDirectIO_Test::closeFile_test()
 {
     // init buffer and file
     DataBuffer buffer;
-    BinaryFile binaryFile(m_filePath);
+    BinaryFile binaryFile(m_filePath, true);
 
     // test close
     TEST_EQUAL(binaryFile.closeFile(), true);
@@ -71,7 +71,7 @@ BinaryFile_withDirectIO_Test::updateFileSize_test()
 {
     // init buffer and file
     DataBuffer buffer(5);
-    BinaryFile binaryFile(m_filePath);
+    BinaryFile binaryFile(m_filePath, true);
     binaryFile.allocateStorage(4);
     binaryFile.closeFile();
 
@@ -90,7 +90,7 @@ BinaryFile_withDirectIO_Test::allocateStorage_test()
 {
     // init buffer and file
     DataBuffer buffer;
-    BinaryFile binaryFile(m_filePath);
+    BinaryFile binaryFile(m_filePath, true);
 
     // test allocation
     TEST_EQUAL(binaryFile.allocateStorage(4), true);
@@ -116,7 +116,7 @@ BinaryFile_withDirectIO_Test::writeSegment_test()
 {
     // init buffer and file
     DataBuffer buffer(5);
-    BinaryFile binaryFile(m_filePath);
+    BinaryFile binaryFile(m_filePath, true);
     binaryFile.allocateStorage(4);
 
     // prepare test-buffer
@@ -128,14 +128,14 @@ BinaryFile_withDirectIO_Test::writeSegment_test()
     addObject_DataBuffer(buffer, &testStruct);
 
     // write-tests
-    TEST_EQUAL(binaryFile.writeSegment(&buffer, 1, 1, 0), true);
-    TEST_EQUAL(binaryFile.writeSegment(&buffer, 2, 1, 2), true);
+    TEST_EQUAL(binaryFile.writeSegment(buffer, 1, 1, 0), true);
+    TEST_EQUAL(binaryFile.writeSegment(buffer, 2, 1, 2), true);
 
     // negative tests
-    TEST_EQUAL(binaryFile.writeSegment(&buffer, 2, 0, 3), false);
-    TEST_EQUAL(binaryFile.writeSegment(&buffer, 42, 1, 3), false);
-    TEST_EQUAL(binaryFile.writeSegment(&buffer, 2, 42, 3), false);
-    TEST_EQUAL(binaryFile.writeSegment(&buffer, 2, 1, 42), false);
+    TEST_EQUAL(binaryFile.writeSegment(buffer, 2, 0, 3), false);
+    TEST_EQUAL(binaryFile.writeSegment(buffer, 42, 1, 3), false);
+    TEST_EQUAL(binaryFile.writeSegment(buffer, 2, 42, 3), false);
+    TEST_EQUAL(binaryFile.writeSegment(buffer, 2, 1, 42), false);
 
     // cleanup
     TEST_EQUAL(binaryFile.closeFile(), true);
@@ -150,7 +150,7 @@ BinaryFile_withDirectIO_Test::readSegment_test()
 {
     // init buffer and file
     DataBuffer buffer(5);
-    BinaryFile binaryFile(m_filePath);
+    BinaryFile binaryFile(m_filePath, true);
     binaryFile.allocateStorage(4);
 
     // prepare test-buffer
@@ -164,8 +164,8 @@ BinaryFile_withDirectIO_Test::readSegment_test()
     addObject_DataBuffer(buffer, &testStruct);
 
     // write the two blocks of the buffer
-    TEST_EQUAL(binaryFile.writeSegment(&buffer, 1, 1, 0), true);
-    TEST_EQUAL(binaryFile.writeSegment(&buffer, 2, 1, 2), true);
+    TEST_EQUAL(binaryFile.writeSegment(buffer, 1, 1, 0), true);
+    TEST_EQUAL(binaryFile.writeSegment(buffer, 2, 1, 2), true);
 
     // clear orinial buffer
     memset(buffer.data, 0, buffer.totalBufferSize);
@@ -173,14 +173,14 @@ BinaryFile_withDirectIO_Test::readSegment_test()
     testStruct.c = 0;
 
     // read the two blocks back
-    TEST_EQUAL(binaryFile.readSegment(&buffer, 1, 1, 1), true);
-    TEST_EQUAL(binaryFile.readSegment(&buffer, 2, 1, 3), true);
+    TEST_EQUAL(binaryFile.readSegment(buffer, 1, 1, 1), true);
+    TEST_EQUAL(binaryFile.readSegment(buffer, 2, 1, 3), true);
 
     // negative tests
-    TEST_EQUAL(binaryFile.readSegment(&buffer, 2, 0, 3), false);
-    TEST_EQUAL(binaryFile.readSegment(&buffer, 42, 1, 3), false);
-    TEST_EQUAL(binaryFile.readSegment(&buffer, 2, 42, 3), false);
-    TEST_EQUAL(binaryFile.readSegment(&buffer, 2, 1, 42), false);
+    TEST_EQUAL(binaryFile.readSegment(buffer, 2, 0, 3), false);
+    TEST_EQUAL(binaryFile.readSegment(buffer, 42, 1, 3), false);
+    TEST_EQUAL(binaryFile.readSegment(buffer, 2, 42, 3), false);
+    TEST_EQUAL(binaryFile.readSegment(buffer, 2, 1, 42), false);
 
     // copy and check the first block
     mempcpy(&testStruct,
