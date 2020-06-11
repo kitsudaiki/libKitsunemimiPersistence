@@ -81,7 +81,9 @@ LOG_debug(const std::string message)
         return false;
     }
 
-    return Kitsunemimi::Persistence::Logger::m_logger->logData("DEBUG: " + message, true);
+    return Kitsunemimi::Persistence::Logger::m_logger->logData("\033[1;32mDEBUG: "
+                                                               + message
+                                                               + "\033[0m");
 }
 
 /**
@@ -107,7 +109,9 @@ LOG_warning(const std::string message)
         return false;
     }
 
-    return Kitsunemimi::Persistence::Logger::m_logger->logData("WARNING: " + message);
+    return Kitsunemimi::Persistence::Logger::m_logger->logData("\033[1;33mWARNING: "
+                                                               + message
+                                                               + "\033[0m");
 }
 
 /**
@@ -120,7 +124,9 @@ LOG_error(const std::string message)
         return false;
     }
 
-    return Kitsunemimi::Persistence::Logger::m_logger->logData("ERROR: " + message);
+    return Kitsunemimi::Persistence::Logger::m_logger->logData("\033[1;31mERROR: "
+                                                               + message
+                                                               + "\033[0m");
 }
 
 /**
