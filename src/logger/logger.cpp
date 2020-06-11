@@ -83,7 +83,8 @@ LOG_debug(const std::string message)
 
     return Kitsunemimi::Persistence::Logger::m_logger->logData("\033[1;32mDEBUG: "
                                                                + message
-                                                               + "\033[0m");
+                                                               + "\033[0m"
+                                                               , true);
 }
 
 /**
