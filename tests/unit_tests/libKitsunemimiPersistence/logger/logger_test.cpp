@@ -29,7 +29,9 @@ void
 Logger_Test::logger_test()
 {
     // init logger
-    bool ret = initFileLogger("/tmp", "testlog", true);
+    bool ret = initConsoleLogger(true);
+    TEST_EQUAL(ret, true);
+    ret = initFileLogger("/tmp", "testlog", true);
     TEST_EQUAL(ret, true);
 
     // negative-test to try reinit the logger
