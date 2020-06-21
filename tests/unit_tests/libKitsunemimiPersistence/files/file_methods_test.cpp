@@ -37,103 +37,11 @@ namespace Persistence
 FileMethods_Test::FileMethods_Test()
     : Kitsunemimi::CompareTestHelper("FileMethods_Test")
 {
-    doesPathExist_test();
-    isFile_test();
-    isDir_test();
-    getParent_test();
     listFiles_test();
-    getRelativePath_test();
     renameFileOrDir_test();
     copyPath_test();
     createDirectory_test();
     deleteFileOrDir_test();
-}
-
-/**
- * @brief doesPathExist_test
- */
-void
-FileMethods_Test::doesPathExist_test()
-{
-    const std::string testPath = "/tmp/doesPathExist_test_testfile";
-    runSyncProcess(std::string("rm " + testPath).c_str());
-
-    TEST_EQUAL(doesPathExist(testPath), false);
-
-    runSyncProcess(std::string("touch " + testPath).c_str());
-
-    TEST_EQUAL(doesPathExist(testPath), true);
-
-    runSyncProcess(std::string("rm " + testPath).c_str());
-}
-
-/**
- * @brief isFile_test
- */
-void
-FileMethods_Test::isFile_test()
-{
-    const std::string testFilePath = "/tmp/isFile_test_testfile";
-    const std::string testDirPath = "/tmp/isFile_test_testdir";
-
-    runSyncProcess(std::string("rm " + testFilePath).c_str());
-    runSyncProcess(std::string("rm -r " + testDirPath).c_str());
-
-    TEST_EQUAL(isFile(testFilePath), false);
-    TEST_EQUAL(isFile(testDirPath), false);
-
-    runSyncProcess(std::string("touch " + testFilePath).c_str());
-    runSyncProcess(std::string("mkdir " + testDirPath).c_str());
-
-    TEST_EQUAL(isFile(testFilePath), true);
-    TEST_EQUAL(isFile(testDirPath), false);
-
-    runSyncProcess(std::string("rm " + testFilePath).c_str());
-    runSyncProcess(std::string("rm -r " + testDirPath).c_str());
-}
-
-/**
- * @brief isDir_test
- */
-void
-FileMethods_Test::isDir_test()
-{
-    const std::string testFilePath = "/tmp/isDir_test_testfile";
-    const std::string testDirPath = "/tmp/isDir_test_testdir";
-
-    runSyncProcess(std::string("rm " + testFilePath).c_str());
-    runSyncProcess(std::string("rm -r " + testDirPath).c_str());
-
-    TEST_EQUAL(isDir(testFilePath), false);
-    TEST_EQUAL(isDir(testDirPath), false);
-
-    runSyncProcess(std::string("touch " + testFilePath).c_str());
-    runSyncProcess(std::string("mkdir " + testDirPath).c_str());
-
-    TEST_EQUAL(isDir(testFilePath), false);
-    TEST_EQUAL(isDir(testDirPath), true);
-
-    runSyncProcess(std::string("rm " + testFilePath).c_str());
-    runSyncProcess(std::string("rm -r " + testDirPath).c_str());
-}
-
-/**
- * @brief getParent_test
- */
-void
-FileMethods_Test::getParent_test()
-{
-    const std::string testFilePath = "/tmp/isFile_test_testdir/isFile_test_testfile";
-    const std::string testDirPath = "/tmp/isFile_test_testdir";
-
-    runSyncProcess(std::string("mkdir " + testDirPath).c_str());
-    runSyncProcess(std::string("touch " + testFilePath).c_str());
-
-    TEST_EQUAL(getParent(testFilePath), testDirPath);
-    TEST_EQUAL(getParent(testDirPath), std::string("/tmp"));
-
-    runSyncProcess(std::string("rm " + testFilePath).c_str());
-    runSyncProcess(std::string("rm -r " + testDirPath).c_str());
 }
 
 /**
@@ -179,32 +87,6 @@ FileMethods_Test::listFiles_test()
 }
 
 /**
- * @brief getRelativePath_test
- */
-void
-FileMethods_Test::getRelativePath_test()
-{
-    std::string child = "/tmp/asdf/poi/meh.txt";
-    std::string parent = "/tmp/asdf/";
-
-    const std::string relative = getRelativePath(child, parent);
-
-    TEST_EQUAL(relative, "poi/meh.txt");
-
-
-
-    std::string oldRelativePath = "../poi/meh.txt";
-    std::string oldRootPath = "/tmp/asdf/";
-    std::string newRootPath = "/tmp/xyz";
-
-    const std::string newRelativePath = getRelativePath(oldRootPath,
-                                                        oldRelativePath,
-                                                        newRootPath);
-
-    TEST_EQUAL(newRelativePath, "../poi/meh.txt");
-}
-
-/**
  * @brief renameFileOrDir_test
  */
 void
@@ -226,8 +108,8 @@ FileMethods_Test::renameFileOrDir_test()
     result = renameFileOrDir(oldFilePath, newFileName, errorMessage);
     TEST_EQUAL(result, false);
 
-    TEST_EQUAL(doesPathExist(oldFilePath), false);
-    TEST_EQUAL(doesPathExist(newFileName), true);
+    TEST_EQUAL(bfs::exists(oldFilePath), false);
+    TEST_EQUAL(bfs::exists(newFileName), true);
 
     runSyncProcess(std::string("rm " + oldFilePath).c_str());
     runSyncProcess(std::string("rm " + newFileName).c_str());
@@ -255,8 +137,8 @@ FileMethods_Test::copyPath_test()
     result = copyPath(oldFilePath, newFileName, errorMessage, false);
     TEST_EQUAL(result, false);
 
-    TEST_EQUAL(doesPathExist(oldFilePath), true);
-    TEST_EQUAL(doesPathExist(newFileName), true);
+    TEST_EQUAL(bfs::exists(oldFilePath), true);
+    TEST_EQUAL(bfs::exists(newFileName), true);
 
     runSyncProcess(std::string("rm " + oldFilePath).c_str());
     runSyncProcess(std::string("rm " + newFileName).c_str());
@@ -273,14 +155,14 @@ FileMethods_Test::createDirectory_test()
     const std::string testDirPath = "/tmp/deleteFileOrDir_test_testdir/test1";
 
     runSyncProcess(std::string("rm -r " + testDirPath).c_str());
-    TEST_EQUAL(doesPathExist(testDirPath), false);
+    TEST_EQUAL(bfs::exists(testDirPath), false);
 
     std::string errorMessage = "";
 
     result = createDirectory(testDirPath, errorMessage);
     TEST_EQUAL(result, true);
 
-    TEST_EQUAL(doesPathExist(testDirPath), true);
+    TEST_EQUAL(bfs::exists(testDirPath), true);
 
     result = createDirectory(testDirPath, errorMessage);
     TEST_EQUAL(result, false);
@@ -304,8 +186,8 @@ FileMethods_Test::deleteFileOrDir_test()
 
     std::string errorMessage = "";
 
-    TEST_EQUAL(doesPathExist(testFilePath), true);
-    TEST_EQUAL(doesPathExist(testDirPath), true);
+    TEST_EQUAL(bfs::exists(testFilePath), true);
+    TEST_EQUAL(bfs::exists(testDirPath), true);
 
     result = deleteFileOrDir(testFilePath, errorMessage);
     TEST_EQUAL(result, true);
@@ -316,8 +198,8 @@ FileMethods_Test::deleteFileOrDir_test()
     result = deleteFileOrDir(testDirPath, errorMessage);
     TEST_EQUAL(result, true);
 
-    TEST_EQUAL(doesPathExist(testFilePath), false);
-    TEST_EQUAL(doesPathExist(testDirPath), false);
+    TEST_EQUAL(bfs::exists(testFilePath), false);
+    TEST_EQUAL(bfs::exists(testDirPath), false);
 
     runSyncProcess(std::string("rm " + testFilePath).c_str());
     runSyncProcess(std::string("rm -r " + testDirPath).c_str());

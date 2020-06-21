@@ -37,12 +37,7 @@ public:
     FileMethods_Test();
 
 private:
-    void doesPathExist_test();
-    void isFile_test();
-    void isDir_test();
-    void getParent_test();
     void listFiles_test();
-    void getRelativePath_test();
     void renameFileOrDir_test();
     void copyPath_test();
     void createDirectory_test();

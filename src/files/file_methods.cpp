@@ -14,71 +14,6 @@ namespace Persistence
 {
 
 /**
- * @brief check if a path exist
- *
- * @param path path to check
- *
- * @return true, if path exist, else false
- */
-bool
-doesPathExist(const std::string path)
-{
-    return boost::filesystem::exists(path);
-}
-
-/**
- * @brief check if a path exist and is a directory
- *
- * @param filePath path to check
- *
- * @return true, if path exist and is a file, else false
- */
-bool
-isFile(const std::string filePath)
-{
-    if(boost::filesystem::exists(filePath) == false
-            || boost::filesystem::is_regular(filePath) == false)
-    {
-        return false;
-    }
-
-    return true;
-}
-
-/**
- * @brief check if a path exist and is a directory
- *
- * @param dirPath path to check
- *
- * @return true, if path exist and is a directory, else false
- */
-bool
-isDir(const std::string dirPath)
-{
-    if(boost::filesystem::exists(dirPath) == false
-            || boost::filesystem::is_directory(dirPath) == false)
-    {
-        return false;
-    }
-
-    return true;
-}
-
-/**
- * @brief get parent-path of a path
- *
- * @param path original path
- *
- * @return parent-path
- */
-const std::string
-getParent(const std::string &path)
-{
-    boost::filesystem::path pathObj(path);
-    return pathObj.parent_path().string();
-}
-
-/**
  * @brief iterate over a directory and subdirectory to file all containing files
  *
  * @param fileList resulting string-list with the absolute path of all found files
@@ -155,27 +90,6 @@ listFiles(std::vector<std::string> &fileList,
 }
 
 /**
- * @brief get relative path of one to another
- *
- * @param absolutePath absolute path
- * @param absolutePath root path
- *
- * @return relative path of the absolute path in relation to the root
- */
-const std::string
-getRelativePath(const std::string &absolutePath,
-                const std::string &rootPath)
-{
-    std::string newRoot = rootPath;
-
-    if(newRoot.at(newRoot.size()-1) == '/') {
-        newRoot = rootPath.substr(0, rootPath.size()-1);
-    }
-
-    return boost::filesystem::relative(absolutePath, newRoot).string();
-}
-
-/**
  * @brief get ralative path in relation to a new root-path
  *
  * @param oldRootPath old root-path
@@ -184,16 +98,14 @@ getRelativePath(const std::string &absolutePath,
  *
  * @return new relative path
  */
-const std::string
-getRelativePath(const std::string &oldRootPath,
-                const std::string &oldRelativePath,
-                const std::string &newRootPath)
+const bfs::path
+getRelativePath(const bfs::path &oldRootPath,
+                const bfs::path &oldRelativePath,
+                const bfs::path &newRootPath)
 {
-    boost::filesystem::path realtivePathObj(oldRelativePath);
-    boost::filesystem::path oringinPathObj(oldRootPath);
-    boost::filesystem::path completePath = oringinPathObj / realtivePathObj;
+    boost::filesystem::path completePath = oldRootPath / oldRelativePath;
 
-    return getRelativePath(completePath.string(), newRootPath);
+    return bfs::relative(completePath, newRootPath);
 }
 
 /**
@@ -206,13 +118,13 @@ getRelativePath(const std::string &oldRootPath,
  * @return true, if successful, else false
  */
 bool
-renameFileOrDir(const std::string &oldPath,
-                const std::string &newPath,
+renameFileOrDir(const bfs::path &oldPath,
+                const bfs::path &newPath,
                 std::string &errorMessage)
 {
-    if(doesPathExist(oldPath) == false)
+    if(bfs::exists(oldPath) == false)
     {
-        errorMessage = "source-path " + oldPath + " doesn't exist.";
+        errorMessage = "source-path " + oldPath.string() + " doesn't exist.";
         return false;
     }
 
@@ -240,14 +152,14 @@ renameFileOrDir(const std::string &oldPath,
  * @return true, if successful, else false
  */
 bool
-copyPath(const std::string &sourcePath,
-         const std::string &targetPath,
+copyPath(const bfs::path &sourcePath,
+         const bfs::path &targetPath,
          std::string &errorMessage,
          const bool force)
 {
-    if(doesPathExist(sourcePath) == false)
+    if(bfs::exists(sourcePath) == false)
     {
-        errorMessage = "source-path " + sourcePath + " doesn't exist.";
+        errorMessage = "source-path " + sourcePath.string() + " doesn't exist.";
         return false;
     }
 
@@ -275,12 +187,15 @@ copyPath(const std::string &sourcePath,
  * @return true, if successful, else false
  */
 bool
-createDirectory(const std::string &path,
+createDirectory(const bfs::path &path,
                 std::string &errorMessage)
 {
-    if(isFile(path))
+    if(bfs::exists(path)
+            && bfs::is_regular_file(path))
     {
-        errorMessage = "under path " + path + " a file already exist.";
+        errorMessage = "under path "
+                       + path.string()
+                       + " a file already exist.";
         return false;
     }
 
@@ -303,10 +218,10 @@ createDirectory(const std::string &path,
  * @return true, if successful, else false. Also return true, if path is already deleted.
  */
 bool
-deleteFileOrDir(const std::string &path,
+deleteFileOrDir(const bfs::path &path,
                 std::string &errorMessage)
 {
-    if(doesPathExist(path) == false) {
+    if(bfs::exists(path) == false) {
         return true;
     }
 
