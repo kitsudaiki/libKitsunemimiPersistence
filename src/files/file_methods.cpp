@@ -157,22 +157,22 @@ listFiles(std::vector<std::string> &fileList,
 /**
  * @brief get relative path of one to another
  *
- * @param childPath child path
- * @param parentPath parent path
+ * @param absolutePath absolute path
+ * @param absolutePath root path
  *
- * @return relative path of the child in relation to the parent
+ * @return relative path of the absolute path in relation to the root
  */
 const std::string
-getRelativePath(const std::string &childPath,
-                const std::string &parentPath)
+getRelativePath(const std::string &absolutePath,
+                const std::string &rootPath)
 {
-    std::string newParent = parentPath;
+    std::string newRoot = rootPath;
 
-    if(newParent.at(newParent.size()-1) == '/') {
-        newParent = parentPath.substr(0, parentPath.size()-1);
+    if(newRoot.at(newRoot.size()-1) == '/') {
+        newRoot = rootPath.substr(0, rootPath.size()-1);
     }
 
-    return boost::filesystem::relative(childPath, newParent).string();
+    return boost::filesystem::relative(absolutePath, newRoot).string();
 }
 
 /**
@@ -191,7 +191,7 @@ getRelativePath(const std::string &oldRootPath,
 {
     boost::filesystem::path realtivePathObj(oldRelativePath);
     boost::filesystem::path oringinPathObj(oldRootPath);
-    boost::filesystem::path completePath = oringinPathObj.parent_path() / realtivePathObj;
+    boost::filesystem::path completePath = oringinPathObj / realtivePathObj;
 
     return getRelativePath(completePath.string(), newRootPath);
 }
