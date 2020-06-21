@@ -190,6 +190,18 @@ FileMethods_Test::getRelativePath_test()
     const std::string relative = getRelativePath(child, parent);
 
     TEST_EQUAL(relative, "poi/meh.txt");
+
+
+
+    std::string oldRelativePath = "../poi/meh.txt";
+    std::string oldRootPath = "/tmp/asdf/";
+    std::string newRootPath = "/tmp/xyz";
+
+    const std::string newRelativePath = getRelativePath(oldRootPath,
+                                                        oldRelativePath,
+                                                        newRootPath);
+
+    TEST_EQUAL(newRelativePath, "../poi/meh.txt");
 }
 
 /**

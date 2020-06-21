@@ -176,6 +176,27 @@ getRelativePath(const std::string &childPath,
 }
 
 /**
+ * @brief get ralative path in relation to a new root-path
+ *
+ * @param oldRootPath old root-path
+ * @param oldRelativePath old relative path
+ * @param newRootPath new root-path
+ *
+ * @return new relative path
+ */
+const std::string
+getRelativePath(const std::string &oldRootPath,
+                const std::string &oldRelativePath,
+                const std::string &newRootPath)
+{
+    boost::filesystem::path realtivePathObj(oldRelativePath);
+    boost::filesystem::path oringinPathObj(oldRootPath);
+    boost::filesystem::path completePath = oringinPathObj.parent_path() / realtivePathObj;
+
+    return getRelativePath(completePath.string(), newRootPath);
+}
+
+/**
  * @brief rename a file or directory
  *
  * @param oldPath origial path
