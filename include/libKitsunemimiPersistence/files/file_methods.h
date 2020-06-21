@@ -13,16 +13,13 @@
 #include <assert.h>
 #include <boost/filesystem.hpp>
 
+namespace bfs = boost::filesystem;
+
 namespace Kitsunemimi
 {
 namespace Persistence
 {
 
-bool doesPathExist(const std::string path);
-bool isFile(const std::string filePath);
-bool isDir(const std::string dirPath);
-
-const std::string getParent(const std::string &path);
 void listFiles(std::vector<std::string> &fileList,
                const std::string &path,
                const bool withSubdirs=true,
@@ -30,20 +27,20 @@ void listFiles(std::vector<std::string> &fileList,
 
 const std::string getRelativePath(const std::string &absolutePath,
                                   const std::string &rootPath);
-const std::string getRelativePath(const std::string &oldRootPath,
-                                  const std::string &oldRelativePath,
-                                  const std::string &newRootPath);
+const bfs::path getRelativePath(const bfs::path &oldRootPath,
+                                const bfs::path &oldRelativePath,
+                                const bfs::path &newRootPath);
 
-bool renameFileOrDir(const std::string &oldPath,
-                     const std::string &newPath,
+bool renameFileOrDir(const bfs::path &oldPath,
+                     const bfs::path &newPath,
                      std::string &errorMessage);
-bool copyPath(const std::string &sourcePath,
-              const std::string &targetPath,
+bool copyPath(const bfs::path &sourcePath,
+              const bfs::path &targetPath,
               std::string &errorMessage,
               const bool force=true);
-bool createDirectory(const std::string &path,
+bool createDirectory(const bfs::path &path,
                      std::string &errorMessage);
-bool deleteFileOrDir(const std::string &path,
+bool deleteFileOrDir(const bfs::path &path,
                      std::string &errorMessage);
 
 

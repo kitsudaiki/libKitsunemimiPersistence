@@ -34,10 +34,10 @@ readFile(std::string &readContentconst,
          std::string &errorMessage)
 {
     // check if exist
-    if(doesPathExist(filePath))
+    if(bfs::exists(filePath))
     {
         // check for directory
-        if(isDir(filePath))
+        if(bfs::is_directory(filePath))
         {
             errorMessage = "failed to read destination of path \""
                            + filePath +
@@ -81,8 +81,8 @@ writeFile(const std::string &filePath,
           const bool force)
 {
     // check and create parent-directory, if necessary
-    const std::string parentDirectory = getParent(filePath);
-    if(doesPathExist(parentDirectory) == false)
+    const bfs::path parentDirectory = bfs::path(filePath).parent_path();
+    if(bfs::exists(parentDirectory) == false)
     {
         bool result = createDirectory(parentDirectory, errorMessage);
         if(result == false) {
@@ -91,10 +91,10 @@ writeFile(const std::string &filePath,
     }
 
     // check if exist
-    if(doesPathExist(filePath))
+    if(bfs::exists(filePath))
     {
         // check for directory
-        if(isDir(filePath))
+        if(bfs::is_directory(filePath))
         {
             errorMessage = "failed to write destination of path \""
                            + filePath +
@@ -146,7 +146,7 @@ appendText(const std::string &filePath,
            std::string &errorMessage)
 {
     // check for directory
-    if(isFile(filePath) == false)
+    if(bfs::is_regular_file(filePath) == false)
     {
         errorMessage = "Failed to append text to file \""
                        + filePath +
