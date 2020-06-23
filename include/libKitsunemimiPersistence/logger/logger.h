@@ -30,8 +30,8 @@ namespace Kitsunemimi
 namespace Persistence
 {
 
-bool initFileLogger(const std::string directoryPath,
-                    const std::string baseFileName,
+bool initFileLogger(const std::string &directoryPath,
+                    const std::string &baseFileName,
                     const bool debugLog = false);
 bool initConsoleLogger(const bool debugLog = false);
 bool setDebugFlag(const bool debugLog);
@@ -51,15 +51,17 @@ public:
     Logger();
     ~Logger();
 
-    bool initFileLogger(const std::string directoryPath,
-                        const std::string baseFileName,
+    bool initFileLogger(const std::string &directoryPath,
+                        const std::string &baseFileName,
                         const bool debugLog);
     bool initConsoleLogger(const bool debugLog);
     bool setDebugFlag(const bool debugLog);
 
     void closeLogFile();
 
-    bool logData(const std::string message,
+    bool logData(const std::string &message,
+                 const std::string &preTag,
+                 const std::string &color,
                  const bool debug = false);
 
     std::string m_filePath = "";

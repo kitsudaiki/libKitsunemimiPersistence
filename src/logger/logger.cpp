@@ -26,8 +26,8 @@ Kitsunemimi::Persistence::Logger* Logger::m_logger = nullptr;
  *
  * @return false, if initializing failed, else true
  */
-bool initFileLogger(const std::string directoryPath,
-                    const std::string baseFileName,
+bool initFileLogger(const std::string &directoryPath,
+                    const std::string &baseFileName,
                     const bool debugLog)
 {
     if(Logger::m_logger == nullptr) {
@@ -81,10 +81,10 @@ LOG_debug(const std::string message)
         return false;
     }
 
-    return Kitsunemimi::Persistence::Logger::m_logger->logData("\033[1;32mDEBUG: "
-                                                               + message
-                                                               + "\033[0m"
-                                                               , true);
+    return Kitsunemimi::Persistence::Logger::m_logger->logData(message,
+                                                               "DEBUG",
+                                                               "\033[1;32m",
+                                                               true);
 }
 
 /**
@@ -97,7 +97,9 @@ LOG_info(const std::string message)
         return false;
     }
 
-    return Kitsunemimi::Persistence::Logger::m_logger->logData("INFO: " + message);
+    return Kitsunemimi::Persistence::Logger::m_logger->logData(message,
+                                                               "INFO",
+                                                               "\033[0m");
 }
 
 /**
@@ -110,9 +112,9 @@ LOG_warning(const std::string message)
         return false;
     }
 
-    return Kitsunemimi::Persistence::Logger::m_logger->logData("\033[1;33mWARNING: "
-                                                               + message
-                                                               + "\033[0m");
+    return Kitsunemimi::Persistence::Logger::m_logger->logData(message,
+                                                               "WARNING",
+                                                               "\033[1;33m");
 }
 
 /**
@@ -125,9 +127,9 @@ LOG_error(const std::string message)
         return false;
     }
 
-    return Kitsunemimi::Persistence::Logger::m_logger->logData("\033[1;31mERROR: "
-                                                               + message
-                                                               + "\033[0m");
+    return Kitsunemimi::Persistence::Logger::m_logger->logData(message,
+                                                               "ERROR",
+                                                               "\033[1;31m");
 }
 
 /**
@@ -175,8 +177,8 @@ Logger::~Logger()
  * @return false, if initializing failed, else true
  */
 bool
-Logger::initFileLogger(const std::string directoryPath,
-                       const std::string baseFileName,
+Logger::initFileLogger(const std::string &directoryPath,
+                       const std::string &baseFileName,
                        const bool debugLog)
 {
     m_directoryPath = directoryPath;
@@ -275,7 +277,9 @@ Logger::closeLogFile()
  * @brief write message to logfile
  */
 bool
-Logger::logData(const std::string message,
+Logger::logData(const std::string &message,
+                const std::string &preTag,
+                const std::string &color,
                 const bool debug)
 {
     m_lock.lock();
@@ -290,7 +294,11 @@ Logger::logData(const std::string message,
             return false;
         }
 
-        std::cout<<message<<std::endl;
+        if(preTag == "INFO") {
+            std::cout<<color<<message<<"\033[0m"<<std::endl;
+        } else {
+            std::cout<<color<<preTag<<": "<<message<<"\033[0m"<<std::endl;
+        }
     }
 
     // build and write new line
@@ -303,7 +311,7 @@ Logger::logData(const std::string message,
             return false;
         }
 
-        const std::string line(getDatetime() + " " + message + "\n");
+        const std::string line(getDatetime() + " " + preTag + ": " + message + "\n");
         m_outputFile << line;
         m_outputFile.flush();
     }
