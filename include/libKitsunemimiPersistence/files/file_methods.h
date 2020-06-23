@@ -25,12 +25,6 @@ void listFiles(std::vector<std::string> &fileList,
                const bool withSubdirs=true,
                const std::vector<std::string> &exceptions = {});
 
-const std::string getRelativePath(const std::string &absolutePath,
-                                  const std::string &rootPath);
-const bfs::path getRelativePath(const bfs::path &oldRootPath,
-                                const bfs::path &oldRelativePath,
-                                const bfs::path &newRootPath);
-
 bool renameFileOrDir(const bfs::path &oldPath,
                      const bfs::path &newPath,
                      std::string &errorMessage);
