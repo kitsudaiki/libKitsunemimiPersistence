@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.9.0] - 2020-08-03
+
+### Added
+- colored logger-output
+
+### Changed
+- logger-interface
+- methods of binary-files to use references instead of pointer
+- return-value of methods to read and write text-file doesn't return a pair anymore
+
+
 ## [0.8.2] - 2020-04-13
 
 ### Changed

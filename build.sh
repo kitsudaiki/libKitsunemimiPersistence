@@ -45,7 +45,7 @@ function get_required_kitsune_lib_repo () {
 
 #-----------------------------------------------------------------------------------------------------------------
 
-get_required_kitsune_lib_repo "libKitsunemimiCommon" "master"
+get_required_kitsune_lib_repo "libKitsunemimiCommon" "v0.14.0"
 
 #-----------------------------------------------------------------------------------------------------------------
 
