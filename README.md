@@ -34,15 +34,16 @@ Its a simple and really easy to use logger to wirte messages with timestamps to 
 
 name | repository | version | task
 --- | --- | --- | ---
-g++ | g++ | 6.x | Compiler for the C++ code.
-qmake | qt5-qmake | 5.x | This package provides the tool qmake, to build the project
-boost-filesystem library | libboost-filesystem-dev | 1.6x | interactions with files and directories on the system
-sqlite3 library | libsqlite3-dev | 3.x | handling of sqlite databases
+g++ | g++ | >= 6.0 | Compiler for the C++ code.
+make | make | >= 4.0 | process the make-file, which is created by qmake to build the programm with g++
+qmake | qt5-qmake | >= 5.0 | This package provides the tool qmake, which is similar to cmake and create the make-file for compilation.
+sqlite3 library | libsqlite3-dev | >= 3.0 | handling of sqlite databases
+
 
 Installation on Ubuntu/Debian:
 
 ```bash
-sudo apt-get install g++ qt5-qmake libboost-filesystem-dev libsqlite3-dev
+sudo apt-get install g++ make qt5-qmake libboost-filesystem-dev libsqlite3-dev
 ```
 
 IMPORTANT: All my projects are only tested on Linux. 
@@ -51,7 +52,7 @@ IMPORTANT: All my projects are only tested on Linux.
 
 Repository-Name | Version-Tag | Download-Path
 --- | --- | ---
-libKitsunemimiCommon | v0.13.0 |  https://github.com/tobiasanker/libKitsunemimiCommon.git
+libKitsunemimiCommon | v0.14.0 |  https://github.com/tobiasanker/libKitsunemimiCommon.git
 
 HINT: These Kitsunemimi-Libraries will be downloaded and build automatically with the build-script below.
 
