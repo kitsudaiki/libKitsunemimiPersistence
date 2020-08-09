@@ -88,21 +88,6 @@ LOG_debug(const std::string message)
 }
 
 /**
- * @brief write info-message to logfile
- */
-bool
-LOG_info(const std::string message)
-{
-    if(Kitsunemimi::Persistence::Logger::m_logger == nullptr) {
-        return false;
-    }
-
-    return Kitsunemimi::Persistence::Logger::m_logger->logData(message,
-                                                               "INFO",
-                                                               WHITE_COLOR);
-}
-
-/**
  * @brief write warnign-message to logfile
  */
 bool
@@ -130,6 +115,22 @@ LOG_error(const std::string message)
     return Kitsunemimi::Persistence::Logger::m_logger->logData(message,
                                                                "ERROR",
                                                                RED_COLOR);
+}
+
+/**
+ * @brief write info-message to logfile
+ */
+bool
+LOG_info(const std::string message,
+         const std::string &color)
+{
+    if(Kitsunemimi::Persistence::Logger::m_logger == nullptr) {
+        return false;
+    }
+
+    return Kitsunemimi::Persistence::Logger::m_logger->logData(message,
+                                                               "INFO",
+                                                               color);
 }
 
 /**

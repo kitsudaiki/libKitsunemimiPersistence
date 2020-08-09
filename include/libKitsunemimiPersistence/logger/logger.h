@@ -43,9 +43,10 @@ bool initConsoleLogger(const bool debugLog = false);
 bool setDebugFlag(const bool debugLog);
 
 bool LOG_debug(const std::string message);
-bool LOG_info(const std::string message);
 bool LOG_warning(const std::string message);
 bool LOG_error(const std::string message);
+bool LOG_info(const std::string message,
+              const std::string &color = WHITE_COLOR);
 
 bool closeLogFile();
 
