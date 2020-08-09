@@ -8,9 +8,8 @@ build:
     - apt-get install -y libboost-filesystem-dev libsqlite3-dev
 
     - cd /builds/tobiasanker/libKitsunemimiPersistence
-    - ./build.sh
+    - ./build.sh test
 
-    - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:'/builds/tobiasanker/result'
     - /builds/tobiasanker/build/libKitsunemimiPersistence/tests/unit_tests/unit_tests
 
   tags:
