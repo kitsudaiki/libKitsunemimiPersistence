@@ -83,7 +83,7 @@ LOG_debug(const std::string message)
 
     return Kitsunemimi::Persistence::Logger::m_logger->logData(message,
                                                                "DEBUG",
-                                                               GREEN_COLOR,
+                                                               BLUE_COLOR,
                                                                true);
 }
 
