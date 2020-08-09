@@ -83,7 +83,7 @@ LOG_debug(const std::string message)
 
     return Kitsunemimi::Persistence::Logger::m_logger->logData(message,
                                                                "DEBUG",
-                                                               "\033[1;32m",
+                                                               GREEN_COLOR,
                                                                true);
 }
 
@@ -99,7 +99,7 @@ LOG_info(const std::string message)
 
     return Kitsunemimi::Persistence::Logger::m_logger->logData(message,
                                                                "INFO",
-                                                               "\033[0m");
+                                                               WHITE_COLOR);
 }
 
 /**
@@ -114,7 +114,7 @@ LOG_warning(const std::string message)
 
     return Kitsunemimi::Persistence::Logger::m_logger->logData(message,
                                                                "WARNING",
-                                                               "\033[1;33m");
+                                                               YELLOW_COLOR);
 }
 
 /**
@@ -129,7 +129,7 @@ LOG_error(const std::string message)
 
     return Kitsunemimi::Persistence::Logger::m_logger->logData(message,
                                                                "ERROR",
-                                                               "\033[1;31m");
+                                                               RED_COLOR);
 }
 
 /**
@@ -295,9 +295,9 @@ Logger::logData(const std::string &message,
         }
 
         if(preTag == "INFO") {
-            std::cout<<color<<message<<"\033[0m"<<std::endl;
+            std::cout<<color<<message<<WHITE_COLOR<<std::endl;
         } else {
-            std::cout<<color<<preTag<<": "<<message<<"\033[0m"<<std::endl;
+            std::cout<<color<<preTag<<": "<<message<<WHITE_COLOR<<std::endl;
         }
     }
 
