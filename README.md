@@ -184,21 +184,20 @@ This is a simple sqlite database handler to run sql-queries against the database
 #include <libKitsunemimiPersistence/database/sqlite.h>
 #include <libKitsunemimiCommon/common_items/table_item.h>
 
-std::pair<bool, std::string> result;
-
 // create and init database
 Sqlite testDB;
-result = testDB.initDB("/tmp/testdb.db");
-// first of the result is, if it was successful or not
-// second of the result is the error-message, if failed
+bool result = false;
+std::string errorMessage = "";
+
+result = testDB.initDB("/tmp/testdb.db", errorMessage);
+// if result is false, errorMessage contains the error-output
 
 std::string sql = <Any SQL-query>
 
 // run sql-qurey
 Kitsunemimi::Common::TableItem resultItem;
-result = testDB.execSqlCommand(&resultItem, sql);
-// first of the result is, if it was successful or not
-// second of the result is the error-message, if failed
+result = testDB.execSqlCommand(&resultItem, sql, errorMessage);
+// if result is false, errorMessage contains the error-output
 
 // If successful, the resultItem contains the result of the sql-query. 
 // It can easily converted into a string with `toString()`
