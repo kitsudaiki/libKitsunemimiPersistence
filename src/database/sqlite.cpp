@@ -46,28 +46,24 @@ Sqlite::~Sqlite()
  * @brief initialize database
  *
  * @param path file-path of the existing or new sqlite file
+ * @param errorMessage reference for error-message output
  *
- * @return pair of bool and string
- *         if success: first is true and second is empty string
- *         if failed: first is false and second is the error-message
+ * @return true, if seccessful, else false
  */
-std::pair<bool, std::string>
-Sqlite::initDB(const std::string path)
+bool
+Sqlite::initDB(const std::string path,
+               std::string &errorMessage)
 {
-    std::pair<bool, std::string> result;
-
     m_rc = sqlite3_open(path.c_str(), &m_db);
 
     if(m_rc != 0)
     {
-        result.second = "Can't open database: \n";
-        result.second.append(sqlite3_errmsg(m_db));
-        result.first = false;
-        return result;
+        errorMessage = "Can't open database: \n";
+        errorMessage.append(sqlite3_errmsg(m_db));
+        return false;
     }
 
-    result.first = true;
-    return result;
+    return true;
 }
 
 /**
@@ -121,42 +117,35 @@ static int callback(void* data,
  *
  * @param resultTable table-item, which should contain the result
  * @param command sql-command for execution
+ * @param errorMessage reference for error-message output
  *
- * @return pair of bool and string
- *         if success: first is true and second is the string-form of the table with the result
- *         if failed: first is false and second is the error-message
+ * @return true, if seccessful, else false
  */
-std::pair<bool, std::string>
+bool
 Sqlite::execSqlCommand(TableItem* resultTable,
-                       const std::string command)
+                       const std::string command,
+                       std::string &errorMessage)
 {
     // init
-    std::pair<bool, std::string> result;
-    char* errorMessage = nullptr;
+    char* err = nullptr;
 
     // run command
     m_rc = sqlite3_exec(m_db,
                         command.c_str(),
                         callback,
                         static_cast<void*>(resultTable),
-                        &errorMessage);
+                        &err);
 
     // check result state
     if(m_rc != SQLITE_OK)
     {
-        // build error-result
-        result.first = false;
-        result.second = "SQL error: " + std::string(errorMessage);
-        sqlite3_free(errorMessage);
+        errorMessage = "SQL error: " + std::string(err);
+        sqlite3_free(err);
 
-        return result;
+        return false;
     }
 
-    // build success-result
-    result.first = true;
-    result.second = "";
-
-    return result;
+    return true;
 }
 
 /**

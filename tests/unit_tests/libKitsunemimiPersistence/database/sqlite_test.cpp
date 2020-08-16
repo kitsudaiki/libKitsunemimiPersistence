@@ -47,10 +47,9 @@ Sqlite_Test::initDB_test()
 {
     Sqlite testDB;
 
-    std::pair<bool, std::string> result;
-    result = testDB.initDB(m_filePath);
+    std::string errorMessage = "";
 
-    TEST_EQUAL(result.first, true);
+    TEST_EQUAL(testDB.initDB(m_filePath, errorMessage), true);
 
     deleteFile();
 }
@@ -62,8 +61,9 @@ void
 Sqlite_Test::execSqlCommand_test()
 {
     Sqlite testDB;
-    testDB.initDB(m_filePath);
-    std::pair<bool, std::string> result;
+    std::string errorMessage = "";
+    testDB.initDB(m_filePath, errorMessage);
+
     Kitsunemimi::TableItem resultItem;
 
     //-----------------------------------------------------------------
@@ -77,8 +77,7 @@ Sqlite_Test::execSqlCommand_test()
             "ADDRESS        CHAR(50),"
             "SALARY         REAL );";
 
-    result = testDB.execSqlCommand(nullptr, sql);
-    TEST_EQUAL(result.first, true);
+    TEST_EQUAL(testDB.execSqlCommand(nullptr, sql, errorMessage), true);
 
     //-----------------------------------------------------------------
     // INSERT
@@ -92,8 +91,7 @@ Sqlite_Test::execSqlCommand_test()
            "INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)"
            "VALUES (4, 'Mark', 25, 'Rich-Mond ', 65000.00 );";
 
-    result = testDB.execSqlCommand(nullptr, sql);
-    TEST_EQUAL(result.first, true);
+    TEST_EQUAL(testDB.execSqlCommand(nullptr, sql, errorMessage), true);
 
     //-----------------------------------------------------------------
     // SELECT
@@ -101,8 +99,7 @@ Sqlite_Test::execSqlCommand_test()
     sql = "SELECT * from COMPANY";
 
     resultItem.clearTable();
-    result = testDB.execSqlCommand(&resultItem, sql);
-    TEST_EQUAL(result.first, true);
+    TEST_EQUAL(testDB.execSqlCommand(&resultItem, sql, errorMessage), true);
 
     std::string compare =
             "+----+-------+-----+------------+---------+\n"
@@ -125,8 +122,7 @@ Sqlite_Test::execSqlCommand_test()
           "SELECT * from COMPANY";
 
     resultItem.clearTable();
-    result = testDB.execSqlCommand(&resultItem, sql);
-    TEST_EQUAL(result.first, true);
+    TEST_EQUAL(testDB.execSqlCommand(&resultItem, sql, errorMessage), true);
 
     compare =
             "+----+-------+-----+------------+---------+\n"
@@ -149,8 +145,7 @@ Sqlite_Test::execSqlCommand_test()
           "SELECT * from COMPANY";
 
     resultItem.clearTable();
-    result = testDB.execSqlCommand(&resultItem, sql);
-    TEST_EQUAL(result.first, true);
+    TEST_EQUAL(testDB.execSqlCommand(&resultItem, sql, errorMessage), true);
 
     compare =
            "+----+-------+-----+------------+---------+\n"
@@ -180,7 +175,8 @@ Sqlite_Test::closeDB_test()
 
     TEST_EQUAL(testDB.closeDB(), false);
 
-    testDB.initDB(m_filePath);
+    std::string errorMessage = "";
+    testDB.initDB(m_filePath, errorMessage);
 
     TEST_EQUAL(testDB.closeDB(), true);
     TEST_EQUAL(testDB.closeDB(), false);

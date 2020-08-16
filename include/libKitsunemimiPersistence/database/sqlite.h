@@ -35,10 +35,12 @@ public:
     Sqlite();
     ~Sqlite();
 
-    std::pair<bool, std::string> initDB(const std::string path);
+    bool initDB(const std::string path,
+                std::string &errorMessage);
 
-    std::pair<bool, std::string> execSqlCommand(TableItem*resultTable,
-                                                const std::string command);
+    bool execSqlCommand(TableItem*resultTable,
+                        const std::string command,
+                        std::string &errorMessage);
 
     bool closeDB();
 
