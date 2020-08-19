@@ -54,6 +54,10 @@ Logger_Test::logger_test()
     TEST_EQUAL(LOG_INFO("info1"), true);
     TEST_EQUAL(LOG_INFO("info2"), true);
     TEST_EQUAL(LOG_INFO("info3"), true);
+    TEST_EQUAL(LOG_INFO("green-info", GREEN_COLOR), true);
+    TEST_EQUAL(LOG_INFO("red-info", RED_COLOR), true);
+    TEST_EQUAL(LOG_INFO("blue-info", BLUE_COLOR), true);
+    TEST_EQUAL(LOG_INFO("pink-info", PINK_COLOR), true);
 
     std::string errorMessage = "";
     std::string logContent = "";

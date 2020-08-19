@@ -30,6 +30,7 @@
 #define GREEN_COLOR "\033[1;32m"
 #define RED_COLOR "\033[1;31m"
 #define BLUE_COLOR "\033[1;34m"
+#define PINK_COLOR "\033[1;95m"
 
 namespace Kitsunemimi
 {
