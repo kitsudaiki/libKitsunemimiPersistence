@@ -37,6 +37,7 @@ name | repository | version | task
 g++ | g++ | >= 6.0 | Compiler for the C++ code.
 make | make | >= 4.0 | process the make-file, which is created by qmake to build the programm with g++
 qmake | qt5-qmake | >= 5.0 | This package provides the tool qmake, which is similar to cmake and create the make-file for compilation.
+boost-filesystem library | libboost-filesystem-dev | >= 1.6 | interactions with files and directories on the system
 sqlite3 library | libsqlite3-dev | >= 3.0 | handling of sqlite databases
 
 
