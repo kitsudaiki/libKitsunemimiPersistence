@@ -1,8 +1,8 @@
 # libKitsunemimiPersistence
 
-![Gitlab pipeline status](https://img.shields.io/gitlab/pipeline/tobiasanker/libKitsunemimiPersistence?label=build%20and%20test&style=flat-square)
-![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/tobiasanker/libKitsunemimiPersistence?label=version&style=flat-square)
-![GitHub](https://img.shields.io/github/license/tobiasanker/libKitsunemimiPersistence?style=flat-square)
+![Gitlab pipeline status](https://img.shields.io/gitlab/pipeline/kitsudaiki/libKitsunemimiPersistence?label=build%20and%20test&style=flat-square)
+![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/kitsudaiki/libKitsunemimiPersistence?label=version&style=flat-square)
+![GitHub](https://img.shields.io/github/license/kitsudaiki/libKitsunemimiPersistence?style=flat-square)
 ![C++Version](https://img.shields.io/badge/c%2B%2B-14-blue?style=flat-square)
 ![Platform](https://img.shields.io/badge/platform-Linux--x64-lightgrey?style=flat-square)
 
