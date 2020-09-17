@@ -34,7 +34,7 @@ namespace Persistence
 class BinaryFile
 {
 public:
-    BinaryFile(const std::string filePath,
+    BinaryFile(const std::string &filePath,
                const bool directIO = false);
     ~BinaryFile();
 

@@ -18,11 +18,14 @@ namespace Persistence
 {
 
 /**
- * @brief BinaryFile::BinaryFile
- * @param filePath
- * @param directIO
+ * @brief constructor
+ *
+ * @param filePath file-path of the binary-file
+ * @param directIO true, to enable direct io, which allows faster data transfers without buffering
+ *                 within the kernel, which requires, that each read and write call use a
+ *                 block-size of a multiple of 512 bytes
  */
-BinaryFile::BinaryFile(const std::string filePath,
+BinaryFile::BinaryFile(const std::string &filePath,
                        const bool directIO)
 {
     m_filePath = filePath;
@@ -66,7 +69,7 @@ BinaryFile::initFile()
 }
 
 /**
- * allocate new storage at the end of the file
+ * @brief allocate new storage at the end of the file
  *
  * @return true is successful, else false
  */
@@ -106,7 +109,7 @@ BinaryFile::allocateStorage(const uint64_t numberOfBlocks,
 }
 
 /**
- * update size-information from the file
+ * @brief update size-information from the file
  *
  * @return false, if file not open, else true
  */
@@ -131,9 +134,11 @@ BinaryFile::updateFileSize()
 }
 
 /**
- * @brief BinaryFile::readCompleteFile
- * @param buffer
- * @return
+ * @brief read a complete binary file into a data-buffer object
+ *
+ * @param buffer reference to the buffer, where the data should be written into
+ *
+ * @return true, if successful, else false
  */
 bool
 BinaryFile::readCompleteFile(DataBuffer &buffer)
@@ -163,9 +168,11 @@ BinaryFile::readCompleteFile(DataBuffer &buffer)
 }
 
 /**
- * @brief BinaryFile::writeCompleteFile
- * @param buffer
- * @return
+ * @brief write a complete buffer into a binary-file
+ *
+ * @param buffer reference to the buffer with the data, which should be written into the file
+ *
+ * @return true, if successful, else false
  */
 bool
 BinaryFile::writeCompleteFile(DataBuffer &buffer)
@@ -193,7 +200,7 @@ BinaryFile::writeCompleteFile(DataBuffer &buffer)
 }
 
 /**
- * read a readSegment of the file
+ * @brief read a readSegment of the file
  *
  * @return true, if successful, else false
  */
@@ -238,7 +245,7 @@ BinaryFile::readSegment(DataBuffer &buffer,
 }
 
 /**
- * write a block of the file
+ * @brief write a block of the file
  *
  * @return true, if successful, else false
  */
@@ -290,7 +297,7 @@ BinaryFile::writeSegment(DataBuffer &buffer,
 }
 
 /**
- * close the cluser-file
+ * @brief close the cluser-file
  *
  * @return true, if file-descriptor is valid, else false
  */

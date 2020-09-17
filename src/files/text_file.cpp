@@ -20,7 +20,7 @@ namespace Persistence
 {
 
 /**
- * read text from a text-file
+ * @brief read text from a text-file
  *
  * @param readContentconst reference to the variable, where the content should be written into
  * @param filePath path the to file
@@ -65,7 +65,7 @@ readFile(std::string &readContentconst,
 }
 
 /**
- * write text into a file
+ * @brief write text into a file
  *
  * @param filePath path the to file
  * @param content text which be wirtten into the file
@@ -132,7 +132,7 @@ writeFile(const std::string &filePath,
 }
 
 /**
- * append text to a existing text-file
+ * @brief append text to a existing text-file
  *
  * @param filePath path the to file
  * @param newText text which should be append to the file
@@ -165,7 +165,7 @@ appendText(const std::string &filePath,
 }
 
 /**
- * replace a specific line inside a text-file
+ * @brief replace a specific line inside a text-file
  *
  * @param filePath path the to file
  * @param lineNumber number of the line inside the file, which should be replaced (beginning with 0)
@@ -219,7 +219,7 @@ replaceLine(const std::string &filePath,
 }
 
 /**
- * replace a substring inside the file with another string
+ * @brief replace a substring inside the file with another string
  *
  * @param filePath path the to file
  * @param oldContent substring which should be replaced
