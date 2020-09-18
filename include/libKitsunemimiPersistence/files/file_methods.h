@@ -37,9 +37,6 @@ bool createDirectory(const bfs::path &path,
 bool deleteFileOrDir(const bfs::path &path,
                      std::string &errorMessage);
 
-
-
-
 }
 }
 

@@ -64,7 +64,7 @@ private:
     bool m_directIO = true;
     uint16_t m_blockSize = 512;
 
-    void initFile();
+    bool initFile();
 };
 
 } // namespace Persistence

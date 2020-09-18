@@ -44,8 +44,10 @@ BinaryFile::~BinaryFile()
 
 /**
  * @brief create a new file or open an existing file
+ *
+ * @return true is successful, else false
  */
-void
+bool
 BinaryFile::initFile()
 {
     if(m_directIO)
@@ -64,8 +66,11 @@ BinaryFile::initFile()
     }
 
     // check if file is open
-    assert(m_fileDescriptor != -1);
-    updateFileSize();
+    if(m_fileDescriptor == -1) {
+        return false;
+    }
+
+    return updateFileSize();
 }
 
 /**
@@ -100,8 +105,7 @@ BinaryFile::allocateStorage(const uint64_t numberOfBlocks,
 
     // got the the end of the file
     ret = lseek(m_fileDescriptor, 0, SEEK_END);
-    if(ret >= 0)
-    {
+    if(ret >= 0) {
         m_totalFileSize = static_cast<uint64_t>(ret);
     }
 
@@ -143,25 +147,33 @@ BinaryFile::updateFileSize()
 bool
 BinaryFile::readCompleteFile(DataBuffer &buffer)
 {
-    if(m_directIO) {
+    // go to the end of the file to get the size of the file
+    const long size = lseek(m_fileDescriptor, 0, SEEK_END);
+    if(size <= 0) {
         return false;
     }
 
-    const long size = lseek(m_fileDescriptor, 0, SEEK_END);
-    assert(size > 0);
+    // check if size of the file is not compatible with direct-io
+    if(size % 512 != 0
+            && m_directIO)
+    {
+        return false;
+    }
 
+    // resize buffer to the size of the file
     const uint64_t numberOfBlocks = (static_cast<uint64_t>(size) / buffer.blockSize) + 1;
     allocateBlocks_DataBuffer(buffer, numberOfBlocks);
 
+    // go to the beginning of the file again and read the complete file into the buffer
     lseek(m_fileDescriptor, 0, SEEK_SET);
     const ssize_t ret = read(m_fileDescriptor, buffer.data, static_cast<uint64_t>(size));
-
     if(ret == -1)
     {
         // TODO: process errno
         return false;
     }
 
+    // size buffer-size
     buffer.bufferPosition = static_cast<uint64_t>(size);
 
     return true;
@@ -177,25 +189,28 @@ BinaryFile::readCompleteFile(DataBuffer &buffer)
 bool
 BinaryFile::writeCompleteFile(DataBuffer &buffer)
 {
-    if(m_directIO) {
+    // check if size of the buffer is not compatible with direct-io
+    if(buffer.bufferPosition % 512 != 0
+            && m_directIO)
+    {
         return false;
     }
 
-    bool success = allocateStorage(buffer.bufferPosition, 1);
+    // resize file to the size of the buffer
+    const bool success = allocateStorage(buffer.bufferPosition, 1);
     if(success == false) {
         return false;
     }
 
+    // go to the beginning of the file and write data to file
     lseek(m_fileDescriptor, 0, SEEK_SET);
-
-    // write data to file
-    ssize_t ret = write(m_fileDescriptor, buffer.data, buffer.bufferPosition);
-
+    const ssize_t ret = write(m_fileDescriptor, buffer.data, buffer.bufferPosition);
     if(ret == -1)
     {
         // TODO: process errno
         return false;
     }
+
     return true;
 }
 
@@ -210,6 +225,7 @@ BinaryFile::readSegment(DataBuffer &buffer,
                         const uint64_t numberOfBlocks,
                         const uint64_t startBlockInBuffer)
 {
+    // prepare blocksize for mode
     uint16_t blockSize = buffer.blockSize;
     if(m_directIO == false) {
         blockSize = 1;
@@ -241,6 +257,7 @@ BinaryFile::readSegment(DataBuffer &buffer,
         // TODO: process errno
         return false;
     }
+
     return true;
 }
 
@@ -255,6 +272,7 @@ BinaryFile::writeSegment(DataBuffer &buffer,
                          const uint64_t numberOfBlocks,
                          const uint64_t startBlockInBuffer)
 {
+    // prepare blocksize for mode
     uint16_t blockSize = buffer.blockSize;
     if(m_directIO == false) {
         blockSize = 1;
@@ -274,15 +292,17 @@ BinaryFile::writeSegment(DataBuffer &buffer,
     }
 
     // go to the requested position and write the block
-    long retSeek = lseek(m_fileDescriptor,
-                         static_cast<long>(startBytesInFile),
-                         SEEK_SET);
-    assert(retSeek >= 0);
+    const long retSeek = lseek(m_fileDescriptor,
+                               static_cast<long>(startBytesInFile),
+                               SEEK_SET);
+    if(retSeek < 0) {
+        return false;
+    }
 
     // write data to file
-    ssize_t ret = write(m_fileDescriptor,
-                        static_cast<uint8_t*>(buffer.data) + startBytesInBuffer,
-                        numberOfBytes);
+    const ssize_t ret = write(m_fileDescriptor,
+                              static_cast<uint8_t*>(buffer.data) + startBytesInBuffer,
+                              numberOfBytes);
 
     if(ret == -1)
     {
@@ -311,6 +331,7 @@ BinaryFile::closeFile()
         m_fileDescriptor = -1;
         return true;
     }
+
     return false;
 }
 
