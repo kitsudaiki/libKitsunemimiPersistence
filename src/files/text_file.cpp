@@ -22,14 +22,14 @@ namespace Persistence
 /**
  * @brief read text from a text-file
  *
- * @param readContentconst reference to the variable, where the content should be written into
+ * @param readContent reference to the variable, where the content should be written into
  * @param filePath path the to file
  * @param errorMessage reference for error-message output
  *
  * @return true if successful, else false
  */
 bool
-readFile(std::string &readContentconst,
+readFile(std::string &readContent,
          const std::string &filePath,
          std::string &errorMessage)
 {
@@ -57,7 +57,7 @@ readFile(std::string &readContentconst,
 
     std::stringstream strStream;
     strStream << inFile.rdbuf();
-    readContentconst = strStream.str();
+    readContent = strStream.str();
 
     inFile.close();
 

@@ -67,14 +67,19 @@ getFilesInDir(std::vector<std::string> &fileList,
  * @param withSubdirs false, to list only files in the current directory, but not files from
  *                    subdirectories (Default: true)
  * @param exceptions list with directory-names, which should be skipped (Default: empty list)
+ *
+ * @return false, if path doesn't exist, else true
  */
-void
+bool
 listFiles(std::vector<std::string> &fileList,
           const std::string &path,
           const bool withSubdirs,
           const std::vector<std::string> &exceptions)
 {
     boost::filesystem::path pathObj(path);
+    if(boost::filesystem::exists(pathObj) == false) {
+        return false;
+    }
 
     if(is_directory(pathObj))
     {
@@ -87,6 +92,8 @@ listFiles(std::vector<std::string> &fileList,
     {
         fileList.push_back(path);
     }
+
+    return true;
 }
 
 /**

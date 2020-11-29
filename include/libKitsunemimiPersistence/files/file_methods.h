@@ -20,7 +20,7 @@ namespace Kitsunemimi
 namespace Persistence
 {
 
-void listFiles(std::vector<std::string> &fileList,
+bool listFiles(std::vector<std::string> &fileList,
                const std::string &path,
                const bool withSubdirs=true,
                const std::vector<std::string> &exceptions = {});

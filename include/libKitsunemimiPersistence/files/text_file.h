@@ -24,7 +24,7 @@ namespace Persistence
 {
 
 bool
-readFile(std::string &readContentconst,
+readFile(std::string &readContent,
          const std::string &filePath,
          std::string &errorMessage);
 
