@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.10.1] - 2020-11-29
+
+### Changed
+- some read and write functions for files now returning a bool-values instead of asserts
+
+### Fixed
+- some fixes in code-styling and comments
+
+
 ## [0.10.0] - 2020-08-24
 
 ### Changed
