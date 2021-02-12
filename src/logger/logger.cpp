@@ -189,7 +189,7 @@ Logger::initFileLogger(const std::string &directoryPath,
     // check if already init
     if(m_enableFileLog)
     {
-        std::cout<<"file logger is already initialized."<<std::endl;
+        std::cout<<"ERROR: file logger is already initialized."<<std::endl;
         return false;
     }
 
@@ -198,7 +198,7 @@ Logger::initFileLogger(const std::string &directoryPath,
     // check if exist
     if(fs::exists(rootPathObj) == false)
     {
-        std::cout<<"failed to initialize logger, because the path \""
+        std::cout<<"ERROR: failed to initialize logger, because the path \""
                  << m_directoryPath
                  << "\" does not exist."
                  <<std::endl;
@@ -208,7 +208,7 @@ Logger::initFileLogger(const std::string &directoryPath,
     // check for directory
     if(fs::is_directory(rootPathObj) == false)
     {
-        std::cout<<"failed to initialize logger, because the path \""
+        std::cout<<"ERROR: failed to initialize logger, because the path \""
                  << m_directoryPath
                  << "\" is not an directory."
                  <<std::endl;
@@ -220,11 +220,18 @@ Logger::initFileLogger(const std::string &directoryPath,
     // create new logger-file
     m_filePath = m_directoryPath + "/" + m_baseFileName + ".log";
     m_outputFile.open(m_filePath, std::ios_base::app);
-    m_enableFileLog = true;
+    const bool ret = m_outputFile.is_open();
+    m_enableFileLog = ret;
+    if(ret == false)
+    {
+        std::cout<<"ERROR: can not create or open log-file-path: \""
+                 << m_filePath
+                 << "\""<<std::endl;
+    }
 
     m_lock.unlock();
 
-    return true;
+    return ret;
 }
 
 /**
