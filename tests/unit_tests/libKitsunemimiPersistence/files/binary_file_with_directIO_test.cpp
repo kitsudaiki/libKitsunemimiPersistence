@@ -73,7 +73,7 @@ BinaryFile_withDirectIO_Test::updateFileSize_test()
     // init buffer and file
     DataBuffer buffer(5);
     BinaryFile binaryFile(m_filePath, true);
-    binaryFile.allocateStorage(4);
+    binaryFile.allocateStorage(4, 4096);
     binaryFile.closeFile();
 
     BinaryFile binaryFileNew(m_filePath);
@@ -94,9 +94,9 @@ BinaryFile_withDirectIO_Test::allocateStorage_test()
     BinaryFile binaryFile(m_filePath, true);
 
     // test allocation
-    TEST_EQUAL(binaryFile.allocateStorage(4), true);
-    TEST_EQUAL(binaryFile.allocateStorage(4), true);
-    TEST_EQUAL(binaryFile.allocateStorage(0), false);
+    TEST_EQUAL(binaryFile.allocateStorage(4, 4096), true);
+    TEST_EQUAL(binaryFile.allocateStorage(4, 4096), true);
+    TEST_EQUAL(binaryFile.allocateStorage(0, 4096), false);
 
     // check meta-data
     TEST_EQUAL(binaryFile.m_totalFileSize, 8*4096);
@@ -104,7 +104,7 @@ BinaryFile_withDirectIO_Test::allocateStorage_test()
     binaryFile.closeFile();
 
     // negative test
-    TEST_EQUAL(binaryFile.allocateStorage(4), false);
+    TEST_EQUAL(binaryFile.allocateStorage(4, 4096), false);
 
     deleteFile();
 }
@@ -118,7 +118,7 @@ BinaryFile_withDirectIO_Test::writeSegment_test()
     // init buffer and file
     DataBuffer buffer(5);
     BinaryFile binaryFile(m_filePath, true);
-    binaryFile.allocateStorage(4);
+    binaryFile.allocateStorage(4, 4096);
 
     // prepare test-buffer
     TestStruct testStruct;
@@ -152,7 +152,7 @@ BinaryFile_withDirectIO_Test::readSegment_test()
     // init buffer and file
     DataBuffer buffer(5);
     BinaryFile binaryFile(m_filePath, true);
-    binaryFile.allocateStorage(4);
+    binaryFile.allocateStorage(4, 4096);
 
     // prepare test-buffer
     TestStruct testStruct;

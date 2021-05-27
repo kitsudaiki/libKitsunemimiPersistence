@@ -118,7 +118,7 @@ BinaryFile_withoutDirectIO_Test::writeSegment_test()
     // init buffer and file
     DataBuffer buffer(5);
     BinaryFile binaryFile(m_filePath, false);
-    binaryFile.allocateStorage(4);
+    binaryFile.allocateStorage(4, 4096);
 
     // prepare test-buffer
     TestStruct testStruct;
@@ -152,7 +152,7 @@ BinaryFile_withoutDirectIO_Test::readSegment_test()
     // init buffer and file
     DataBuffer buffer(5);
     BinaryFile binaryFile(m_filePath, false);
-    binaryFile.allocateStorage(4);
+    binaryFile.allocateStorage(4, 4096);
 
     // prepare test-buffer
     TestStruct testStruct;

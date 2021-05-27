@@ -90,11 +90,22 @@ BinaryFile::allocateStorage(const uint64_t numberOfBlocks,
         return false;
     }
 
+    return allocateStorage(numberOfBlocks * blockSize);
+}
+
+/**
+ * @brief allocate new storage at the end of the file
+ *
+ * @return true is successful, else false
+ */
+bool
+BinaryFile::allocateStorage(const uint64_t numberOfBytes)
+{
     // set first to the start of the file and allocate the new size at the end of the file
     lseek(m_fileDescriptor, 0, SEEK_SET);
     long ret = posix_fallocate(m_fileDescriptor,
                                static_cast<long>(m_totalFileSize),
-                               static_cast<long>(numberOfBlocks * blockSize));
+                               static_cast<long>(numberOfBytes));
 
     // check if allocation was successful
     if(ret != 0)
@@ -104,10 +115,7 @@ BinaryFile::allocateStorage(const uint64_t numberOfBlocks,
     }
 
     // got the the end of the file
-    ret = lseek(m_fileDescriptor, 0, SEEK_END);
-    if(ret >= 0) {
-        m_totalFileSize = static_cast<uint64_t>(ret);
-    }
+    updateFileSize();
 
     return true;
 }
@@ -154,7 +162,7 @@ BinaryFile::readCompleteFile(DataBuffer &buffer)
     }
 
     // check if size of the file is not compatible with direct-io
-    if(size % 512 != 0
+    if(buffer.blockSize % 512 != 0
             && m_directIO)
     {
         return false;
@@ -190,16 +198,24 @@ bool
 BinaryFile::writeCompleteFile(DataBuffer &buffer)
 {
     // check if size of the buffer is not compatible with direct-io
-    if(buffer.bufferPosition % 512 != 0
+    if(buffer.blockSize % 512 != 0
             && m_directIO)
     {
         return false;
     }
 
     // resize file to the size of the buffer
-    const bool success = allocateStorage(buffer.bufferPosition, 1);
-    if(success == false) {
-        return false;
+    int64_t sizeDiff = (buffer.numberOfBlocks * buffer.blockSize) - m_totalFileSize;
+    if(sizeDiff > 0)
+    {
+        if(sizeDiff % buffer.blockSize != 0) {
+            sizeDiff += buffer.blockSize - (sizeDiff % buffer.blockSize);
+        }
+
+        const bool success = allocateStorage(sizeDiff);
+        if(success == false) {
+            return false;
+        }
     }
 
     // go to the beginning of the file and write data to file

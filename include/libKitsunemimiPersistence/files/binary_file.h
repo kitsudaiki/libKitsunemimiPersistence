@@ -39,7 +39,7 @@ public:
     ~BinaryFile();
 
     bool allocateStorage(const uint64_t numberOfBlocks,
-                         const uint32_t blockSize = 4096);
+                         const uint32_t blockSize);
     bool updateFileSize();
 
     bool readCompleteFile(DataBuffer &buffer);
@@ -65,6 +65,7 @@ private:
     uint16_t m_blockSize = 512;
 
     bool initFile();
+    bool allocateStorage(const uint64_t numberOfBytes);
 };
 
 } // namespace Persistence
