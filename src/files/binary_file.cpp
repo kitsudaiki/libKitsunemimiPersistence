@@ -169,7 +169,10 @@ BinaryFile::readCompleteFile(DataBuffer &buffer)
     }
 
     // resize buffer to the size of the file
-    const uint64_t numberOfBlocks = (static_cast<uint64_t>(size) / buffer.blockSize) + 1;
+    uint64_t numberOfBlocks = (static_cast<uint64_t>(size) / buffer.blockSize);
+    if(size % buffer.blockSize != 0) {
+        numberOfBlocks++;
+    }
     allocateBlocks_DataBuffer(buffer, numberOfBlocks);
 
     // go to the beginning of the file again and read the complete file into the buffer
@@ -208,10 +211,12 @@ BinaryFile::writeCompleteFile(DataBuffer &buffer)
     int64_t sizeDiff = (buffer.numberOfBlocks * buffer.blockSize) - m_totalFileSize;
     if(sizeDiff > 0)
     {
+        // round diff up to full block-size
         if(sizeDiff % buffer.blockSize != 0) {
             sizeDiff += buffer.blockSize - (sizeDiff % buffer.blockSize);
         }
 
+        // allocate additional memory
         const bool success = allocateStorage(sizeDiff);
         if(success == false) {
             return false;
@@ -340,15 +345,13 @@ BinaryFile::writeSegment(DataBuffer &buffer,
 bool
 BinaryFile::closeFile()
 {
-    // check file-deskriptor
-    if(m_fileDescriptor > 0)
-    {
-        close(m_fileDescriptor);
-        m_fileDescriptor = -1;
-        return true;
+    if(m_fileDescriptor == -1) {
+        return false;
     }
 
-    return false;
+    close(m_fileDescriptor);
+    m_fileDescriptor = -1;
+    return true;
 }
 
 } // namespace Persistence
