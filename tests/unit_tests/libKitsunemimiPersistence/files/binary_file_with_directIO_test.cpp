@@ -33,6 +33,7 @@ BinaryFile_withDirectIO_Test::BinaryFile_withDirectIO_Test()
     allocateStorage_test();
     writeSegment_test();
     readSegment_test();
+    writeCompleteFile_test();
     readCompleteFile_test();
     closeTest();
 }
@@ -73,7 +74,7 @@ BinaryFile_withDirectIO_Test::updateFileSize_test()
     // init buffer and file
     DataBuffer buffer(5);
     BinaryFile binaryFile(m_filePath, true);
-    binaryFile.allocateStorage(4);
+    binaryFile.allocateStorage(4, 4096);
     binaryFile.closeFile();
 
     BinaryFile binaryFileNew(m_filePath);
@@ -94,9 +95,9 @@ BinaryFile_withDirectIO_Test::allocateStorage_test()
     BinaryFile binaryFile(m_filePath, true);
 
     // test allocation
-    TEST_EQUAL(binaryFile.allocateStorage(4), true);
-    TEST_EQUAL(binaryFile.allocateStorage(4), true);
-    TEST_EQUAL(binaryFile.allocateStorage(0), false);
+    TEST_EQUAL(binaryFile.allocateStorage(4, 4096), true);
+    TEST_EQUAL(binaryFile.allocateStorage(4, 4096), true);
+    TEST_EQUAL(binaryFile.allocateStorage(0, 4096), false);
 
     // check meta-data
     TEST_EQUAL(binaryFile.m_totalFileSize, 8*4096);
@@ -104,7 +105,7 @@ BinaryFile_withDirectIO_Test::allocateStorage_test()
     binaryFile.closeFile();
 
     // negative test
-    TEST_EQUAL(binaryFile.allocateStorage(4), false);
+    TEST_EQUAL(binaryFile.allocateStorage(4, 4096), false);
 
     deleteFile();
 }
@@ -118,7 +119,7 @@ BinaryFile_withDirectIO_Test::writeSegment_test()
     // init buffer and file
     DataBuffer buffer(5);
     BinaryFile binaryFile(m_filePath, true);
-    binaryFile.allocateStorage(4);
+    binaryFile.allocateStorage(4, 4096);
 
     // prepare test-buffer
     TestStruct testStruct;
@@ -152,7 +153,7 @@ BinaryFile_withDirectIO_Test::readSegment_test()
     // init buffer and file
     DataBuffer buffer(5);
     BinaryFile binaryFile(m_filePath, true);
-    binaryFile.allocateStorage(4);
+    binaryFile.allocateStorage(4, 4096);
 
     // prepare test-buffer
     TestStruct testStruct;
@@ -203,12 +204,66 @@ BinaryFile_withDirectIO_Test::readSegment_test()
 }
 
 /**
- * @brief readCompleteFile_test
+ * writeCompleteFile_test
+ */
+void
+BinaryFile_withDirectIO_Test::writeCompleteFile_test()
+{
+    // init buffer and file
+    DataBuffer buffer(5);
+    BinaryFile binaryFile(m_filePath, true);
+
+    // prepare test-buffer
+    TestStruct testStruct;
+    testStruct.a = 42;
+    testStruct.c = 1337;
+    addObject_DataBuffer(buffer, &testStruct);
+    testStruct.a = 10;
+    testStruct.c = 1234;
+    addObject_DataBuffer(buffer, &testStruct);
+    buffer.bufferPosition = 2 * buffer.blockSize;
+
+    TEST_EQUAL(binaryFile.writeCompleteFile(buffer), true);
+
+    // cleanup
+    TEST_EQUAL(binaryFile.closeFile(), true);
+    deleteFile();
+}
+
+/**
+ * readCompleteFile_test
  */
 void
 BinaryFile_withDirectIO_Test::readCompleteFile_test()
 {
-    // TODO
+    // init buffer and file
+    DataBuffer sourceBuffer(5);
+    DataBuffer targetBuffer(5);
+    BinaryFile binaryFile(m_filePath, false);
+
+    // prepare test-buffer
+    TestStruct testStruct;
+    testStruct.a = 42;
+    testStruct.c = 1337;
+    addObject_DataBuffer(sourceBuffer, &testStruct);
+    testStruct.a = 10;
+    testStruct.c = 1234;
+    addObject_DataBuffer(sourceBuffer, &testStruct);
+    sourceBuffer.bufferPosition = 2 * sourceBuffer.blockSize;
+    targetBuffer.bufferPosition = 2 * targetBuffer.blockSize;
+
+    binaryFile.writeCompleteFile(sourceBuffer);
+    TEST_EQUAL(binaryFile.readCompleteFile(targetBuffer), true);
+
+    // check if source and target-buffer are
+    int ret = memcmp(sourceBuffer.data,
+                     targetBuffer.data,
+                     2 * sourceBuffer.blockSize);
+    TEST_EQUAL(ret, 0);
+
+    // cleanup
+    TEST_EQUAL(binaryFile.closeFile(), true);
+    deleteFile();
 }
 
 /**
