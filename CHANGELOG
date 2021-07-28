@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.10.2] - 2021-07-28
+
+### Added
+- validation, if log-file is open and writable
+
+### Fixed
+- read and write of complete binary-files was broken
+
+
 ## [0.10.1] - 2020-11-29
 
 ### Changed
