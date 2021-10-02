@@ -8,6 +8,8 @@
 
 ## Description
 
+**IMPORTANT: This library is deprecated. Most parts are moved to https://github.com/kitsudaiki/libKitsunemimiCommon**
+
 This library contains all my functions for interactions with the storage. At the moment its the smalest of my projects and only contains functionality to read, modify and write binaray- and text- files, handle an sqlite3-database and write log-files.
 
 ### Content Overview
